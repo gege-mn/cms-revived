@@ -56,7 +56,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
             _copy_drawing(ufo, drawings[target.glyph], target.glyph)
             result.drawn.append(entry.name)
         elif keys or entry.marks:
-            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks, entry.shift, stem if entry.trim else None)
+            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks, entry.shift, entry.trim, stem)
             result.keyed.append(entry.name)
         elif target.kind in ("piece", "char"):
             _placeholder(ufo, target.glyph, stem)
@@ -74,7 +74,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
             _copy_drawing(ufo, drawn, name)
         else:
             entry = mapping.get(piece)
-            _compose_keys(ufo, legacy, name, keys, entry.marks, trim=stem if entry.trim else None)
+            _compose_keys(ufo, legacy, name, keys, entry.marks, trim=entry.trim, stem=stem)
     neighbours.add_inner_forms(ufo, found_rules)
     _add_shorter_ligatures(ufo, mapping, found_rules)
 
@@ -176,7 +176,8 @@ def _compose_keys(
     keys: str,
     marks: list[Mark] = (),
     shift: dict[int, int] | None = None,
-    trim: tuple[float, float] | None = None,
+    trim: str = "",
+    stem: tuple[float, float] = (0, 0),
 ) -> None:
     glyph = ufo.newGlyph(glyph_name)
     x = 0
@@ -185,8 +186,10 @@ def _compose_keys(
         x += (shift or {}).get(index, 0)
         name = legacy.glyph_name(key)
         origins.append(x)
-        if trim and index == len(keys) - 1:
-            trimmed, advance = _trimmed(ufo, legacy, name, trim)
+        start = index == 0 and trim in ("start", "both")
+        end = index == len(keys) - 1 and trim in ("end", "both")
+        if start or end:
+            trimmed, advance = _trimmed(ufo, legacy, name, stem, start, end)
             glyph.components.append(Component(trimmed, Transform(dx=x)))
             x += advance
             continue
@@ -218,25 +221,36 @@ def _mark_glyph(ufo: Font, legacy: LegacyFont, mark: Mark) -> str:
     return lifted
 
 
-def _trimmed(ufo: Font, legacy: LegacyFont, name: str, stem: tuple[float, float]) -> tuple[str, float]:
-    """The key with its stem cut where its body ends: what hangs below or rises above it."""
+def _trimmed(
+    ufo: Font, legacy: LegacyFont, name: str, stem: tuple[float, float], start: bool, end: bool
+) -> tuple[str, float]:
+    """The key with its stem cut where its body begins or ends: what hangs below or rises above."""
 
     bottom, top = stem
     contours = legacy.contours(name)
     points = [point for contour in contours for _, arguments in contour for point in arguments if point is not None]
     body = [x for x, y in points if y < bottom - 1 or y > top + 1]
-    end = max(body) if body else legacy.advance(name)
-    trimmed = f"{legacy_glyph_name(name)}.trim"
+    advance = legacy.advance(name)
+    first = min(body) if start and body else 0
+    last = max(body) if end and body else advance
+    # An end cut keeps the bare `.trim`: goldens accepted as fixes pin glyph names.
+    trimmed = f"{legacy_glyph_name(name)}.trim" + {(True, False): "_start", (True, True): "_both"}.get((start, end), "")
     if trimmed not in ufo:
         glyph = ufo.newGlyph(trimmed)
         pen = glyph.getPen()
-        # The stem past the body is a plain bar, so pulling its end points back is the cut.
-        clamp = lambda point: (min(point[0], end), point[1]) if bottom - 1 <= point[1] <= top + 1 else point  # noqa: E731
+
+        # The stem beside the body is a plain bar, so pulling its end points in is the cut.
+        def cut(point: tuple[float, float]) -> tuple[float, float]:
+            x, y = point
+            if bottom - 1 <= y <= top + 1:
+                x = min(max(x, first), last)
+            return x - first, y
+
         for contour in contours:
             for operator, arguments in contour:
-                getattr(pen, operator)(*(clamp(point) if point is not None else None for point in arguments))
-        glyph.width = end
-    return trimmed, end
+                getattr(pen, operator)(*(cut(point) if point is not None else None for point in arguments))
+        glyph.width = last - first
+    return trimmed, last - first
 
 
 def _rule_drawing(drawings: Font | None, mapping: Mapping, piece: str, previous: str):

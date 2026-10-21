@@ -270,7 +270,7 @@ class Handler(SimpleHTTPRequestHandler):
                             marks=[Mark.from_dict(mark) for mark in body.get("marks", [])],
                             after={previous: keys for previous, keys in body.get("after", {}).items() if previous and keys},
                             shift={int(index): int(units) for index, units in body.get("shift", {}).items() if int(units)},
-                            trim=bool(body.get("trim", False)),
+                            trim=body.get("trim") or "",
                         )
                     )
                     mapping.save()

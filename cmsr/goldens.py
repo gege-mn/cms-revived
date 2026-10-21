@@ -109,8 +109,9 @@ def check(golden: Golden, font_path: Path, legacy: LegacyFont) -> Result:
 def _typed(name: str, keys_by_glyph: dict[str, str]) -> str:
     if name in keys_by_glyph:
         return keys_by_glyph[name]
-    if name.endswith(".trim") and name[: -len(".trim")] in keys_by_glyph:
-        return keys_by_glyph[name[: -len(".trim")]] + TRIMMED
+    base, trimmed, sides = name.partition(".trim")
+    if trimmed and base in keys_by_glyph:
+        return TRIMMED * (sides in ("_start", "_both")) + keys_by_glyph[base] + TRIMMED * (sides in ("", "_both"))
     if name.startswith("cmsr."):
         return DRAWN
     return LIFTED if name.startswith("cms.") else PLACEHOLDER

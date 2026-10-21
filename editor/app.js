@@ -664,7 +664,7 @@ async function flushSave() {
   const response = await fetch("/api/entry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [], after: item.after || {}, shift: item.shift || {}, trim: Boolean(item.trim) }),
+    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [], after: item.after || {}, shift: item.shift || {}, trim: item.trim || "" }),
   });
   const result = await response.json();
   if (result.error) {
