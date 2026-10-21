@@ -199,3 +199,15 @@ latin = "γuwang"
 text = "ᠭᠤᠸᠠᠩ"
 keys = "Goweeit"
 status = "ok"
+
+[[golden]]
+latin = "kino"
+text = "ᠺᠢᠨᠣ᠋"
+keys = "\\uno"
+status = "pending"
+
+[[golden]]
+latin = "bü"
+text = "ᠪᠦ"
+keys = "BA"
+status = "pending"
