@@ -112,7 +112,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "F.init" = { keys = "q", status = "ok" }
 "F.medi" = { keys = "q", status = "ok" }
 "F.fina" = { keys = "@", status = "ok" }
-"K2.init" = { keys = "\\", status = "draft", note = "given by hand: kino = \\uno" }
+"K2.init" = { status = "new" }
 "K2.medi" = { status = "new" }
 "K2.fina" = { status = "new" }
 "K.init" = { keys = "\\", status = "ok" }

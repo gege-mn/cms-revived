@@ -34,9 +34,5 @@
       <string>arch-k</string>
       <string>glyphs.arch-k</string>
     </array>
-    <array>
-      <string>arch-kh</string>
-      <string>glyphs.arch-kh</string>
-    </array>
   </array>
 </plist>

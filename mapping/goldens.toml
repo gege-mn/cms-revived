@@ -202,7 +202,7 @@ status = "ok"
 
 [[golden]]
 latin = "kino"
-text = "ᠺᠢᠨᠣ᠋"
+text = "ᠻᠢᠨᠣ᠋"
 keys = "\\uno"
 status = "pending"
 
@@ -210,4 +210,4 @@ status = "pending"
 latin = "bü"
 text = "ᠪᠦ"
 keys = "BA"
-status = "pending"
+status = "ok"
