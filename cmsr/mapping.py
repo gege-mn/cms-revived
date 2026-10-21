@@ -38,7 +38,9 @@ HEADER = """\
 #         shift = { "2" = -200 } slides the third key back 200 to tighten a join
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
-#         "@arch" names a group from [groups]; a piece named on its own wins over a group
+#         "@arch" names a group from [groups]; a piece named on its own wins over a group;
+#         a rule drawn by hand, as glyph cmsr.<piece>.after.<piece or @group> in
+#         drawings/<cut>.ufo, replaces its keys, which stand in until then
 # status  todo   not mapped yet; the build draws a placeholder box
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed

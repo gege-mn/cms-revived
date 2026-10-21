@@ -68,7 +68,12 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
 
     found_rules = neighbours.rules(mapping)
     for (piece, previous), keys in found_rules.items():
-        _compose_keys(ufo, legacy, neighbours.rule_glyph(piece, previous), keys, mapping.get(piece).marks)
+        name = neighbours.rule_glyph(piece, previous)
+        drawn = _rule_drawing(drawings, mapping, piece, previous)
+        if drawn is not None:
+            _copy_drawing(ufo, drawn, name)
+        else:
+            _compose_keys(ufo, legacy, name, keys, mapping.get(piece).marks)
     neighbours.add_inner_forms(ufo, found_rules)
     _add_shorter_ligatures(ufo, mapping, found_rules)
 
@@ -199,6 +204,24 @@ def _mark_glyph(ufo: Font, legacy: LegacyFont, mark: Mark) -> str:
             for operator, arguments in contours[index]:
                 getattr(pen, operator)(*arguments)
     return lifted
+
+
+def _rule_drawing(drawings: Font | None, mapping: Mapping, piece: str, previous: str):
+    """A rule drawn by hand, where no 1998 keys can type it: under the rule's own name, or
+    under its group's (cmsr.L.medi.after.@arch draws L.medi after every arch letter)."""
+
+    if drawings is None:
+        return None
+    after = mapping.get(piece).after
+    names = [neighbours.rule_glyph(piece, previous)]
+    # As with keys, a rule for the piece itself wins over its group's drawing.
+    if previous not in after:
+        names += [
+            neighbours.rule_glyph(piece, rule)
+            for rule in after
+            if rule.startswith("@") and previous in mapping.groups.get(rule[1:], [])
+        ]
+    return next((drawings[name] for name in names if name in drawings), None)
 
 
 def _copy_drawing(ufo: Font, source, glyph_name: str) -> None:
