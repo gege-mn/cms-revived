@@ -214,8 +214,8 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "FW.medi" = { status = "auto" }  # required
 "GA.medi" = { status = "auto" }  # required
 "GI.medi" = { status = "auto" }  # required
-"GO.medi" = { status = "auto" }  # required
-"GOI.medi" = { status = "auto" }  # required
+"GO.medi" = { keys = "K", status = "draft", note = "given by hand: medial gü/hü is K, the bow with its vowel (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki" }  # required
+"GOI.medi" = { keys = "Ki", status = "draft", note = "by the rule given with eγüdqü: K, plus i where the vowel has its shilbe, as GOI.init" }  # required
 "GW.medi" = { status = "auto" }  # required
 "GxA.medi" = { status = "auto" }  # required
 "GxI.medi" = { status = "auto" }  # required
@@ -249,7 +249,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "FW.fina" = { status = "auto" }  # required
 "GAa.fina" = { status = "auto" }  # required
 "GI.fina" = { status = "auto" }  # required
-"GO.fina" = { status = "auto" }  # required
+"GO.fina" = { keys = "K", status = "draft", note = "given by hand: final gü/hü is K (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki" }  # required
 "GUe.fina" = { status = "auto" }  # required
 "GW.fina" = { status = "auto" }  # required
 "GxAa.fina" = { status = "auto" }  # required

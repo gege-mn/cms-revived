@@ -155,19 +155,19 @@ status = "pending"
 latin = "intēr"
 text = "ᠢᠨᠲ᠋ᠧᠷ"
 keys = "fieDw*"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "paisa"
 text = "ᠫᠠᠢᠰᠠ"
 keys = "pEUsa"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "eγüdqü"
 text = "ᠡᠭᠦᠳᠬᠦ"
-keys = "fkooeko"
-status = "pending"
+keys = "fKoeK"
+status = "ok"
 
 [[golden]]
 latin = "abuγad"
@@ -191,10 +191,10 @@ status = "pending"
 latin = "oroqu"
 text = "ᠣᠷᠣᠬᠤ"
 keys = "foroeeO"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "γuwang"
 text = "ᠭᠤᠸᠠᠩ"
 keys = "Goweeit"
-status = "pending"
+status = "ok"

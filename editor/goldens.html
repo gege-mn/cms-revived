@@ -33,9 +33,10 @@
     .verdict.pass { color: var(--ok); }
     .verdict.fail { color: var(--bad); }
     .renders { display: flex; gap: 14px; align-items: flex-start; }
-    figure { margin: 0; width: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    figure { margin: 0; min-width: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     figcaption { font-size: 10px; color: var(--muted); white-space: nowrap; }
-    .v { writing-mode: vertical-lr; line-height: 1; white-space: pre; max-height: 170px; overflow: hidden; }
+    /* No clipping: a long word makes its row taller rather than losing its tail. */
+    .v { writing-mode: vertical-lr; line-height: 1.15; white-space: pre; padding: 2px 4px; }
     /* CMs draws its letters smaller within the em than Noto; this brings them to the same size */
     .v.cms { font-size: 50px; }
     .v.ref { font-size: 36px; font-family: "Reference"; color: var(--muted); }
