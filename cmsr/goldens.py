@@ -54,6 +54,7 @@ class Result:
     produced: str
     passed: bool
     signature: str
+    suggestion: dict[str, str] | None = None  # {piece: keys} that would explain the typed keys
 
 
 def load(path: Path = GOLDENS_FILE) -> list[Golden]:
@@ -88,7 +89,20 @@ def check(golden: Golden, font_path: Path, legacy: LegacyFont) -> Result:
     signature = _signature(built)
     if golden.status == "fixed":
         return Result(produced, signature == golden.snapshot, signature)
-    return Result(produced, _same(built, _legacy_leaves(legacy, golden.keys)), signature)
+    passed = _same(built, _legacy_leaves(legacy, golden.keys))
+    return Result(produced, passed, signature, None if passed else _suggest(built, produced, golden.keys))
+
+
+def _suggest(built: list[tuple[str, float, float]], produced: str, typed: str) -> dict[str, str] | None:
+    """With one unmapped piece in the word, the typed keys around it say what it is."""
+
+    holes = [name for name, _, _ in built if name.startswith("_")]
+    if len(holes) != 1 or produced.count(PLACEHOLDER) != 1:
+        return None
+    before, after = produced.split(PLACEHOLDER)
+    if not (typed.startswith(before) and typed.endswith(after)) or len(typed) <= len(before) + len(after):
+        return None
+    return {holes[0][1:]: typed[len(before) : len(typed) - len(after)]}
 
 
 def _signature(leaves: list[tuple[str, float, float]]) -> str:

@@ -104,12 +104,12 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "R.medi" = { keys = "r", status = "ok" }
 "R.fina" = { keys = "*", status = "ok" }
 "W.init" = { keys = "W", status = "ok" }
-"F.init" = { status = "todo" }
-"F.medi" = { status = "todo" }
+"F.init" = { keys = "q", status = "ok" }
+"F.medi" = { keys = "q", status = "ok" }
 "F.fina" = { keys = "@", status = "ok" }
-"K2.init" = { status = "todo" }
-"K2.medi" = { status = "todo" }
-"K2.fina" = { status = "todo" }
+"K2.init" = { status = "new" }
+"K2.medi" = { status = "new" }
+"K2.fina" = { status = "new" }
 "K.init" = { keys = "\\", status = "ok" }
 "K.medi" = { keys = "\\", status = "ok" }
 "K.fina" = { keys = "!", status = "ok" }

@@ -194,7 +194,7 @@ def _goldens(cut_id: str) -> dict:
     rows = []
     for golden in goldens.load():
         result = goldens.check(golden, cut.output_path, legacy)
-        rows.append({**golden.__dict__, "produced": result.produced, "passed": result.passed})
+        rows.append({**golden.__dict__, "produced": result.produced, "passed": result.passed, "suggestion": result.suggestion})
     return {"cut": cut_id, "legacyFont": f"/cms/{cut.legacy_path.name}", "goldens": rows}
 
 
@@ -274,6 +274,17 @@ class Handler(SimpleHTTPRequestHandler):
                     )
                     mapping.save()
                     return self._json(_mapping_state(mapping))
+                if path == "/api/map":
+                    # A piece mapped from a golden's typed keys: a draft, since one word is one context.
+                    mapping = Mapping.load()
+                    entry = mapping.get(body["name"])
+                    entry.keys, entry.status = body["keys"], "draft"
+                    entry.note = (entry.note + " | " if entry.note else "") + f"from golden {body.get('golden', '')}"
+                    mapping.set(entry)
+                    mapping.save()
+                    for cut_id in config.CUTS:
+                        build(cut_id)
+                    return self._json(_goldens(body.get("cut", config.DEFAULT_CUT)))
                 if path == "/api/golden":
                     items = goldens.load()
                     golden = items[int(body["index"])]

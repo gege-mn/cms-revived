@@ -16,7 +16,8 @@ status = "ok"
 latin = "mongγol"
 text = "ᠮᠣᠩᠭᠣᠯ"
 keys = "Moekgo&"
-status = "pending"
+status = "fixed"
+snapshot = "74fd0ec30050"
 
 [[golden]]
 latin = "altan"
@@ -78,13 +79,13 @@ note = "given by hand: T carries the chachlag gap"
 [[golden]]
 latin = "bayar"
 text = "ᠪᠠᠶᠠᠷ"
-keys = "bE□e*"
-status = "pending"
+keys = "bEye*"
+status = "ok"
 
 [[golden]]
 latin = "γajar"
 text = "ᠭᠠᠵᠠᠷ"
-keys = "Ge□e*"
+keys = "Geje*"
 status = "pending"
 
 [[golden]]
@@ -103,7 +104,7 @@ note = "given by hand: B is bo/bu"
 [[golden]]
 latin = "yeke"
 text = "ᠶᠡᠬᠡ"
-keys = "□ekEt"
+keys = "YekEt"
 status = "pending"
 
 [[golden]]
