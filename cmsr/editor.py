@@ -292,8 +292,7 @@ class Handler(SimpleHTTPRequestHandler):
                     golden.status = body.get("status", golden.status)
                     golden.note = body.get("note", golden.note)
                     if golden.status == "fixed":
-                        cut = config.CUTS[body.get("cut", config.DEFAULT_CUT)]
-                        golden.snapshot = goldens.check(golden, cut.output_path, LegacyFont.open(cut.id)).signature
+                        goldens.pin(golden)
                     goldens.save(items)
                     return self._json(_goldens(body.get("cut", config.DEFAULT_CUT)))
                 if path == "/api/build":

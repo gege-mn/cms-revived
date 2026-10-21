@@ -17,7 +17,8 @@ latin = "mongγol"
 text = "ᠮᠣᠩᠭᠣᠯ"
 keys = "Moekgo&"
 status = "fixed"
-snapshot = "74fd0ec30050"
+note = "differs on purpose: CMs had no proper ng + masculine g join"
+snapshot = { CMSHR = "f040c6b1bbd9", CMSUB = "74fd0ec30050", CMSUG = "53b9670d8873" }
 
 [[golden]]
 latin = "altan"
@@ -86,13 +87,13 @@ status = "ok"
 latin = "γajar"
 text = "ᠭᠠᠵᠠᠷ"
 keys = "Geje*"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "ulus"
 text = "ᠤᠯᠤᠰ"
 keys = "folo_"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "bol"
@@ -105,7 +106,7 @@ note = "given by hand: B is bo/bu"
 latin = "yeke"
 text = "ᠶᠡᠬᠡ"
 keys = "YekEt"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "nige"
@@ -137,3 +138,63 @@ latin = "qar-a"
 text = "ᠬᠠᠷ᠎ᠠ"
 keys = "He*T"
 status = "ok"
+
+[[golden]]
+latin = "dürim-i"
+text = "ᠳᠦᠷᠢᠮ᠎ᠢ"
+keys = "Doiri^I"
+status = "pending"
+
+[[golden]]
+latin = "jöblel"
+text = "ᠵᠥᠪᠯᠡᠯ"
+keys = "Joible&"
+status = "pending"
+
+[[golden]]
+latin = "intēr"
+text = "ᠢᠨᠲ᠋ᠧᠷ"
+keys = "fieDw*"
+status = "pending"
+
+[[golden]]
+latin = "paisa"
+text = "ᠫᠠᠢᠰᠠ"
+keys = "pEUsa"
+status = "pending"
+
+[[golden]]
+latin = "eγüdqü"
+text = "ᠡᠭᠦᠳᠬᠦ"
+keys = "fkooeko"
+status = "pending"
+
+[[golden]]
+latin = "abuγad"
+text = "ᠠᠪᠤᠭᠠᠳ"
+keys = "febogeoa"
+status = "pending"
+
+[[golden]]
+latin = "rediu"
+text = "ᠷᠡᠳᠢᠤ᠋"
+keys = "Redio"
+status = "pending"
+
+[[golden]]
+latin = "üy-e-dü"
+text = "ᠦᠶ᠎ᠡ᠎ᠳᠦ"
+keys = "foiITdO"
+status = "pending"
+
+[[golden]]
+latin = "oroqu"
+text = "ᠣᠷᠣᠬᠤ"
+keys = "foroeeO"
+status = "pending"
+
+[[golden]]
+latin = "γuwang"
+text = "ᠭᠤᠸᠠᠩ"
+keys = "Goweeit"
+status = "pending"

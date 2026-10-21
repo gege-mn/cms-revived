@@ -45,8 +45,15 @@ function saveUi() {
 }
 
 async function boot() {
-  const response = await fetch("/api/data");
-  const data = await response.json();
+  let data;
+  try {
+    const response = await fetch("/api/data");
+    if (!response.ok) throw new Error(`the server answered ${response.status}`);
+    data = await response.json();
+  } catch (error) {
+    document.body.innerHTML = `<p style="padding:24px;font:15px sans-serif">The editor could not load its data (${escapeHtml(String(error.message || error))}). Is <code>uv run cmsr editor</code> running? Its terminal shows the error.</p>`;
+    return;
+  }
   state.data = data;
   state.entries = data.entries;
   state.groups = data.groups || {};

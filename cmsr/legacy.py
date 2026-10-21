@@ -56,5 +56,8 @@ class LegacyFont:
     def tip(self, glyph_name: str) -> float:
         """Where the glyph's first stroke reaches lowest along the run: a tooth's tip."""
 
-        points = [point for _, arguments in self.contours(glyph_name)[0] for point in arguments if point is not None]
+        contours = self.contours(glyph_name)
+        if not contours:
+            return 0
+        points = [point for _, arguments in contours[0] for point in arguments if point is not None]
         return min(points, key=lambda point: point[1])[0] if points else 0

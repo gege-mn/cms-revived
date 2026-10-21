@@ -11,7 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import tomllib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cache
 from pathlib import Path
 from typing import Literal
@@ -46,7 +46,7 @@ class Golden:
     keys: str = ""
     status: Status = "pending"
     note: str = ""
-    snapshot: str = ""
+    snapshot: dict[str, str] = field(default_factory=dict)  # per cut: each draws its own outlines
 
 
 @dataclass
@@ -61,7 +61,12 @@ def load(path: Path = GOLDENS_FILE) -> list[Golden]:
     if not path.exists():
         return []
     raw = tomllib.loads(path.read_text(encoding="utf-8"))
-    return [Golden(**fields) for fields in raw.get("golden", [])]
+    found = []
+    for fields in raw.get("golden", []):
+        if isinstance(fields.get("snapshot"), str):
+            fields["snapshot"] = {}  # an early single snapshot; re-pinned on the next "differs on purpose"
+        found.append(Golden(**fields))
+    return found
 
 
 def save(goldens: list[Golden], path: Path = GOLDENS_FILE) -> None:
@@ -73,7 +78,8 @@ def save(goldens: list[Golden], path: Path = GOLDENS_FILE) -> None:
         if golden.note:
             lines.append(f"note = {string(golden.note)}")
         if golden.snapshot:
-            lines.append(f"snapshot = {string(golden.snapshot)}")
+            pins = ", ".join(f"{cut} = {string(value)}" for cut, value in sorted(golden.snapshot.items()))
+            lines.append(f"snapshot = {{ {pins} }}")
         lines.append("")
     temporary = path.with_suffix(".toml.tmp")
     temporary.write_text("\n".join(lines), encoding="utf-8")
@@ -88,7 +94,7 @@ def check(golden: Golden, font_path: Path, legacy: LegacyFont) -> Result:
     )
     signature = _signature(built)
     if golden.status == "fixed":
-        return Result(produced, signature == golden.snapshot, signature)
+        return Result(produced, signature == golden.snapshot.get(legacy.cut.id), signature)
     passed = _same(built, _legacy_leaves(legacy, golden.keys))
     return Result(produced, passed, signature, None if passed else _suggest(built, produced, golden.keys))
 
@@ -164,3 +170,15 @@ def _legacy_leaves(legacy: LegacyFont, keys: str) -> list[tuple[str, float, floa
             leaves.append((name, x, 0))
         x += legacy.advance(name)
     return leaves
+
+
+def pin(golden: Golden) -> None:
+    """Accept what every cut draws now as this golden's expected drawing."""
+
+    from .build import build
+    from .config import CUTS
+
+    for cut in CUTS.values():
+        if not cut.output_path.exists():
+            build(cut.id)
+        golden.snapshot[cut.id] = check(golden, cut.output_path, LegacyFont.open(cut.id)).signature

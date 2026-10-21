@@ -30,6 +30,7 @@ uv run cmsr editor --open   # map and review pieces, see real shaping live
 uv run cmsr build           # build all three cuts into dist/
 uv run cmsr check           # build, then run the 3,689 shaping cases
 uv run cmsr status          # progress, conflicts, problems
+uv run cmsr goldens --add 10  # next goldens: common words with joins no golden checks yet
 ```
 
 ## Layout
