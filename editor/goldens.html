@@ -13,13 +13,12 @@
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.4 -apple-system, system-ui, sans-serif; }
     header { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--line); }
-    header select { padding: 3px 6px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: inherit; }
     header a { color: var(--accent); }
     header .hint { color: var(--muted); font-size: 12px; flex: 1; }
     header .toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); white-space: nowrap; }
     .empty { padding: 40px; text-align: center; color: var(--muted); font-size: 15px; }
-    main { padding: 16px; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
-    .golden { display: grid; grid-template-columns: 130px auto minmax(260px, 1fr); align-items: center; gap: 12px 20px; padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; }
+    main { padding: 16px; max-width: 1500px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+    .golden { display: grid; grid-template-columns: 130px minmax(0, auto) minmax(240px, 1fr); align-items: center; gap: 12px 20px; padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; }
     .golden.ok { border-left-color: var(--ok); }
     .golden.fail { border-left-color: var(--bad); }
     .golden.focus { box-shadow: 0 0 0 2px var(--accent); }
@@ -32,14 +31,20 @@
     .verdict { font-size: 12px; }
     .verdict.pass { color: var(--ok); }
     .verdict.fail { color: var(--bad); }
-    .renders { display: flex; gap: 14px; align-items: flex-start; }
-    figure { margin: 0; min-width: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .renders { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: flex-start; }
+    .cut { display: flex; flex-direction: column; gap: 4px; padding: 4px 8px 6px; border: 1px solid var(--line); border-radius: 8px; }
+    .cut.fail { border-color: var(--bad); }
+    .cut-name { font-size: 11px; font-weight: 600; display: flex; justify-content: space-between; gap: 8px; }
+    .cut-name .pass { color: var(--ok); }
+    .cut-name .fail { color: var(--bad); }
+    .pair { display: flex; gap: 8px; align-items: flex-start; }
+    figure { margin: 0; min-width: 52px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     figcaption { font-size: 10px; color: var(--muted); white-space: nowrap; }
     /* No clipping: a long word makes its row taller rather than losing its tail. */
     .v { writing-mode: vertical-lr; line-height: 1.15; white-space: pre; padding: 2px 4px; }
     /* CMs draws its letters smaller within the em than Noto; this brings them to the same size */
-    .v.cms { font-size: 50px; }
-    .v.ref { font-size: 36px; font-family: "Reference"; color: var(--muted); }
+    .v.cms { font-size: 44px; }
+    .v.ref { font-size: 32px; font-family: "Reference"; color: var(--muted); }
     .controls { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
     .row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .row input { flex: 1 1 120px; min-width: 0; font: 17px ui-monospace, monospace; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: inherit; }
@@ -49,17 +54,15 @@
     .draws code { color: var(--bad); font-size: 13px; }
     .map { align-self: flex-start; padding: 4px 12px; border: 1px solid var(--accent); border-radius: 6px; background: none; color: var(--accent); cursor: pointer; font-size: 13px; }
     .map code { font-size: 14px; }
-    @media (max-width: 720px) {
-      .golden { grid-template-columns: 1fr auto; }
-      .controls { grid-column: 1 / -1; }
+    @media (max-width: 900px) {
+      .golden { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
     <strong>Goldens</strong>
-    <select id="cut"></select>
-    <span class="hint">Type the keys you would use in CMs and press ↵ to confirm. Confirmed goldens that still match are hidden.</span>
+    <span class="hint">Every cut is shown: Confirm and Differs on purpose accept all three at once. Type the keys you would use in CMs and press ↵ to confirm. Confirmed goldens that match in every cut are hidden.</span>
     <label class="toggle"><input id="show-done" type="checkbox"> show <span id="done-count">0</span> confirmed</label>
     <a href="/">editor</a> <a href="/specimen">specimen</a>
   </header>
@@ -68,47 +71,36 @@
     "use strict";
     const $ = (selector) => document.querySelector(selector);
     const escape = (value) => String(value).replace(/[&<>"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character]);
-    let state = { cut: null, fonts: [], legacyFamilies: {}, data: null };
+    let state = { fonts: {}, legacyLoaded: false, data: null };
 
-    async function boot() {
-      state.fonts = await fetch("/api/fonts").then((response) => response.json());
-      state.cut = (() => { try { return localStorage.getItem("cmsr.goldens.cut"); } catch { return null; } })() || state.fonts[0].cut;
-      $("#cut").innerHTML = state.fonts.map((font) => `<option value="${font.cut}">${font.name}</option>`).join("");
-      $("#cut").value = state.cut;
-      await Promise.all(state.fonts.map(async (font) => {
-        font.css = `golden-${font.cut}-${font.revision}`;
-        const face = new FontFace(font.css, `url(${font.url}?v=${font.revision})`);
+    async function loadFonts() {
+      const fonts = await fetch("/api/fonts").then((response) => response.json());
+      await Promise.all(fonts.map(async (font) => {
+        const family = `golden-${font.cut}-${font.revision}`;
+        const face = new FontFace(family, `url(${font.url}?v=${font.revision})`);
         await face.load();
         document.fonts.add(face);
-      }));
-      await load();
-    }
-
-    async function reloadFonts() {
-      state.fonts = await fetch("/api/fonts").then((response) => response.json());
-      await Promise.all(state.fonts.map(async (font) => {
-        font.css = `golden-${font.cut}-${font.revision}`;
-        const face = new FontFace(font.css, `url(${font.url}?v=${font.revision})`);
-        await face.load();
-        document.fonts.add(face);
+        state.fonts[font.cut] = family;
       }));
     }
 
     async function load() {
-      state.data = await fetch(`/api/goldens?cut=${state.cut}`).then((response) => response.json());
-      const family = `legacy-${state.cut}`;
-      if (!state.legacyFamilies[family]) {
-        const face = new FontFace(family, `url(${state.data.legacyFont})`);
-        await face.load();
-        document.fonts.add(face);
-        state.legacyFamilies[family] = true;
+      state.data = await fetch("/api/goldens").then((response) => response.json());
+      if (!state.legacyLoaded) {
+        await Promise.all(state.data.cuts.map(async (cut) => {
+          const face = new FontFace(`legacy-${cut.cut}`, `url(${cut.legacyFont})`);
+          await face.load();
+          document.fonts.add(face);
+        }));
+        state.legacyLoaded = true;
       }
       render();
     }
 
+    const allPassed = (golden) => Object.values(golden.results).every((result) => result.passed);
+
     function render() {
-      const font = state.fonts.find((item) => item.cut === state.cut);
-      const done = (golden) => golden.status !== "pending" && golden.passed;
+      const done = (golden) => golden.status !== "pending" && allPassed(golden);
       const showDone = $("#show-done").checked;
       $("#done-count").textContent = state.data.goldens.filter(done).length;
       // Broken confirmed goldens first: they are regressions. Then the ones waiting for an answer.
@@ -117,41 +109,64 @@
         .filter(({ golden }) => showDone || !done(golden))
         .sort((a, b) => rank(a.golden) - rank(b.golden) || a.index - b.index);
       if (!order.length) {
-        $("#goldens").innerHTML = `<div class="empty">Every golden is confirmed and matching. ✓</div>`;
+        $("#goldens").innerHTML = `<div class="empty">Every golden is confirmed and matching in every cut. ✓</div>`;
         return;
       }
-      $("#goldens").innerHTML = order.map(({ golden, index }) => {
-        const fixed = golden.status === "fixed";
-        const verdict = golden.passed
-          ? `<span class="verdict pass">✓ ${fixed ? "as accepted" : "matches CMs"}</span>`
-          : `<span class="verdict fail">✗ ${fixed ? "changed since accepted" : "differs from CMs"}</span>`;
-        const border = golden.status === "pending" ? "" : golden.passed ? "ok" : "fail";
-        const draws = golden.produced !== golden.keys ? `<div class="draws">the font draws <code>${escape(golden.produced)}</code></div>` : "";
-        const [piece, keys] = Object.entries(golden.suggestion || {})[0] || [];
-        const suggest = piece && golden.status === "ok"
-          ? `<button class="map" data-piece="${escape(piece)}" data-keys="${escape(keys)}">Map <b>${escape(piece)}</b> = <code>${escape(keys)}</code></button>`
-          : "";
-        return `<section class="golden ${border}" data-index="${index}">
-          <div class="name"><b>${escape(golden.latin)}</b><span class="chip ${golden.status}">${golden.status}</span>${verdict}</div>
-          <div class="renders">
-            <figure><span class="v ref">${escape(golden.text)}</span><figcaption>Unicode</figcaption></figure>
-            <figure><span class="v cms" style="font-family:'${font.css}'">${escape(golden.text)}</span><figcaption>Revived</figcaption></figure>
-            <figure><span class="v cms typed" style="font-family:'legacy-${state.cut}'">${escape(golden.keys)}</span><figcaption>CMs typed</figcaption></figure>
+      $("#goldens").innerHTML = order.map(({ golden, index }) => row(golden, index)).join("");
+    }
+
+    function row(golden, index) {
+      const fixed = golden.status === "fixed";
+      const failing = state.data.cuts.filter((cut) => !golden.results[cut.cut].passed);
+      const verdict = !failing.length
+        ? `<span class="verdict pass">✓ ${fixed ? "as accepted" : "matches CMs"}, all cuts</span>`
+        : `<span class="verdict fail">✗ ${fixed ? "changed since accepted" : "differs from CMs"}: ${failing.map((cut) => escape(cut.name)).join(", ")}</span>`;
+      const border = golden.status === "pending" ? "" : failing.length ? "fail" : "ok";
+      const cuts = state.data.cuts.map((cut) => {
+        const result = golden.results[cut.cut];
+        return `<div class="cut ${result.passed ? "" : "fail"}">
+          <div class="cut-name"><span>${escape(cut.name)}</span><span class="${result.passed ? "pass" : "fail"}">${result.passed ? "✓" : "✗"}</span></div>
+          <div class="pair">
+            <figure><span class="v cms" style="font-family:'${state.fonts[cut.cut]}'">${escape(golden.text)}</span><figcaption>Revived</figcaption></figure>
+            <figure><span class="v cms typed" style="font-family:'legacy-${cut.cut}'">${escape(golden.keys)}</span><figcaption>CMs typed</figcaption></figure>
           </div>
-          <div class="controls">
-            <div class="row">
-              <input value="${escape(golden.keys)}" spellcheck="false" autocomplete="off" aria-label="CMs keys for ${escape(golden.latin)}">
-              <button data-status="ok">Confirm ↵</button>
-              <button data-status="fixed" class="secondary" title="Our font differs from CMs here on purpose: pin what it draws now">Differs on purpose</button>
-            </div>
-            ${draws}${suggest}
-          </div>
-        </section>`;
+        </div>`;
       }).join("");
+      // Cuts usually draw the same keys; name the cuts only when they differ.
+      const produced = {};
+      for (const cut of state.data.cuts) {
+        const keys = golden.results[cut.cut].produced;
+        if (keys !== golden.keys) (produced[keys] ||= []).push(cut.name);
+      }
+      const variants = Object.entries(produced);
+      const draws = variants.length
+        ? `<div class="draws">the font draws ${variants.map(([keys, names]) =>
+            `<code>${escape(keys)}</code>${variants.length > 1 || names.length < state.data.cuts.length ? ` (${names.map(escape).join(", ")})` : ""}`).join("; ")}</div>`
+        : "";
+      const suggestion = state.data.cuts.map((cut) => golden.results[cut.cut].suggestion).find(Boolean);
+      const [piece, keys] = Object.entries(suggestion || {})[0] || [];
+      const map = piece && golden.status === "ok"
+        ? `<button class="map" data-piece="${escape(piece)}" data-keys="${escape(keys)}">Map <b>${escape(piece)}</b> = <code>${escape(keys)}</code></button>`
+        : "";
+      return `<section class="golden ${border}" data-index="${index}">
+        <div class="name"><b>${escape(golden.latin)}</b><span class="chip ${golden.status}">${golden.status}</span>${verdict}</div>
+        <div class="renders">
+          <figure><span class="v ref">${escape(golden.text)}</span><figcaption>Unicode</figcaption></figure>
+          ${cuts}
+        </div>
+        <div class="controls">
+          <div class="row">
+            <input value="${escape(golden.keys)}" spellcheck="false" autocomplete="off" aria-label="CMs keys for ${escape(golden.latin)}">
+            <button data-status="ok">Confirm ↵</button>
+            <button data-status="fixed" class="secondary" title="Our font differs from CMs here on purpose: pin what every cut draws now">Differs on purpose</button>
+          </div>
+          ${draws}${map}
+        </div>
+      </section>`;
     }
 
     function rank(golden) {
-      if (golden.status !== "pending" && !golden.passed) return 0;
+      if (golden.status !== "pending" && !allPassed(golden)) return 0;
       if (golden.status === "pending") return 1;
       return 2;
     }
@@ -160,22 +175,17 @@
       state.data = await fetch("/api/golden", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ index, keys, status, cut: state.cut }),
+        body: JSON.stringify({ index, keys, status }),
       }).then((response) => response.json());
       render();
       document.querySelector(".golden input")?.focus();
     }
 
-    $("#cut").addEventListener("change", (event) => {
-      state.cut = event.target.value;
-      try { localStorage.setItem("cmsr.goldens.cut", state.cut); } catch {}
-      load();
-    });
     $("#show-done").addEventListener("change", render);
     $("#goldens").addEventListener("input", (event) => {
       const section = event.target.closest(".golden");
       if (!section) return;
-      section.querySelector(".v.typed").textContent = event.target.value;
+      section.querySelectorAll(".v.typed").forEach((element) => { element.textContent = event.target.value; });
     });
     $("#goldens").addEventListener("focusin", (event) => {
       document.querySelectorAll(".golden.focus").forEach((element) => element.classList.remove("focus"));
@@ -194,9 +204,9 @@
         await fetch("/api/map", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: map.dataset.piece, keys: map.dataset.keys, golden: latin, cut: state.cut }),
+          body: JSON.stringify({ name: map.dataset.piece, keys: map.dataset.keys, golden: latin }),
         });
-        await reloadFonts();
+        await loadFonts();
         await load();
         return;
       }
@@ -204,7 +214,7 @@
       const section = event.target.closest(".golden");
       confirm(Number(section.dataset.index), section.querySelector("input").value, event.target.dataset.status);
     });
-    boot();
+    loadFonts().then(load);
   </script>
 </body>
 </html>

@@ -12,7 +12,7 @@ import webbrowser
 from functools import cache
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 from fontTools import unicodedata
 from fontTools.pens.boundsPen import BoundsPen
@@ -186,16 +186,25 @@ def _build(cut_id: str) -> dict:
     return report
 
 
-def _goldens(cut_id: str) -> dict:
-    cut = config.CUTS[cut_id]
-    if not cut.output_path.exists():
-        build(cut_id)
-    legacy = LegacyFont.open(cut_id)
+def _goldens() -> dict:
+    """Every golden checked in every cut: one confirmation accepts all three, so all three show."""
+
+    cuts = []
+    for cut in config.CUTS.values():
+        if not cut.output_path.exists():
+            build(cut.id)
+        cuts.append((cut, LegacyFont.open(cut.id)))
     rows = []
     for golden in goldens.load():
-        result = goldens.check(golden, cut.output_path, legacy)
-        rows.append({**golden.__dict__, "produced": result.produced, "passed": result.passed, "suggestion": result.suggestion})
-    return {"cut": cut_id, "legacyFont": f"/cms/{cut.legacy_path.name}", "goldens": rows}
+        results = {}
+        for cut, legacy in cuts:
+            result = goldens.check(golden, cut.output_path, legacy)
+            results[cut.id] = {"produced": result.produced, "passed": result.passed, "suggestion": result.suggestion}
+        rows.append({**golden.__dict__, "results": results})
+    return {
+        "cuts": [{"cut": cut.id, "name": cut.name, "legacyFont": f"/cms/{cut.legacy_path.name}"} for cut, _ in cuts],
+        "goldens": rows,
+    }
 
 
 def _fonts() -> list[dict]:
@@ -235,9 +244,8 @@ class Handler(SimpleHTTPRequestHandler):
                 mapping = Mapping.load()
                 return self._json({**_static_data(), **_mapping_state(mapping), "builds": last_builds})
         if path == "/api/goldens":
-            cut_id = parse_qs(urlparse(self.path).query).get("cut", [config.DEFAULT_CUT])[0]
             with lock:
-                return self._json(_goldens(cut_id))
+                return self._json(_goldens())
         if path == "/api/fonts":
             with lock:
                 return self._json(_fonts())
@@ -285,7 +293,7 @@ class Handler(SimpleHTTPRequestHandler):
                     mapping.save()
                     for cut_id in config.CUTS:
                         build(cut_id)
-                    return self._json(_goldens(body.get("cut", config.DEFAULT_CUT)))
+                    return self._json(_goldens())
                 if path == "/api/golden":
                     items = goldens.load()
                     golden = items[int(body["index"])]
@@ -295,7 +303,7 @@ class Handler(SimpleHTTPRequestHandler):
                     if golden.status == "fixed":
                         goldens.pin(golden)
                     goldens.save(items)
-                    return self._json(_goldens(body.get("cut", config.DEFAULT_CUT)))
+                    return self._json(_goldens())
                 if path == "/api/build":
                     return self._json(_build(body.get("cut", config.DEFAULT_CUT)))
         except (KeyError, ValueError) as error:

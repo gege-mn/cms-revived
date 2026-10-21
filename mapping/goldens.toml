@@ -150,7 +150,7 @@ latin = "jöblel"
 text = "ᠵᠥᠪᠯᠡᠯ"
 keys = "Joible&"
 status = "fixed"
-snapshot = { CMSHR = "6f3d6630220a", CMSUB = "6989f9a6df09", CMSUG = "510867fa7f65" }
+snapshot = { CMSHR = "ab477b2986bf", CMSUB = "be1050969f67", CMSUG = "23c262d89727" }
 
 [[golden]]
 latin = "intēr"

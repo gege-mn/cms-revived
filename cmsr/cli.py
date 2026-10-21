@@ -81,7 +81,7 @@ def _check(args: argparse.Namespace) -> None:
         from .editor import _goldens, _mapping_state, _static_data
         from .mapping import Mapping
 
-        _static_data(), _mapping_state(Mapping.load()), _goldens(config.DEFAULT_CUT)
+        _static_data(), _mapping_state(Mapping.load()), _goldens()
         print("editor data: ok")
     except Exception as error:  # the editor would fail to load: say so here, not in the browser
         failed = True
