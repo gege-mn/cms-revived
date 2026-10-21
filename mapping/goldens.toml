@@ -2,6 +2,7 @@
 #
 # status  pending  keys proposed, waiting for a human eye
 #         ok       confirmed: the build must draw the word exactly as these keys did
+#         fixed    differs from CMs on purpose: the build must keep drawing the snapshot
 #
 # The goldens page (/goldens in the editor) rewrites this file.
 
@@ -9,7 +10,7 @@
 latin = "ene"
 text = "ᠡᠨᠡ"
 keys = "fna"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "mongγol"
@@ -20,7 +21,7 @@ status = "pending"
 [[golden]]
 latin = "altan"
 text = "ᠠᠯᠲᠠᠨ"
-keys = "feldEa"
+keys = "feldea"
 status = "pending"
 
 [[golden]]
@@ -33,7 +34,7 @@ status = "pending"
 latin = "ger"
 text = "ᠭᠡᠷ"
 keys = "kE*"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "usu"
@@ -44,7 +45,7 @@ status = "pending"
 [[golden]]
 latin = "sar-a"
 text = "ᠰᠠᠷ᠎ᠠ"
-keys = "SE*t"
+keys = "Se*t"
 status = "pending"
 
 [[golden]]
@@ -56,7 +57,7 @@ status = "pending"
 [[golden]]
 latin = "temege"
 text = "ᠲᠡᠮᠡᠭᠡ"
-keys = "DEmEkt"
+keys = "Demekt"
 status = "pending"
 
 [[golden]]
