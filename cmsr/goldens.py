@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Literal
 
 import uharfbuzz as hb
+from fontTools.pens.boundsPen import BoundsPen
 from fontTools.ttLib import TTFont
 
 from .config import ROOT
@@ -25,6 +26,8 @@ from .legacy import LegacyFont
 GOLDENS_FILE = ROOT / "mapping" / "goldens.toml"
 PLACEHOLDER = "□"
 LIFTED = "·"
+TRIMMED = "✂"
+DRAWN = "✎"
 
 HEADER = """\
 # Goldens: words and the CMs keys that type them, checked against every build.
@@ -89,14 +92,28 @@ def save(goldens: list[Golden], path: Path = GOLDENS_FILE) -> None:
 def check(golden: Golden, font_path: Path, legacy: LegacyFont) -> Result:
     built = _built_leaves(font_path, golden.text)
     keys_by_glyph = {name: key for key, name in legacy.keyed_glyphs().items()}
-    produced = "".join(
-        keys_by_glyph.get(name, LIFTED if name.startswith("cms.") else PLACEHOLDER) for name, _, _ in built
-    )
+    gaps = _gaps(font_path, golden.text)
+    produced = ""
+    for name, x, _ in built:
+        while gaps and gaps[0] < x:
+            produced += " "
+            gaps.pop(0)
+        produced += _typed(name, keys_by_glyph)
     signature = _signature(built)
     if golden.status == "fixed":
         return Result(produced, signature == golden.snapshot.get(legacy.cut.id), signature)
     passed = _same(built, _legacy_leaves(legacy, golden.keys))
     return Result(produced, passed, signature, None if passed else _suggest(built, produced, golden.keys))
+
+
+def _typed(name: str, keys_by_glyph: dict[str, str]) -> str:
+    if name in keys_by_glyph:
+        return keys_by_glyph[name]
+    if name.endswith(".trim") and name[: -len(".trim")] in keys_by_glyph:
+        return keys_by_glyph[name[: -len(".trim")]] + TRIMMED
+    if name.startswith("cmsr."):
+        return DRAWN
+    return LIFTED if name.startswith("cms.") else PLACEHOLDER
 
 
 def _suggest(built: list[tuple[str, float, float]], produced: str, typed: str) -> dict[str, str] | None:
@@ -157,6 +174,25 @@ def _built_leaves(path: Path, text: str) -> list[tuple[str, float, float]]:
         walk(hb_font.glyph_to_string(info.codepoint), pen + position.x_offset, position.y_offset)
         pen += position.x_advance
     return sorted(leaves, key=lambda leaf: leaf[1])
+
+
+def _gaps(path: Path, text: str) -> list[float]:
+    """Where the shaped text has blank space of its own, such as the gap an MVS puts before a suffix."""
+
+    hb_font, ttf = _font(path, path.stat().st_mtime_ns)
+    buffer = hb.Buffer()
+    buffer.add_str(text)
+    buffer.guess_segment_properties()
+    hb.shape(hb_font, buffer)
+    glyph_set = ttf.getGlyphSet()
+    found, pen = [], 0
+    for info, position in zip(buffer.glyph_infos, buffer.glyph_positions):
+        bounds = BoundsPen(glyph_set)
+        glyph_set[hb_font.glyph_to_string(info.codepoint)].draw(bounds)
+        if position.x_advance and bounds.bounds is None:
+            found.append(pen)
+        pen += position.x_advance
+    return found
 
 
 def _legacy_leaves(legacy: LegacyFont, keys: str) -> list[tuple[str, float, float]]:

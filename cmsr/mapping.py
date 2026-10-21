@@ -36,6 +36,8 @@ HEADER = """\
 #         on = 2 sets the mark on the third key, tooth tip to tooth tip, in every cut
 # shift   move a key and everything after it along the stem, in font units, e.g.
 #         shift = { "2" = -200 } slides the third key back 200 to tighten a join
+# trim    true cuts the stem the last key runs on past its body: CMs ends o and B with a
+#         stub of nirugu that a word-final form should not have
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
 #         "@arch" names a group from [groups]; a piece named on its own wins over a group;
@@ -100,6 +102,7 @@ class Entry:
     marks: list[Mark] = field(default_factory=list)
     after: dict[str, str] = field(default_factory=dict)
     shift: dict[int, int] = field(default_factory=dict)
+    trim: bool = False
 
     def keys_for(self, cut_id: str) -> str | None:
         return self.cuts.get(cut_id, self.keys)
@@ -116,6 +119,8 @@ class Entry:
             found["after"] = self.after
         if self.shift:
             found["shift"] = {str(index): units for index, units in self.shift.items()}
+        if self.trim:
+            found["trim"] = True
         if self.note:
             found["note"] = self.note
         return found
@@ -154,6 +159,7 @@ class Mapping:
                         marks=[Mark.from_dict(mark) for mark in fields.get("marks", [])],
                         after=dict(fields.get("after", {})),
                         shift={int(index): int(units) for index, units in fields.get("shift", {}).items()},
+                        trim=bool(fields.get("trim", False)),
                     )
         return cls(entries, path, groups)
 
@@ -199,6 +205,8 @@ class Mapping:
                 found.append(f"{entry.name}: unknown status {entry.status!r}")
             if entry.status in ("draft", "ok") and not (entry.keys or entry.marks):
                 found.append(f"{entry.name}: {entry.status} without keys")
+            if entry.trim and not (entry.keys or entry.cuts):
+                found.append(f"{entry.name}: trim without keys")
             if entry.status == "auto" and entry.kind not in AUTO_KINDS:
                 found.append(f"{entry.name}: only ligatures, pre-MVS and whole forms can be auto")
             for cut_id, font in fonts.items():
@@ -280,6 +288,8 @@ def _inline(entry: Entry) -> str:
     if entry.shift:
         shifts = ", ".join(f'"{index}" = {units}' for index, units in sorted(entry.shift.items()))
         fields.append(f"shift = {{ {shifts} }}")
+    if entry.trim:
+        fields.append("trim = true")
     if entry.after:
         rules = ", ".join(f"{_string(previous)} = {_string(keys)}" for previous, keys in entry.after.items())
         fields.append(f"after = {{ {rules} }}")

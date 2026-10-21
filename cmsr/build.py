@@ -56,7 +56,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
             _copy_drawing(ufo, drawings[target.glyph], target.glyph)
             result.drawn.append(entry.name)
         elif keys or entry.marks:
-            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks, entry.shift)
+            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks, entry.shift, stem if entry.trim else None)
             result.keyed.append(entry.name)
         elif target.kind in ("piece", "char"):
             _placeholder(ufo, target.glyph, stem)
@@ -73,7 +73,8 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
         if drawn is not None:
             _copy_drawing(ufo, drawn, name)
         else:
-            _compose_keys(ufo, legacy, name, keys, mapping.get(piece).marks)
+            entry = mapping.get(piece)
+            _compose_keys(ufo, legacy, name, keys, entry.marks, trim=stem if entry.trim else None)
     neighbours.add_inner_forms(ufo, found_rules)
     _add_shorter_ligatures(ufo, mapping, found_rules)
 
@@ -169,7 +170,13 @@ def _import_legacy(ufo: Font, legacy: LegacyFont) -> None:
 
 
 def _compose_keys(
-    ufo: Font, legacy: LegacyFont, glyph_name: str, keys: str, marks: list[Mark] = (), shift: dict[int, int] | None = None
+    ufo: Font,
+    legacy: LegacyFont,
+    glyph_name: str,
+    keys: str,
+    marks: list[Mark] = (),
+    shift: dict[int, int] | None = None,
+    trim: tuple[float, float] | None = None,
 ) -> None:
     glyph = ufo.newGlyph(glyph_name)
     x = 0
@@ -178,6 +185,11 @@ def _compose_keys(
         x += (shift or {}).get(index, 0)
         name = legacy.glyph_name(key)
         origins.append(x)
+        if trim and index == len(keys) - 1:
+            trimmed, advance = _trimmed(ufo, legacy, name, trim)
+            glyph.components.append(Component(trimmed, Transform(dx=x)))
+            x += advance
+            continue
         glyph.components.append(Component(legacy_glyph_name(name), Transform(dx=x)))
         x += legacy.advance(name)
     for mark in marks:
@@ -204,6 +216,27 @@ def _mark_glyph(ufo: Font, legacy: LegacyFont, mark: Mark) -> str:
             for operator, arguments in contours[index]:
                 getattr(pen, operator)(*arguments)
     return lifted
+
+
+def _trimmed(ufo: Font, legacy: LegacyFont, name: str, stem: tuple[float, float]) -> tuple[str, float]:
+    """The key with its stem cut where its body ends: what hangs below or rises above it."""
+
+    bottom, top = stem
+    contours = legacy.contours(name)
+    points = [point for contour in contours for _, arguments in contour for point in arguments if point is not None]
+    body = [x for x, y in points if y < bottom - 1 or y > top + 1]
+    end = max(body) if body else legacy.advance(name)
+    trimmed = f"{legacy_glyph_name(name)}.trim"
+    if trimmed not in ufo:
+        glyph = ufo.newGlyph(trimmed)
+        pen = glyph.getPen()
+        # The stem past the body is a plain bar, so pulling its end points back is the cut.
+        clamp = lambda point: (min(point[0], end), point[1]) if bottom - 1 <= point[1] <= top + 1 else point  # noqa: E731
+        for contour in contours:
+            for operator, arguments in contour:
+                getattr(pen, operator)(*(clamp(point) if point is not None else None for point in arguments))
+        glyph.width = end
+    return trimmed, end
 
 
 def _rule_drawing(drawings: Font | None, mapping: Mapping, piece: str, previous: str):

@@ -8,6 +8,8 @@
 #         on = 2 sets the mark on the third key, tooth tip to tooth tip, in every cut
 # shift   move a key and everything after it along the stem, in font units, e.g.
 #         shift = { "2" = -200 } slides the third key back 200 to tighten a join
+# trim    true cuts the stem the last key runs on past its body: CMs ends o and B with a
+#         stub of nirugu that a word-final form should not have
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
 #         "@arch" names a group from [groups]; a piece named on its own wins over a group;
@@ -44,7 +46,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "I.fina" = { keys = "I", status = "draft", note = "CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
 "I.init" = { keys = "J", status = "draft", note = "from editor: j · isolated" }
 "I.medi" = { keys = "i", after = { "@arch" = "u" }, status = "draft", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial. | u is the wavy shilbe that joins an arch directly (bi, pi, hi, gi)" }
-"O.fina" = { keys = "o", status = "draft", note = "has trailing nirugu" }
+"O.fina" = { keys = "o", trim = true, status = "draft", note = "o, with its trailing stub of nirugu cut off (given by hand, from rediu)" }
 "O.medi" = { keys = "o", status = "ok", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
 "U.fina" = { keys = "O", status = "draft", note = "from editor: o · final, u · final, oe · final, ue · final" }
 "U.isol" = { keys = "O", status = "draft" }
@@ -136,7 +138,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 [ligatures]
 "BAa.isol" = { status = "auto" }  # required
 "BI.isol" = { status = "auto" }  # required
-"BO.isol" = { status = "auto" }  # required
+"BO.isol" = { keys = "B", trim = true, status = "draft", note = "bo/bu is B, with the trailing stub cut as for o" }  # required
 "BUe.isol" = { status = "auto" }  # required
 "BW.isol" = { status = "auto" }  # required
 "FAa.isol" = { status = "auto" }  # required
@@ -206,8 +208,8 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "PW.init" = { status = "auto" }  # required
 "BA.medi" = { status = "auto" }  # required
 "BI.medi" = { status = "auto" }  # required
-"BO.medi" = { status = "auto" }  # required
-"BOI.medi" = { status = "auto" }  # required
+"BO.medi" = { keys = "B", status = "draft", note = "given by hand: bo/bu is B (abuγad = feBgeoa)" }  # required
+"BOI.medi" = { keys = "Bi", status = "draft", note = "given by hand: bö/bü is Bi" }  # required
 "BW.medi" = { status = "auto" }  # required
 "FA.medi" = { status = "auto" }  # required
 "FI.medi" = { status = "auto" }  # required
@@ -241,7 +243,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "PW.medi" = { status = "auto" }  # required
 "BAa.fina" = { status = "auto" }  # required
 "BI.fina" = { status = "auto" }  # required
-"BO.fina" = { status = "auto" }  # required
+"BO.fina" = { keys = "B", trim = true, status = "draft", note = "bo/bu is B, with the trailing stub cut as for o" }  # required
 "BUe.fina" = { status = "auto" }  # required
 "BW.fina" = { status = "auto" }  # required
 "FAa.fina" = { status = "auto" }  # required
