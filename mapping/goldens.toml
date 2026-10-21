@@ -204,7 +204,8 @@ status = "ok"
 latin = "kino"
 text = "ᠻᠢᠨᠣ᠋"
 keys = "\\uno"
-status = "pending"
+status = "fixed"
+snapshot = { CMSHR = "2d1241771ffd", CMSUB = "d077ed24de73", CMSUG = "82365f0df678" }
 
 [[golden]]
 latin = "bü"
