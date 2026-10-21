@@ -18,6 +18,7 @@ from typing import Literal
 
 import uharfbuzz as hb
 from fontTools.pens.boundsPen import BoundsPen
+from fontTools.pens.recordingPen import RecordingPen
 from fontTools.ttLib import TTFont
 
 from .config import ROOT
@@ -99,7 +100,7 @@ def check(golden: Golden, font_path: Path, legacy: LegacyFont) -> Result:
             produced += " "
             gaps.pop(0)
         produced += _typed(name, keys_by_glyph)
-    signature = _signature(built)
+    signature = _signature(built, font_path)
     if golden.status == "fixed":
         return Result(produced, signature == golden.snapshot.get(legacy.cut.id), signature)
     passed = _same(built, _legacy_leaves(legacy, golden.keys))
@@ -129,13 +130,24 @@ def _suggest(built: list[tuple[str, float, float]], produced: str, typed: str) -
     return {holes[0][1:]: typed[len(before) : len(typed) - len(after)]}
 
 
-def _signature(leaves: list[tuple[str, float, float]]) -> str:
+def _signature(leaves: list[tuple[str, float, float]], path: Path) -> str:
     """A short fingerprint of what the font draws, for a golden that differs on purpose."""
 
     if not leaves:
         return ""
+    _, ttf = _font(path, path.stat().st_mtime_ns)
+    glyph_set = ttf.getGlyphSet()
+
+    def mark(name: str) -> str:
+        # A hand drawing can be redrawn under the same name; dEgi's outlines never change.
+        if not name.startswith("cmsr."):
+            return name
+        recording = RecordingPen()
+        glyph_set[name].draw(recording)
+        return f"{name}#{hashlib.sha1(repr(recording.value).encode()).hexdigest()[:8]}"
+
     x0 = leaves[0][1]
-    text = ";".join(f"{name}@{round(x - x0)},{round(y)}" for name, x, y in leaves)
+    text = ";".join(f"{mark(name)}@{round(x - x0)},{round(y)}" for name, x, y in leaves)
     return hashlib.sha1(text.encode()).hexdigest()[:12]
 
 
