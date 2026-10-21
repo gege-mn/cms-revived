@@ -33,7 +33,8 @@ HEADER = """\
 # status  todo   not mapped yet; the build draws a placeholder box
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
-#         new    CMs has no such piece; drawn in drawings/<cut>.ufo
+#         new    needs a new drawing in drawings/<cut>.ufo: missing from CMs, or broken
+#                there; keys, if any, stand in until it is drawn
 #         auto   built from its parts (ligatures, pre-MVS forms, whole forms)
 #
 # pieces     single written units in a joining position: everything is built from these

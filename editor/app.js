@@ -278,7 +278,7 @@ function renderTarget() {
   const statusButtons = [
     ["ok", "Confirm", "↵"],
     ["draft", "Draft", ""],
-    ["new", "Not in CMs", ""],
+    ["new", "Needs drawing", ""],
     ["todo", "Todo", ""],
     ...(AUTO_KINDS.includes(info.kind) ? [["auto", "Use parts", ""]] : []),
   ];

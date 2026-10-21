@@ -36,7 +36,7 @@ uv run cmsr status          # progress, conflicts, problems
 |---|---|
 | `cms/` | the 1998 fonts, read-only |
 | `mapping/pieces.toml` | the mapping, written by the editor and by hand |
-| `drawings/<CUT>.ufo` | glyphs CMs never had, drawn new (status `new`); optional |
+| `drawings/<CUT>.ufo` | glyphs drawn new (status `new`): missing from CMs, or fixed; optional |
 | `cmsr/` | targets, build, shaping check, editor server |
 | `editor/` | the editor page |
 | `reference/` | Noto Sans Mongolian, for comparison only |
