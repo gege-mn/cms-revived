@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CMs Revived Specimen</title>
+  <style>
+    @font-face { font-family: "Reference"; src: url("/reference/NotoSansMongolian-Regular.ttf"); }
+    :root { --bg: #f6f5f2; --panel: #fff; --ink: #1d1c1a; --muted: #77736b; --line: #e3e0d9; --accent: #b4441c; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) { --bg: #161514; --panel: #201f1d; --ink: #ecebe7; --muted: #9a958c; --line: #34322e; --accent: #f08a5d; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.4 -apple-system, system-ui, sans-serif; }
+    header { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--line); }
+    header strong { font-size: 15px; }
+    header label { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+    header a { color: var(--accent); margin-left: auto; }
+    .cuts { display: flex; gap: 6px; }
+    .cuts button { padding: 3px 10px; border: 1px solid var(--line); border-radius: 99px; background: none; color: inherit; cursor: pointer; }
+    .cuts button.on { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+    main { padding: 16px; display: flex; flex-direction: column; gap: 18px; }
+    section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+    section h2 { margin: 0 0 2px; font-size: 13px; font-weight: 600; }
+    section p { margin: 0 0 10px; font-size: 12px; color: var(--muted); }
+    .text { writing-mode: vertical-lr; height: var(--column, 460px); max-width: 100%; overflow-x: auto; font-size: var(--size, 28px); line-height: 1.55; white-space: pre-wrap; }
+    .text.reference { font-family: "Reference"; }
+    textarea { width: 100%; min-height: 70px; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: inherit; font: 15px "Reference"; }
+    .status { font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>CMs Revived</strong>
+    <div class="cuts" id="cuts"></div>
+    <label>Size <input id="size" type="range" min="16" max="72" value="28"></label>
+    <label>Column <input id="column" type="range" min="200" max="900" value="460"></label>
+    <label><input id="compare" type="checkbox"> Noto beside</label>
+    <span class="status" id="status">loading fonts…</span>
+    <a href="/">editor</a>
+  </header>
+  <main>
+    <textarea id="input" spellcheck="false" aria-label="Text"></textarea>
+    <div id="out"></div>
+  </main>
+  <script>
+    "use strict";
+    const $ = (selector) => document.querySelector(selector);
+    const ui = (() => {
+      try { return JSON.parse(localStorage.getItem("cmsr.specimen") || "{}"); } catch { return {}; }
+    })();
+    const save = () => { try { localStorage.setItem("cmsr.specimen", JSON.stringify(ui)); } catch {} };
+    let fonts = [];
+
+    async function boot() {
+      const [fontList, sample] = await Promise.all([
+        fetch("/api/fonts").then((response) => response.json()),
+        fetch("/editor/specimen.txt").then((response) => response.text()),
+      ]);
+      fonts = fontList;
+      await Promise.all(fonts.map(async (font) => {
+        font.css = `specimen-${font.cut}-${font.revision}`;
+        const face = new FontFace(font.css, `url(${font.url}?v=${font.revision})`);
+        await face.load();
+        document.fonts.add(face);
+      }));
+      ui.shown ??= fonts.map((font) => font.cut);
+      $("#input").value = ui.text ?? sample.trim();
+      $("#size").value = ui.size ?? 28;
+      $("#column").value = ui.column ?? 460;
+      $("#compare").checked = Boolean(ui.compare);
+      $("#status").textContent = `built ${new Date(Math.max(...fonts.map((font) => font.revision / 1e6))).toLocaleTimeString()}`;
+      renderCuts();
+      render();
+    }
+
+    function renderCuts() {
+      $("#cuts").innerHTML = fonts
+        .map((font) => `<button data-cut="${font.cut}" class="${ui.shown.includes(font.cut) ? "on" : ""}">${font.name}</button>`)
+        .join("");
+    }
+
+    function render() {
+      document.documentElement.style.setProperty("--size", `${$("#size").value}px`);
+      document.documentElement.style.setProperty("--column", `${$("#column").value}px`);
+      const text = $("#input").value;
+      const sections = fonts.filter((font) => ui.shown.includes(font.cut)).map((font) => block(font.family, `font-family:'${font.css}'`, text));
+      if ($("#compare").checked) sections.push(block("Noto Sans Mongolian (reference)", "", text, "reference"));
+      $("#out").innerHTML = sections.join("");
+    }
+
+    function block(title, style, text, className = "") {
+      const escaped = text.replace(/[&<>]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[character]);
+      return `<section><h2>${title}</h2><p>dEgi, 1998 · Unicode rework 2026</p><div class="text ${className}" style="${style}">${escaped}</div></section>`;
+    }
+
+    $("#cuts").addEventListener("click", (event) => {
+      const cut = event.target.closest("button")?.dataset.cut;
+      if (!cut) return;
+      ui.shown = ui.shown.includes(cut) ? ui.shown.filter((value) => value !== cut) : [...ui.shown, cut];
+      save(); renderCuts(); render();
+    });
+    for (const id of ["size", "column", "compare"]) {
+      $(`#${id}`).addEventListener("input", (event) => {
+        ui[id] = event.target.type === "checkbox" ? event.target.checked : Number(event.target.value);
+        save(); render();
+      });
+    }
+    $("#input").addEventListener("input", (event) => { ui.text = event.target.value; save(); render(); });
+    boot();
+  </script>
+</body>
+</html>

@@ -25,6 +25,7 @@ change there reaches all three cuts and all 216 letter forms.
 
 ```sh
 uv run cmsr editor --open   # map and review pieces, see real shaping live
+                            # the specimen (all cuts, real text) is at /specimen
 uv run cmsr build           # build all three cuts into dist/
 uv run cmsr check           # build, then run the 3,689 shaping cases
 uv run cmsr status          # progress, conflicts, problems
@@ -40,6 +41,7 @@ uv run cmsr status          # progress, conflicts, problems
 | `cmsr/` | targets, build, shaping check, editor server |
 | `editor/` | the editor page |
 | `reference/` | Noto Sans Mongolian, for comparison only |
+| `reference/corpora/` | mongfontbuilder's news corpora, fetched on demand, not in git |
 
 ## What counts as done
 

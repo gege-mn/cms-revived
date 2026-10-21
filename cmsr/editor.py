@@ -184,6 +184,25 @@ def _build(cut_id: str) -> dict:
     return report
 
 
+def _fonts() -> list[dict]:
+    """Every cut's built font, building the ones that are missing."""
+
+    found = []
+    for cut in config.CUTS.values():
+        if not cut.output_path.exists():
+            build(cut.id)
+        found.append(
+            {
+                "cut": cut.id,
+                "name": cut.name,
+                "family": cut.family,
+                "url": f"/dist/{cut.output_path.name}",
+                "revision": cut.output_path.stat().st_mtime_ns,
+            }
+        )
+    return found
+
+
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, directory=str(config.ROOT), **kwargs)
@@ -201,8 +220,13 @@ class Handler(SimpleHTTPRequestHandler):
             with lock:
                 mapping = Mapping.load()
                 return self._json({**_static_data(), **_mapping_state(mapping), "builds": last_builds})
+        if path == "/api/fonts":
+            with lock:
+                return self._json(_fonts())
         if path == "/" or path == "/index.html":
             self.path = "/editor/index.html"
+        elif path == "/specimen":
+            self.path = "/editor/specimen.html"
         elif not (path.startswith("/editor/") or path.startswith("/dist/") or path.startswith("/reference/")):
             return self.send_error(404)
         super().do_GET()
@@ -253,7 +277,7 @@ def serve(port: int = 8787, open_browser: bool = False) -> None:
     else:
         raise SystemExit(f"no free port in {port}–{port + 19}")
     url = f"http://127.0.0.1:{server.server_address[1]}/"
-    print(f"editor at {url}  (Ctrl+C to stop)")
+    print(f"editor at {url}  specimen at {url}specimen  (Ctrl+C to stop)")
     if open_browser:
         threading.Timer(0.3, webbrowser.open, (url,)).start()
     try:
