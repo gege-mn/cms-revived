@@ -24,7 +24,7 @@
 
 [pieces]
 "A.isol" = { keys = "ft", status = "ok", note = "from editor: e · isolated" }
-"Aa.isol" = { keys = "t", status = "draft" }
+"Aa.isol" = { keys = "T", status = "draft", note = "T is the orkhits for the a/e after an MVS (chachlag), with the gap built in: cinu-a is typed CinOT. Lowercase t is the ordinary orkhits (bichig's feminine final g)." }
 "A.init" = { keys = "f", status = "ok", note = "from editor: e · initial, a · isolated (split), a · initial (split), i · isolated (split), i · initial (split), o · isolated (split), o · initial (split), u · isolated (split), u · initial (split), oe · isolated (split), ue · isolated (split), ee · isolated (split), ee · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | u · initial: spine" }
 "A.fina" = { keys = "a", status = "ok", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
 "A.medi" = { keys = "e", after = { "G.medi" = "E", "B.init" = "E", "B.medi" = "E", "P.init" = "E", "P.medi" = "E", "G.init" = "E", "Gx.init" = "E", "Gx.medi" = "E", "F.init" = "E", "F.medi" = "E", "K2.init" = "E", "K2.medi" = "E", "K.init" = "E", "K.medi" = "E" }, status = "draft", note = "e by default; E only right after an arch: feminine g/h (G, Gx) and the b family (B, P, F, K, K2). Earlier: Noto has no leading nirugu, CMs pieces carry theirs." }
@@ -85,7 +85,7 @@
 "Dd.medi" = { keys = "oe", status = "draft", note = "from editor: d · medial" }
 "Dd.fina" = { keys = "oa", status = "draft", note = "from editor: d · final" }
 "D.fina" = { keys = "dA", status = "ok" }
-"Ch.init" = { keys = "c", status = "draft", note = "from editor: ch · isolated, ch · initial" }
+"Ch.init" = { keys = "C", status = "draft", note = "from editor: ch · isolated, ch · initial | set to C from the cinu-a example (CinOT); was 'c'" }
 "Ch.medi" = { keys = "c", status = "draft", note = "from editor: ch · medial" }
 "Ch.fina" = { keys = "cA", status = "draft", note = "from editor: ch · final" }
 "J.medi" = { status = "todo" }

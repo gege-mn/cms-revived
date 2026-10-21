@@ -219,5 +219,6 @@ def _add_controls(ufo: Font, legacy: LegacyFont) -> None:
         if name not in ufo:
             ufo.newGlyph(name).width = round(widths.get(name, 0))
         ufo[name].unicodes = [code_point]
-    narrow = ufo.newGlyph("mvs.narrow")
-    narrow.width = round(space * 0.18)
+    # The narrow MVS only ever stands before a chachlag a/e, and CMs draws that gap into the
+    # a itself (the T key starts with blank space), so the mark adds none of its own.
+    ufo.newGlyph("mvs.narrow").width = 0

@@ -28,7 +28,7 @@ status = "pending"
 latin = "edür"
 text = "ᠡᠳᠦᠷ"
 keys = "fdo*"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "ger"
@@ -45,7 +45,7 @@ status = "pending"
 [[golden]]
 latin = "sar-a"
 text = "ᠰᠠᠷ᠎ᠠ"
-keys = "Se*t"
+keys = "Se*T"
 status = "pending"
 
 [[golden]]
@@ -65,3 +65,10 @@ latin = "kümün"
 text = "ᠬᠦᠮᠦᠨ"
 keys = "koimoa"
 status = "pending"
+
+[[golden]]
+latin = "čino-a"
+text = "ᠴᠢᠨᠤ᠎ᠠ"
+keys = "CinOT"
+status = "ok"
+note = "given by hand: T carries the chachlag gap"
