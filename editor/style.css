@@ -122,7 +122,7 @@ figcaption { font-size: 11px; color: var(--muted); }
 
 .usage h3 { font-size: 14px; margin: 24px 0 10px; }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+.card { cursor: pointer; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
 .card.alt { border-style: dashed; }
 .card header { font-size: 12px; }
 .card footer { font-size: 11px; color: var(--muted); }

@@ -69,7 +69,7 @@ def _status(args: argparse.Namespace) -> None:
     for kind, counts in by_kind.items():
         summary = ", ".join(f"{status} {count}" for status, count in sorted(counts.items()))
         print(f"{kind:<9} {sum(counts.values()):>4}  {summary}")
-    conflicts = [entry.name for entry in mapping.all() if "CONFLICT" in entry.note]
+    conflicts = [entry.name for entry in mapping.all() if "CONFLICT" in entry.note and entry.status != "ok"]
     if conflicts:
         print(f"\nconflicts to settle: {' '.join(conflicts)}")
     problems = mapping.problems()

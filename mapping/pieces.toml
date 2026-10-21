@@ -6,7 +6,7 @@
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
 #         new    CMs has no such piece; drawn in drawings/<cut>.ufo
-#         auto   built from its parts (ligatures, pre-MVS forms)
+#         auto   built from its parts (ligatures, pre-MVS forms, whole forms)
 #
 # pieces     single written units in a joining position: everything is built from these
 # mvs        the shape a unit takes before an MVS, where it has one of its own
@@ -27,7 +27,7 @@
 "Ix.isol" = { status = "todo" }
 "I.fina" = { keys = "I", status = "draft", note = "from editor: i · final, i · isolated (split)" }
 "I.init" = { keys = "J", status = "draft", note = "from editor: j · isolated" }
-"I.medi" = { keys = "iU", status = "draft", note = "CONFLICT: 'J' from i · medial; 'i' from i · initial (split)" }
+"I.medi" = { keys = "i", status = "draft", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial." }
 "O.fina" = { keys = "o", status = "draft", note = "from editor: o · isolated (split), u · isolated (split)" }
 "O.medi" = { keys = "o", status = "draft", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
 "U.fina" = { keys = "O", status = "draft", note = "from editor: o · final, u · final, oe · final, ue · final" }
@@ -35,14 +35,14 @@
 "Ux.isol" = { status = "todo" }
 "O.init" = { status = "todo" }
 "Ue.fina" = { keys = "oA", status = "draft", note = "from editor: oe · isolated (split), ue · isolated (split)" }
-"W.fina" = { keys = "wA", status = "draft", note = "CONFLICT: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
-"W.medi" = { keys = "w", status = "draft", note = "CONFLICT: 'W' from ee · medial; 'w' from ee · initial (split)" }
+"W.fina" = { keys = "wA", status = "draft", note = "settled by hand; was in conflict: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
+"W.medi" = { keys = "w", status = "draft", note = "settled by hand; was in conflict: 'W' from ee · medial; 'w' from ee · initial (split)" }
 "N.init" = { keys = "N", status = "draft", note = "from editor: n · isolated, n · initial" }
 "N.medi" = { status = "todo" }
 "N.fina" = { status = "todo" }
-"G.medi" = { keys = "k", status = "draft", note = "CONFLICT: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split)" }
+"G.medi" = { keys = "k", status = "draft", note = "settled by hand; was in conflict: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split)" }
 "G.fina" = { keys = "it", status = "draft", note = "from editor: g · final, ng · final (split)" }
-"B.init" = { keys = "b", status = "draft", note = "CONFLICT: 'O' from b · isolated; 'b' from b · initial" }
+"B.init" = { keys = "b", status = "draft", note = "settled by hand; was in conflict: 'O' from b · isolated; 'b' from b · initial" }
 "B.medi" = { keys = "b", status = "draft", note = "from editor: b · medial" }
 "B.fina" = { keys = "$", status = "draft", note = "from editor: b · final" }
 "B2.fina" = { status = "todo" }
@@ -302,3 +302,6 @@
 "U+3009" = { keys = ">", status = "draft", note = "guess from the glyph sheet" }
 "U+300A" = { status = "todo" }
 "U+300B" = { status = "todo" }
+
+[forms]
+"II.medi" = { keys = "U", status = "ok", note = "CMs draws the double shilbe on one key; used by i and y medial fvs2" }

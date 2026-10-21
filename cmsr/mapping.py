@@ -15,6 +15,8 @@ from .targets import Kind, Target, is_written_form, targets
 Status = Literal["todo", "draft", "ok", "new", "auto"]
 STATUSES: tuple[Status, ...] = ("todo", "draft", "ok", "new", "auto")
 
+AUTO_KINDS: tuple[Kind, ...] = ("ligature", "mvs", "form")
+
 SECTIONS: dict[str, Kind] = {
     "pieces": "piece",
     "mvs": "mvs",
@@ -32,7 +34,7 @@ HEADER = """\
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
 #         new    CMs has no such piece; drawn in drawings/<cut>.ufo
-#         auto   built from its parts (ligatures, pre-MVS forms)
+#         auto   built from its parts (ligatures, pre-MVS forms, whole forms)
 #
 # pieces     single written units in a joining position: everything is built from these
 # mvs        the shape a unit takes before an MVS, where it has one of its own
@@ -68,7 +70,7 @@ class Entry:
 
 
 def default_entry(target: Target) -> Entry:
-    status: Status = "auto" if target.kind in ("ligature", "mvs") else "todo"
+    status: Status = "auto" if target.kind in AUTO_KINDS else "todo"
     return Entry(target.name, target.kind, status=status)
 
 
@@ -124,8 +126,8 @@ class Mapping:
                 found.append(f"{entry.name}: unknown status {entry.status!r}")
             if entry.status in ("draft", "ok") and not entry.keys:
                 found.append(f"{entry.name}: {entry.status} without keys")
-            if entry.status == "auto" and entry.kind not in ("ligature", "mvs"):
-                found.append(f"{entry.name}: only ligatures and pre-MVS forms can be auto")
+            if entry.status == "auto" and entry.kind not in AUTO_KINDS:
+                found.append(f"{entry.name}: only ligatures, pre-MVS and whole forms can be auto")
             for cut_id, font in fonts.items():
                 keys = entry.keys_for(cut_id) or ""
                 missing = sorted({key for key in keys if key not in font.keyed_glyphs()})

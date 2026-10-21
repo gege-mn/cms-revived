@@ -9,6 +9,7 @@ const KINDS = [
   ["form", "Whole forms"],
 ];
 const FILTERS = ["open", "all", "todo", "draft", "conflict", "ok", "new", "auto"];
+const AUTO_KINDS = ["ligature", "mvs", "form"];
 const POSITIONS = { isol: "isolated", init: "initial", medi: "medial", fina: "final" };
 const DEFAULT_WORDS = "ᠮᠣᠩᠭᠣᠯ ᠪᠢᠴᠢᠭ ᠰᠠᠮᠪᠠ ᠦᠰᠦᠭ ᠲᠡᠮᠳᠡᠭ ᠬᠠᠭᠠᠨ ᠭᠡᠷ ᠴᠢᠬᠢ ᠵᠢᠯ ᠶᠠᠪᠤ ᠳᠠᠯᠠᠢ ᠺᠢᠨᠣ";
 
@@ -73,7 +74,9 @@ function entry(name) {
 }
 
 function target(name) {
-  return state.targetsByName[name] || { name, kind: "form", atoms: [], usedBy: [], required: false };
+  if (state.targetsByName[name]) return state.targetsByName[name];
+  const using = state.data.variants.filter((variant) => variant.written === name);
+  return { name, kind: "form", atoms: using[0]?.atoms || [], usedBy: using.map((variant) => variant.id), required: false };
 }
 
 function keysFor(item, cut = state.ui.cut) {
@@ -82,7 +85,7 @@ function keysFor(item, cut = state.ui.cut) {
 }
 
 function isConflict(item) {
-  return (item.note || "").includes("CONFLICT");
+  return item.status !== "ok" && (item.note || "").includes("CONFLICT");
 }
 
 function matchesFilter(item) {
@@ -277,7 +280,7 @@ function renderTarget() {
     ["draft", "Draft", ""],
     ["new", "Not in CMs", ""],
     ["todo", "Todo", ""],
-    ...(["ligature", "mvs"].includes(info.kind) ? [["auto", "Use parts", ""]] : []),
+    ...(AUTO_KINDS.includes(info.kind) ? [["auto", "Use parts", ""]] : []),
   ];
 
   $("#target").innerHTML = `
@@ -332,13 +335,13 @@ function renderUsage() {
   const cards = ids.map((id) => {
     const variant = state.variantsById[id];
     const fvs = variant.fvs ? ` · fvs${variant.fvs}` : "";
-    return `<div class="card ${variant.default ? "" : "alt"}">
+    return `<div class="card ${variant.default ? "" : "alt"}" data-written="${escapeAttr(variant.written)}" title="Map ${escapeAttr(variant.written)} as a whole form">
       <header>${escapeHtml(variant.label)} · ${POSITIONS[variant.position]}${fvs}</header>
       <div class="pair">${referenceSvg(variant.reference, 70)}${legacySvg(variantParts(variant, name), 70)}</div>
       <footer><code>${escapeHtml(variant.written)}</code></footer>
     </div>`;
   });
-  $("#usage").innerHTML = `<h3>Used by ${ids.length} forms <span class="hint">reference left, CMs right, this piece highlighted</span></h3><div class="cards">${cards.join("")}</div>`;
+  $("#usage").innerHTML = `<h3>Used by ${ids.length} forms <span class="hint">reference left, CMs right, this piece highlighted · click a form to map it whole</span></h3><div class="cards">${cards.join("")}</div>`;
 }
 
 function renderWords() {
@@ -421,7 +424,7 @@ function editKeys(value) {
   }
   const hasKeys = Boolean(keysFor(item));
   if (hasKeys && ["todo", "ok", "auto"].includes(item.status)) item.status = "draft";
-  if (!hasKeys && item.status === "draft") item.status = ["ligature", "mvs"].includes(item.kind) ? "auto" : "todo";
+  if (!hasKeys && item.status === "draft") item.status = AUTO_KINDS.includes(item.kind) ? "auto" : "todo";
   const caret = $("#keys").selectionStart;
   renderTarget();
   $("#keys").setSelectionRange(caret, caret);
@@ -578,6 +581,16 @@ function wire() {
     if (name) select(name);
   });
   $("#build").addEventListener("click", () => scheduleBuild(0));
+  $("#usage").addEventListener("click", (event) => {
+    const written = event.target.closest(".card")?.dataset.written;
+    if (!written || written === state.ui.current) return;
+    if (!state.entries[written]) state.entries[written] = { name: written, kind: "form", status: "auto", note: "" };
+    if (state.ui.filter !== "all" && !matchesFilter(state.entries[written])) {
+      state.ui.filter = "all";
+      markFilter();
+    }
+    select(written);
+  });
   $("#words-input").addEventListener("input", (event) => {
     state.ui.words = event.target.value;
     saveUi();
