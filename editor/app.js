@@ -288,60 +288,60 @@ function renderTarget() {
       <h2><code>${escapeHtml(name)}</code> <i class="chip s-${item.status}">${item.status}</i></h2>
       <p>${escapeHtml(description)}</p>
     </div>
-    <div class="stage">
-      <figure><figcaption>CMs ${escapeHtml(cutName(cut))}</figcaption>${legacySvg(parts, 150, "big")}</figure>
-      ${info.reference ? `<figure><figcaption>Reference</figcaption>${referenceSvg(info.reference, 150)}</figure>` : ""}
-      ${
-        ["ligature", "mvs", "form"].includes(info.kind) && keys
-          ? `<figure><figcaption>From parts</figcaption>${legacySvg(info.atoms.flatMap((atom) => namedParts(atom)), 150, "big")}</figure>`
-          : ""
-      }
-    </div>
-    <div class="keys-row">
-      <label>Keys <input id="keys" value="${escapeAttr(keys)}" spellcheck="false" autocomplete="off"></label>
+    <div class="controls">
+      <label class="keys">Keys <input id="keys" value="${escapeAttr(keys)}" spellcheck="false" autocomplete="off"></label>
       <label class="small"><input id="cut-only" type="checkbox" ${cutOnly ? "checked" : ""}> only ${escapeHtml(cutName(cut))}</label>
-      ${keys ? `<span class="keys-split">${[...keys].map((key) => `<kbd>${escapeHtml(key)}</kbd>`).join("")}</span>` : ""}
+      <div class="actions">
+        ${statusButtons
+          .map(
+            ([status, label, key]) =>
+              `<button data-status="${status}" class="${item.status === status ? "on" : ""}">${label}${key ? ` <kbd>${key}</kbd>` : ""}</button>`,
+          )
+          .join("")}
+      </div>
     </div>
-    <div class="palette">${paletteHtml()}</div>
-    <div class="actions">
-      ${statusButtons
-        .map(
-          ([status, label, key]) =>
-            `<button data-status="${status}" class="${item.status === status ? "on" : ""}">${label}${key ? ` <kbd>${key}</kbd>` : ""}</button>`,
-        )
-        .join("")}
-      <span class="hint">Tab / ⇧Tab move · Esc reverts keys</span>
+    <div class="stage">
+      <div class="main-figures">
+        <figure><figcaption>CMs ${escapeHtml(cutName(cut))}</figcaption>${legacySvg(parts, 150, "big")}</figure>
+        ${info.reference ? `<figure><figcaption>Unicode</figcaption>${referenceSvg(info.reference, 150)}</figure>` : ""}
+        ${
+          AUTO_KINDS.includes(info.kind) && keys
+            ? `<figure><figcaption>From parts</figcaption>${legacySvg(info.atoms.flatMap((atom) => namedParts(atom)), 150, "big")}</figure>`
+            : ""
+        }
+      </div>
+      <div id="forms" class="forms"></div>
     </div>
-    <textarea id="note" rows="2" placeholder="Note">${escapeHtml(item.note || "")}</textarea>`;
+    <textarea id="note" rows="2" placeholder="Note">${escapeHtml(item.note || "")}</textarea>
+    <p class="hint">↵ confirm · Tab / ⇧Tab move · Esc reverts keys · click a form to map it whole</p>`;
+  renderUsage();
   $("#keys").focus();
 }
 
-function paletteHtml() {
-  const glyphs = legacy().keys;
-  return Object.entries(glyphs)
-    .filter(([key]) => key !== " ")
-    .map(([key, glyph]) => `<button class="tile" data-key="${escapeAttr(key)}" title="${escapeAttr(glyph.glyph)}">${legacySvg([glyph], 46)}<kbd>${escapeHtml(key)}</kbd></button>`)
-    .join("");
+function codeChips(variant) {
+  const chips = [`U+${variant.codePoint.toString(16).toUpperCase()}`];
+  if (variant.fvs) chips.push(`FVS${variant.fvs}`);
+  return chips.map((chip) => `<i class="cp">${chip}</i>`).join("");
 }
 
 function renderUsage() {
+  const element = $("#forms");
+  if (!element) return;
   const name = state.ui.current;
-  const info = target(name);
-  const ids = info.usedBy || [];
+  const ids = target(name).usedBy || [];
   if (!ids.length) {
-    $("#usage").innerHTML = "";
+    element.innerHTML = "";
     return;
   }
   const cards = ids.map((id) => {
     const variant = state.variantsById[id];
-    const fvs = variant.fvs ? ` · fvs${variant.fvs}` : "";
-    return `<div class="card ${variant.default ? "" : "alt"}" data-written="${escapeAttr(variant.written)}" title="Map ${escapeAttr(variant.written)} as a whole form">
-      <header>${escapeHtml(variant.label)} · ${POSITIONS[variant.position]}${fvs}</header>
-      <div class="pair">${referenceSvg(variant.reference, 70)}${legacySvg(variantParts(variant, name), 70)}</div>
-      <footer><code>${escapeHtml(variant.written)}</code></footer>
+    return `<div class="card ${variant.default ? "" : "alt"}${variant.written === name ? " self" : ""}" data-written="${escapeAttr(variant.written)}" title="Map ${escapeAttr(variant.written)} as a whole form">
+      <header>${escapeHtml(variant.label)} · ${POSITIONS[variant.position]} ${codeChips(variant)}</header>
+      <div class="pair">${referenceSvg(variant.reference, 64)}${legacySvg(variantParts(variant, name), 64)}</div>
+      <footer><code>${escapeHtml(variant.written)}</code>${variant.default ? "" : " · variant"}</footer>
     </div>`;
   });
-  $("#usage").innerHTML = `<h3>Used by ${ids.length} forms <span class="hint">reference left, CMs right, this piece highlighted · click a form to map it whole</span></h3><div class="cards">${cards.join("")}</div>`;
+  element.innerHTML = `<h3>${ids.length} forms <span class="hint">Unicode left · CMs right, this piece highlighted</span></h3><div class="cards">${cards.join("")}</div>`;
 }
 
 function renderWords() {
@@ -581,7 +581,7 @@ function wire() {
     if (name) select(name);
   });
   $("#build").addEventListener("click", () => scheduleBuild(0));
-  $("#usage").addEventListener("click", (event) => {
+  $("#target").addEventListener("click", (event) => {
     const written = event.target.closest(".card")?.dataset.written;
     if (!written || written === state.ui.current) return;
     if (!state.entries[written]) state.entries[written] = { name: written, kind: "form", status: "auto", note: "" };
@@ -615,18 +615,6 @@ function wire() {
     scheduleSave(item.name, 0);
   });
   work.addEventListener("click", (event) => {
-    const tile = event.target.closest(".tile");
-    if (tile) {
-      const input = $("#keys");
-      const start = input.selectionStart ?? input.value.length;
-      const end = input.selectionEnd ?? input.value.length;
-      const value = input.value.slice(0, start) + tile.dataset.key + input.value.slice(end);
-      input.value = value;
-      input.setSelectionRange(start + 1, start + 1);
-      editKeys(value);
-      $("#keys").setSelectionRange(start + 1, start + 1);
-      return;
-    }
     const status = event.target.closest("[data-status]")?.dataset.status;
     if (status) setStatus(status);
   });
