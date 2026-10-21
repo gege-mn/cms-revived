@@ -143,7 +143,7 @@ status = "ok"
 latin = "dürim-i"
 text = "ᠳᠦᠷᠢᠮ᠎ᠢ"
 keys = "Doiri^ I"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "jöblel"
@@ -186,7 +186,7 @@ snapshot = { CMSHR = "b5d272da20d2", CMSUB = "9ed76182d87c", CMSUG = "d2c5598333
 latin = "üy-e-dü"
 text = "ᠦᠶ᠎ᠡ᠎ᠳᠦ"
 keys = "foiIT dO"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "oroqu"

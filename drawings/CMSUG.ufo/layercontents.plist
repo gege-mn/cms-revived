@@ -6,5 +6,33 @@
       <string>public.default</string>
       <string>glyphs</string>
     </array>
+    <array>
+      <string>arch-all</string>
+      <string>glyphs.arch-all</string>
+    </array>
+    <array>
+      <string>arch-g</string>
+      <string>glyphs.arch-g</string>
+    </array>
+    <array>
+      <string>arch-b</string>
+      <string>glyphs.arch-b</string>
+    </array>
+    <array>
+      <string>arch-p</string>
+      <string>glyphs.arch-p</string>
+    </array>
+    <array>
+      <string>arch-gx</string>
+      <string>glyphs.arch-gx</string>
+    </array>
+    <array>
+      <string>arch-f</string>
+      <string>glyphs.arch-f</string>
+    </array>
+    <array>
+      <string>arch-kh</string>
+      <string>glyphs.arch-kh</string>
+    </array>
   </array>
 </plist>
