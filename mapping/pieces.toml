@@ -2,6 +2,9 @@
 #
 # keys    the CMs key sequence that draws it, as typed on the 1998 keyboard
 # cuts    per-cut keys where a cut differs, e.g. cuts = { CMSHR = "fx" }
+# marks   contours lifted from another key and laid over the keys, e.g. the dusal of N:
+#         marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }]
+#         contours count from 0 in the key's own order; dx/dy move them, in font units
 # status  todo   not mapped yet; the build draws a placeholder box
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
@@ -25,7 +28,7 @@
 "A.medi" = { keys = "E", status = "draft", note = "so it's little complicated, Noto seems to have no leading nirugu, and displaying immediate pointy part of the sidu. I've updated it to \"E\", which is sidu with no leading nirugu , but that makes it look incorrect (i've put correct CMs after the glyph in parentheses) for AA.init (Fe), and AA.medi (Ee) AG.medi (the first is e, not E). AG.fina and other unmentioned ones are correct" }
 "Aa.fina" = { keys = "t", status = "draft" }
 "I.isol" = { keys = "I", status = "draft" }
-"Ix.isol" = { status = "new" }
+"Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "draft", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
 "I.fina" = { keys = "I", status = "draft", note = "CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
 "I.init" = { keys = "J", status = "draft", note = "from editor: j · isolated" }
 "I.medi" = { keys = "i", status = "draft", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial." }
@@ -33,7 +36,7 @@
 "O.medi" = { keys = "o", status = "ok", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
 "U.fina" = { keys = "O", status = "draft", note = "from editor: o · final, u · final, oe · final, ue · final" }
 "U.isol" = { keys = "O", status = "ok" }
-"Ux.isol" = { status = "new" }
+"Ux.isol" = { keys = "O", marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }], status = "draft", note = "proposal: U.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
 "O.init" = { keys = "o", status = "ok", note = "plus trailing nirugu is needed" }
 "Ue.fina" = { keys = "oA", status = "draft", note = "from editor: oe · isolated (split), ue · isolated (split)" }
 "W.fina" = { keys = "wA", status = "draft", note = "settled by hand; was in conflict: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
@@ -53,10 +56,10 @@
 "H.init" = { keys = "H", status = "draft", note = "from editor: h · isolated, h · initial" }
 "Hx.init" = { keys = "G", status = "draft", note = "from editor: g · isolated, g · initial" }
 "G.init" = { keys = "k", status = "ok" }
-"Gx.init" = { status = "new" }
+"Gx.init" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "draft", note = "proposal: G.init + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
 "Hx.medi" = { keys = "g", status = "ok" }
 "H.medi" = { keys = "Ee", status = "ok" }
-"Gx.medi" = { status = "new" }
+"Gx.medi" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "draft", note = "proposal: G.medi + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
 "H.fina" = { keys = "ea", status = "draft", note = "from editor: h · final" }
 "Hx.fina" = { keys = ")", status = "ok" }
 "M.init" = { keys = "M", status = "draft", note = "from editor: m · isolated, m · initial" }

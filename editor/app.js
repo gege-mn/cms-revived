@@ -151,10 +151,33 @@ function keyParts(keys, cut = state.ui.cut) {
   return [...keys].map((key) => glyphs[key] || { ...placeholderPart(cut), missingKey: key });
 }
 
+// Marks sit over the keys at an offset from the piece's start and take no advance.
+function markParts(item, cut, start) {
+  const glyphs = legacy(cut).keys;
+  return (item?.marks || [])
+    .map((mark) => {
+      const glyph = glyphs[mark.key];
+      if (!glyph) return null;
+      const contours = mark.contours ? mark.contours.map((index) => glyph.contours[index]).filter(Boolean) : [glyph];
+      if (!contours.length) return null;
+      const low = Math.min(...contours.map((contour) => contour.bounds[1])) + mark.dy;
+      const high = Math.max(...contours.map((contour) => contour.bounds[3])) + mark.dy;
+      return { path: contours.map((contour) => contour.path).join(""), advance: 0, dx: mark.dx - start, dy: mark.dy, bounds: [0, low, 0, high] };
+    })
+    .filter(Boolean);
+}
+
+function hasDrawing(item, cut = state.ui.cut) {
+  return Boolean(keysFor(item, cut) || item?.marks?.length);
+}
+
 function namedParts(name, cut = state.ui.cut) {
   const item = entry(name);
-  const keys = keysFor(item, cut);
-  if (keys) return keyParts(keys, cut);
+  if (hasDrawing(item, cut)) {
+    const parts = keyParts(keysFor(item, cut) || "", cut);
+    const advance = parts.reduce((sum, part) => sum + part.advance, 0);
+    return [...parts, ...markParts(item, cut, advance)];
+  }
   const info = target(name);
   if ((item?.status === "auto" || !item) && info.atoms.length) {
     return info.atoms.flatMap((atom) => namedParts(atom, cut));
@@ -164,8 +187,8 @@ function namedParts(name, cut = state.ui.cut) {
 
 function variantParts(variant, highlight, cut = state.ui.cut) {
   const whole = entry(variant.written);
-  if (whole && keysFor(whole, cut)) {
-    return keyParts(keysFor(whole, cut), cut).map((part) => ({ ...part, highlight: variant.written === highlight }));
+  if (whole && hasDrawing(whole, cut)) {
+    return namedParts(variant.written, cut).map((part) => ({ ...part, highlight: variant.written === highlight }));
   }
   return variant.atoms.flatMap((atom) =>
     namedParts(atom, cut).map((part) => ({ ...part, highlight: atom === highlight })),
@@ -178,7 +201,7 @@ function runSvg(parts, metrics, size, className = "") {
   const paths = parts
     .map((part) => {
       const classes = [part.highlight && "hl", part.placeholder && "ph"].filter(Boolean).join(" ");
-      const markup = `<path transform="translate(${x} 0)" d="${part.path}" class="${classes}"${part.placeholder ? ' fill-rule="evenodd"' : ""}/>`;
+      const markup = `<path transform="translate(${x + (part.dx || 0)} ${part.dy || 0})" d="${part.path}" class="${classes}"${part.placeholder ? ' fill-rule="evenodd"' : ""}/>`;
       x += part.advance;
       return markup;
     })
@@ -300,22 +323,78 @@ function renderTarget() {
           .join("")}
       </div>
     </div>
-    <div class="stage">
-      <div class="main-figures">
-        <figure><figcaption>CMs ${escapeHtml(cutName(cut))}</figcaption>${legacySvg(parts, 150, "big")}</figure>
-        ${info.reference ? `<figure><figcaption>Unicode</figcaption>${referenceSvg(info.reference, 150)}</figure>` : ""}
-        ${
-          AUTO_KINDS.includes(info.kind) && keys
-            ? `<figure><figcaption>From parts</figcaption>${legacySvg(info.atoms.flatMap((atom) => namedParts(atom)), 150, "big")}</figure>`
-            : ""
-        }
-      </div>
-      <div id="forms" class="forms"></div>
-    </div>
+    <div id="marks" class="marks"></div>
+    <div id="stage" class="stage"></div>
     <textarea id="note" rows="2" placeholder="Note">${escapeHtml(item.note || "")}</textarea>
-    <p class="hint">↵ confirm · Tab / ⇧Tab move · Esc reverts keys · click a form to map it whole</p>`;
-  renderUsage();
+    <p class="hint">↵ confirm · Tab / ⇧Tab move · Esc reverts keys · click a form to map it whole · marks: ↑/↓ in dx, dy nudge by 5</p>`;
+  renderMarks();
+  renderStage();
   $("#keys").focus();
+}
+
+function renderStatus() {
+  const item = entry(state.ui.current);
+  const chip = $("#target .t-head .chip");
+  if (chip) {
+    chip.className = `chip s-${item.status}`;
+    chip.textContent = item.status;
+  }
+  for (const button of document.querySelectorAll("#target [data-status]")) {
+    button.classList.toggle("on", button.dataset.status === item.status);
+  }
+}
+
+function renderStage() {
+  const name = state.ui.current;
+  const info = target(name);
+  const cut = state.ui.cut;
+  const drawn = hasDrawing(entry(name));
+  $("#stage").innerHTML = `
+    <div class="main-figures">
+      <figure><figcaption>CMs ${escapeHtml(cutName(cut))}</figcaption>${legacySvg(namedParts(name), 150, "big")}</figure>
+      ${info.reference ? `<figure><figcaption>Unicode</figcaption>${referenceSvg(info.reference, 150)}</figure>` : ""}
+      ${
+        AUTO_KINDS.includes(info.kind) && drawn
+          ? `<figure><figcaption>From parts</figcaption>${legacySvg(info.atoms.flatMap((atom) => namedParts(atom)), 150, "big")}</figure>`
+          : ""
+      }
+    </div>
+    <div id="forms" class="forms"></div>`;
+  renderUsage();
+}
+
+function renderMarks() {
+  const item = entry(state.ui.current);
+  const glyphs = legacy().keys;
+  const rows = (item.marks || []).map((mark, index) => {
+    const glyph = glyphs[mark.key];
+    const contours = (glyph?.contours || [])
+      .map((contour, contourIndex) => {
+        const on = !mark.contours || mark.contours.includes(contourIndex);
+        return `<button class="contour ${on ? "on" : ""}" data-contour="${contourIndex}" title="contour ${contourIndex}">${runSvg([{ ...contour, advance: glyph.advance }], legacy(), 34)}</button>`;
+      })
+      .join("");
+    return `<div class="mark" data-index="${index}">
+      <label>Mark from <input class="m-key" value="${escapeAttr(mark.key)}" maxlength="1" spellcheck="false"></label>
+      <span class="contours">${contours || `<span class="hint">no such key</span>`}</span>
+      <label>dx <input class="m-dx" type="number" step="5" value="${mark.dx}"></label>
+      <label>dy <input class="m-dy" type="number" step="5" value="${mark.dy}"></label>
+      <button class="m-del" title="Remove mark">×</button>
+    </div>`;
+  });
+  $("#marks").innerHTML = rows.join("") + `<button id="add-mark" class="add-mark">+ Mark</button>`;
+}
+
+function editMarks(change, { rerenderMarks = false } = {}) {
+  const item = entry(state.ui.current);
+  item.marks = item.marks ? item.marks.map((mark) => ({ ...mark })) : [];
+  change(item.marks);
+  if (hasDrawing(item) && ["todo", "ok"].includes(item.status)) item.status = "draft";
+  if (rerenderMarks) renderMarks();
+  renderStage();
+  renderStatus();
+  renderProgress();
+  scheduleSave(item.name);
 }
 
 function useChip(variant) {
@@ -430,26 +509,25 @@ function editKeys(value) {
   } else {
     item.keys = value || null;
   }
-  const hasKeys = Boolean(keysFor(item));
+  const hasKeys = hasDrawing(item);
   if (hasKeys && ["todo", "ok", "auto"].includes(item.status)) item.status = "draft";
   if (!hasKeys && item.status === "draft") item.status = AUTO_KINDS.includes(item.kind) ? "auto" : "todo";
-  const caret = $("#keys").selectionStart;
-  renderTarget();
-  $("#keys").setSelectionRange(caret, caret);
-  renderUsage();
+  renderStage();
+  renderStatus();
   renderProgress();
   scheduleSave(item.name);
 }
 
 function setStatus(status) {
   const item = entry(state.ui.current);
-  if (status === "ok" && !keysFor(item)) {
+  if (status === "ok" && !hasDrawing(item)) {
     flash("Nothing to confirm: type the keys first, or mark it Not in CMs.");
     return;
   }
   if (status === "auto") {
     item.keys = null;
     item.cuts = {};
+    item.marks = [];
   }
   item.status = status;
   scheduleSave(item.name, 0);
@@ -478,7 +556,7 @@ async function flushSave() {
   const response = await fetch("/api/entry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {} }),
+    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [] }),
   });
   const result = await response.json();
   if (result.error) {
@@ -607,6 +685,21 @@ function wire() {
 
   const work = $("#target");
   work.addEventListener("input", (event) => {
+    const row = event.target.closest(".mark");
+    if (row) {
+      const index = Number(row.dataset.index);
+      if (event.target.classList.contains("m-key")) {
+        const key = event.target.value;
+        if (!key) return;
+        editMarks((marks) => (marks[index] = { ...marks[index], key, contours: null }), { rerenderMarks: true });
+        $(`.mark[data-index="${index}"] .m-key`)?.focus();
+      } else {
+        const field = event.target.classList.contains("m-dx") ? "dx" : "dy";
+        const value = Math.round(Number(event.target.value) || 0);
+        editMarks((marks) => (marks[index] = { ...marks[index], [field]: value }));
+      }
+      return;
+    }
     if (event.target.id === "keys") editKeys(event.target.value);
     if (event.target.id === "note") {
       entry(state.ui.current).note = event.target.value;
@@ -623,12 +716,39 @@ function wire() {
     scheduleSave(item.name, 0);
   });
   work.addEventListener("click", (event) => {
+    if (event.target.closest("#add-mark")) {
+      editMarks((marks) => marks.push({ key: "N", contours: [1], dx: 0, dy: 0 }), { rerenderMarks: true });
+      return;
+    }
+    const row = event.target.closest(".mark");
+    if (row) {
+      const index = Number(row.dataset.index);
+      if (event.target.closest(".m-del")) {
+        editMarks((marks) => marks.splice(index, 1), { rerenderMarks: true });
+        return;
+      }
+      const contour = event.target.closest(".contour");
+      if (contour) {
+        const contourIndex = Number(contour.dataset.contour);
+        editMarks(
+          (marks) => {
+            const mark = marks[index];
+            const count = legacy().keys[mark.key]?.contours.length || 0;
+            const current = mark.contours ?? [...Array(count).keys()];
+            const next = current.includes(contourIndex) ? current.filter((value) => value !== contourIndex) : [...current, contourIndex].sort();
+            mark.contours = next.length === count ? null : next;
+          },
+          { rerenderMarks: true },
+        );
+      }
+      return;
+    }
     const status = event.target.closest("[data-status]")?.dataset.status;
     if (status) setStatus(status);
   });
 
   document.addEventListener("keydown", (event) => {
-    const inText = event.target.tagName === "TEXTAREA" || event.target.id === "search";
+    const inText = event.target.tagName === "TEXTAREA" || event.target.id === "search" || Boolean(event.target.closest?.(".marks"));
     if (event.key === "Tab" && !inText) {
       event.preventDefault();
       move(event.shiftKey ? -1 : 1);

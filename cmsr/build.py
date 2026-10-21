@@ -22,7 +22,7 @@ from ufoLib2.objects import Component
 
 from . import config
 from .legacy import LegacyFont
-from .mapping import Mapping
+from .mapping import Mapping, Mark
 from .targets import CONTROLS, Target, targets
 
 PLACEHOLDER_WIDTH = 400
@@ -55,8 +55,8 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
         if drawings is not None and target.glyph in drawings:
             _copy_drawing(ufo, drawings[target.glyph], target.glyph)
             result.drawn.append(entry.name)
-        elif keys:
-            _compose_keys(ufo, legacy, target.glyph, keys)
+        elif keys or entry.marks:
+            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks)
             result.keyed.append(entry.name)
         elif target.kind in ("piece", "char"):
             _placeholder(ufo, target.glyph, stem)
@@ -137,14 +137,34 @@ def _import_legacy(ufo: Font, legacy: LegacyFont) -> None:
         target.width = legacy.advance(name)
 
 
-def _compose_keys(ufo: Font, legacy: LegacyFont, glyph_name: str, keys: str) -> None:
+def _compose_keys(ufo: Font, legacy: LegacyFont, glyph_name: str, keys: str, marks: list[Mark] = ()) -> None:
     glyph = ufo.newGlyph(glyph_name)
     x = 0
     for key in keys:
         name = legacy.glyph_name(key)
         glyph.components.append(Component(legacy_glyph_name(name), Transform(dx=x)))
         x += legacy.advance(name)
+    for mark in marks:
+        base = _mark_glyph(ufo, legacy, mark)
+        glyph.components.append(Component(base, Transform(dx=mark.dx, dy=mark.dy)))
     glyph.width = x
+
+
+def _mark_glyph(ufo: Font, legacy: LegacyFont, mark: Mark) -> str:
+    """The glyph a mark is drawn from: the whole key, or just the contours it lifts."""
+
+    name = legacy.glyph_name(mark.key)
+    if mark.contours is None:
+        return legacy_glyph_name(name)
+    lifted = f"{legacy_glyph_name(name)}.c{'_'.join(str(index) for index in mark.contours)}"
+    if lifted not in ufo:
+        contours = legacy.contours(name)
+        glyph = ufo.newGlyph(lifted)
+        pen = glyph.getPen()
+        for index in mark.contours:
+            for operator, arguments in contours[index]:
+                getattr(pen, operator)(*arguments)
+    return lifted
 
 
 def _copy_drawing(ufo: Font, source, glyph_name: str) -> None:

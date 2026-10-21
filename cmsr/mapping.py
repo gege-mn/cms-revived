@@ -30,6 +30,9 @@ HEADER = """\
 #
 # keys    the CMs key sequence that draws it, as typed on the 1998 keyboard
 # cuts    per-cut keys where a cut differs, e.g. cuts = { CMSHR = "fx" }
+# marks   contours lifted from another key and laid over the keys, e.g. the dusal of N:
+#         marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }]
+#         contours count from 0 in the key's own order; dx/dy move them, in font units
 # status  todo   not mapped yet; the build draws a placeholder box
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
@@ -48,6 +51,32 @@ HEADER = """\
 
 
 @dataclass
+class Mark:
+    key: str
+    contours: list[int] | None = None
+    dx: int = 0
+    dy: int = 0
+
+    @classmethod
+    def from_dict(cls, fields: dict) -> Mark:
+        contours = fields.get("contours")
+        return cls(
+            fields["key"],
+            [int(index) for index in contours] if contours is not None else None,
+            int(fields.get("dx", 0)),
+            int(fields.get("dy", 0)),
+        )
+
+    def as_dict(self) -> dict:
+        found: dict = {"key": self.key}
+        if self.contours is not None:
+            found["contours"] = self.contours
+        found["dx"] = self.dx
+        found["dy"] = self.dy
+        return found
+
+
+@dataclass
 class Entry:
     name: str
     kind: Kind
@@ -55,6 +84,7 @@ class Entry:
     status: Status = "todo"
     note: str = ""
     cuts: dict[str, str] = field(default_factory=dict)
+    marks: list[Mark] = field(default_factory=list)
 
     def keys_for(self, cut_id: str) -> str | None:
         return self.cuts.get(cut_id, self.keys)
@@ -65,6 +95,8 @@ class Entry:
             found["keys"] = self.keys
         if self.cuts:
             found["cuts"] = self.cuts
+        if self.marks:
+            found["marks"] = [mark.as_dict() for mark in self.marks]
         if self.note:
             found["note"] = self.note
         return found
@@ -95,6 +127,7 @@ class Mapping:
                         status=fields.get("status", "todo"),
                         note=fields.get("note", ""),
                         cuts=dict(fields.get("cuts", {})),
+                        marks=[Mark.from_dict(mark) for mark in fields.get("marks", [])],
                     )
         return cls(entries, path)
 
@@ -125,15 +158,24 @@ class Mapping:
         for entry in self.all():
             if entry.status not in STATUSES:
                 found.append(f"{entry.name}: unknown status {entry.status!r}")
-            if entry.status in ("draft", "ok") and not entry.keys:
+            if entry.status in ("draft", "ok") and not (entry.keys or entry.marks):
                 found.append(f"{entry.name}: {entry.status} without keys")
             if entry.status == "auto" and entry.kind not in AUTO_KINDS:
                 found.append(f"{entry.name}: only ligatures, pre-MVS and whole forms can be auto")
             for cut_id, font in fonts.items():
                 keys = entry.keys_for(cut_id) or ""
-                missing = sorted({key for key in keys if key not in font.keyed_glyphs()})
+                keyed = font.keyed_glyphs()
+                missing = sorted({key for key in keys if key not in keyed})
                 if missing:
                     found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(missing)!r}")
+                for mark in entry.marks:
+                    if mark.key not in keyed:
+                        found.append(f"{entry.name}: {cut_id} has no glyph on mark key {mark.key!r}")
+                        continue
+                    count = len(font.contours(keyed[mark.key]))
+                    bad = [index for index in mark.contours or [] if not 0 <= index < count]
+                    if bad:
+                        found.append(f"{entry.name}: {cut_id} key {mark.key!r} has {count} contours, not {bad}")
         return found
 
     def save(self) -> None:
@@ -173,7 +215,17 @@ def _inline(entry: Entry) -> str:
     if entry.cuts:
         cuts = ", ".join(f"{cut} = {_string(keys)}" for cut, keys in sorted(entry.cuts.items()))
         fields.append(f"cuts = {{ {cuts} }}")
+    if entry.marks:
+        fields.append("marks = [" + ", ".join(_inline_mark(mark) for mark in entry.marks) + "]")
     fields.append(f"status = {_string(entry.status)}")
     if entry.note:
         fields.append(f"note = {_string(entry.note)}")
+    return "{ " + ", ".join(fields) + " }"
+
+
+def _inline_mark(mark: Mark) -> str:
+    fields = [f"key = {_string(mark.key)}"]
+    if mark.contours is not None:
+        fields.append(f"contours = [{', '.join(str(index) for index in mark.contours)}]")
+    fields += [f"dx = {mark.dx}", f"dy = {mark.dy}"]
     return "{ " + ", ".join(fields) + " }"

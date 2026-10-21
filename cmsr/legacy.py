@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cache
 
+from fontTools.pens.recordingPen import DecomposingRecordingPen
 from fontTools.ttLib import TTFont
 
 from .config import CUTS, Cut
@@ -39,3 +40,15 @@ class LegacyFont:
     def keyed_glyphs(self) -> dict[str, str]:
         cmap = self.ttf.getBestCmap()
         return {key: cmap[ord(key)] for key in KEYS if ord(key) in cmap}
+
+    def contours(self, glyph_name: str) -> list[list[tuple[str, tuple]]]:
+        """The glyph's outline as one recording per contour, in drawing order."""
+
+        recording = DecomposingRecordingPen(self.ttf.getGlyphSet())
+        self.ttf.getGlyphSet()[glyph_name].draw(recording)
+        found: list[list[tuple[str, tuple]]] = [[]]
+        for operator, arguments in recording.value:
+            found[-1].append((operator, arguments))
+            if operator in ("closePath", "endPath"):
+                found.append([])
+        return [contour for contour in found if contour]

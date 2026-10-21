@@ -25,7 +25,7 @@ from . import config
 from .build import _stem, build
 from .check import run
 from .legacy import LegacyFont
-from .mapping import Entry, Mapping
+from .mapping import Entry, Mapping, Mark
 from .targets import LOCALE, atoms_of, targets, variants
 
 EDITOR_DIR = config.ROOT / "editor"
@@ -49,6 +49,15 @@ def _outline(glyph_set, name: str) -> dict:
     return {"path": pen.getCommands(), "bounds": [round(value) for value in bounds.bounds or (0, 0, 0, 0)]}
 
 
+def _contour(glyph_set, recording: list) -> dict:
+    pen = SVGPathPen(glyph_set, ntos=_number)
+    bounds = BoundsPen(glyph_set)
+    for operator, arguments in recording:
+        getattr(pen, operator)(*arguments)
+        getattr(bounds, operator)(*arguments)
+    return {"path": pen.getCommands(), "bounds": [round(value) for value in bounds.bounds or (0, 0, 0, 0)]}
+
+
 @cache
 def _legacy(cut_id: str) -> dict:
     font = LegacyFont.open(cut_id)
@@ -59,7 +68,12 @@ def _legacy(cut_id: str) -> dict:
         "descent": font.ttf["hhea"].descent,
         "stem": list(_stem(font)),
         "keys": {
-            key: {"glyph": name, "advance": font.advance(name), **_outline(glyph_set, name)}
+            key: {
+                "glyph": name,
+                "advance": font.advance(name),
+                **_outline(glyph_set, name),
+                "contours": [_contour(glyph_set, contour) for contour in font.contours(name)],
+            }
             for key, name in font.keyed_glyphs().items()
         },
     }
@@ -209,6 +223,7 @@ class Handler(SimpleHTTPRequestHandler):
                             status=body.get("status", "todo"),
                             note=body.get("note", ""),
                             cuts={cut: keys for cut, keys in body.get("cuts", {}).items() if keys},
+                            marks=[Mark.from_dict(mark) for mark in body.get("marks", [])],
                         )
                     )
                     mapping.save()

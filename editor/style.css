@@ -144,3 +144,14 @@ figcaption { font-size: 11px; color: var(--muted); }
 .problems ul { margin: 0; padding-left: 16px; font-size: 12px; font-family: var(--mono); }
 
 .flash { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 8px 14px; background: var(--ink); color: var(--panel); border-radius: 8px; font-size: 13px; }
+
+.marks { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.mark { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 6px 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; font-size: 13px; }
+.mark input { font-family: var(--mono); padding: 2px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); }
+.mark .m-key { width: 32px; text-align: center; margin-left: 4px; }
+.mark .m-dx, .mark .m-dy { width: 72px; margin-left: 4px; }
+.contours { display: flex; gap: 4px; }
+.contour { padding: 2px; border: 1px solid var(--line); border-radius: 5px; background: none; cursor: pointer; opacity: 0.35; }
+.contour.on { opacity: 1; border-color: var(--accent); }
+.m-del { border: 0; background: none; color: var(--muted); font-size: 16px; cursor: pointer; }
+.add-mark { align-self: flex-start; font-size: 12px; padding: 2px 10px; border: 1px dashed var(--line); border-radius: 6px; background: none; color: var(--muted); cursor: pointer; }
