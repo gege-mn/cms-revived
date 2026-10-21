@@ -37,50 +37,50 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 
 [pieces]
 "A.isol" = { keys = "ft", status = "ok", note = "from editor: e · isolated" }
-"Aa.isol" = { keys = "T", status = "draft", note = "T is the orkhits for the a/e after an MVS (chachlag), with the gap built in: cinu-a is typed CinOT. Lowercase t is the ordinary orkhits (bichig's feminine final g)." }
+"Aa.isol" = { keys = "T", status = "ok", note = "T is the orkhits for the a/e after an MVS (chachlag), with the gap built in: cinu-a is typed CinOT. Lowercase t is the ordinary orkhits (bichig's feminine final g)." }
 "A.init" = { keys = "f", status = "ok", note = "from editor: e · initial, a · isolated (split), a · initial (split), i · isolated (split), i · initial (split), o · isolated (split), o · initial (split), u · isolated (split), u · initial (split), oe · isolated (split), ue · isolated (split), ee · isolated (split), ee · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | u · initial: spine" }
 "A.fina" = { keys = "a", status = "ok", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
-"A.medi" = { keys = "e", after = { "@arch" = "E" }, status = "draft", note = "e by default; E only right after an arch: feminine g/h (G, Gx) and the b family (B, P, F, K, K2). Earlier: Noto has no leading nirugu, CMs pieces carry theirs." }
-"Aa.fina" = { keys = "t", after = { "@arch" = "Et" }, status = "draft", note = "after an arch the final takes the tooth too: k is toothless, so final ge is kEt (temege = DemekEt)" }
-"I.isol" = { keys = "I", status = "draft", note = "I; it keeps its leading nirugu after the suffix gap (dürim-i = Doiri^ I)" }
-"Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "draft", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
-"I.fina" = { keys = "I", status = "draft", note = "CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
-"I.init" = { keys = "J", status = "draft", note = "from editor: j · isolated" }
-"I.medi" = { keys = "i", after = { "@arch" = "u" }, status = "draft", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial. | u is the wavy shilbe that joins an arch directly (bi, pi, hi, gi)" }
-"O.fina" = { keys = "o", trim = "end", status = "draft", note = "o, with its trailing stub of nirugu cut off (given by hand, from rediu)" }
+"A.medi" = { keys = "e", after = { "@arch" = "E" }, status = "ok", note = "e by default; E only right after an arch: feminine g/h (G, Gx) and the b family (B, P, F, K, K2). Earlier: Noto has no leading nirugu, CMs pieces carry theirs." }
+"Aa.fina" = { keys = "t", after = { "@arch" = "Et" }, status = "ok", note = "after an arch the final takes the tooth too: k is toothless, so final ge is kEt (temege = DemekEt)" }
+"I.isol" = { keys = "I", status = "ok", note = "I; it keeps its leading nirugu after the suffix gap (dürim-i = Doiri^ I)" }
+"Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "ok", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
+"I.fina" = { keys = "I", status = "ok", note = "CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
+"I.init" = { keys = "J", status = "ok", note = "from editor: j · isolated" }
+"I.medi" = { keys = "i", after = { "@arch" = "u" }, status = "ok", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial. | u is the wavy shilbe that joins an arch directly (bi, pi, hi, gi)" }
+"O.fina" = { keys = "o", trim = "end", status = "ok", note = "o, with its trailing stub of nirugu cut off (given by hand, from rediu)" }
 "O.medi" = { keys = "o", status = "ok", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
-"U.fina" = { keys = "O", status = "draft", note = "from editor: o · final, u · final, oe · final, ue · final" }
-"U.isol" = { keys = "O", status = "draft" }
-"Ux.isol" = { keys = "O", marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }], status = "draft", note = "proposal: U.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
+"U.fina" = { keys = "O", status = "ok", note = "from editor: o · final, u · final, oe · final, ue · final" }
+"U.isol" = { keys = "O", status = "ok" }
+"Ux.isol" = { keys = "O", marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }], status = "ok", note = "proposal: U.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
 "O.init" = { keys = "o", status = "ok", note = "plus trailing nirugu is needed" }
-"Ue.fina" = { keys = "oA", status = "draft", note = "from editor: oe · isolated (split), ue · isolated (split)" }
-"W.fina" = { keys = "wA", status = "draft", note = "settled by hand; was in conflict: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
-"W.medi" = { keys = "w", status = "draft", note = "has a little bit of leading nirugu, i think it's gonna be a trend..." }
-"N.init" = { keys = "N", status = "draft", note = "from editor: n · isolated, n · initial" }
+"Ue.fina" = { keys = "oA", status = "ok", note = "from editor: oe · isolated (split), ue · isolated (split)" }
+"W.fina" = { keys = "wA", status = "ok", note = "settled by hand; was in conflict: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
+"W.medi" = { keys = "w", status = "ok", note = "has a little bit of leading nirugu, i think it's gonna be a trend..." }
+"N.init" = { keys = "N", status = "ok", note = "from editor: n · isolated, n · initial" }
 "N.medi" = { keys = "n", status = "ok" }
 "N.fina" = { keys = "%", status = "ok" }
-"G.medi" = { keys = "k", status = "draft", note = "settled by hand; was in conflict: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split)" }
-"G.fina" = { keys = "it", status = "draft", note = "from editor: g · final, ng · final (split)" }
-"B.init" = { keys = "b", status = "draft", note = "settled by hand; was in conflict: 'O' from b · isolated; 'b' from b · initial" }
-"B.medi" = { keys = "b", status = "draft", note = "from editor: b · medial" }
-"B.fina" = { keys = "$", status = "draft", note = "from editor: b · final" }
+"G.medi" = { keys = "k", status = "ok", note = "settled by hand; was in conflict: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split)" }
+"G.fina" = { keys = "it", status = "ok", note = "from editor: g · final, ng · final (split)" }
+"B.init" = { keys = "b", status = "ok", note = "settled by hand; was in conflict: 'O' from b · isolated; 'b' from b · initial" }
+"B.medi" = { keys = "b", status = "ok", note = "from editor: b · medial" }
+"B.fina" = { keys = "$", status = "ok", note = "from editor: b · final" }
 "B2.fina" = { keys = "ot", status = "ok" }
-"P.init" = { keys = "p", status = "draft", note = "from editor: p · isolated, p · initial" }
-"P.medi" = { keys = "p", status = "draft", note = "from editor: p · medial" }
-"P.fina" = { keys = "#", status = "draft", note = "from editor: p · final" }
-"H.init" = { keys = "H", status = "draft", note = "from editor: h · isolated, h · initial" }
-"Hx.init" = { keys = "G", status = "draft", note = "from editor: g · isolated, g · initial" }
+"P.init" = { keys = "p", status = "ok", note = "from editor: p · isolated, p · initial" }
+"P.medi" = { keys = "p", status = "ok", note = "from editor: p · medial" }
+"P.fina" = { keys = "#", status = "ok", note = "from editor: p · final" }
+"H.init" = { keys = "H", status = "ok", note = "from editor: h · isolated, h · initial" }
+"Hx.init" = { keys = "G", status = "ok", note = "from editor: g · isolated, g · initial" }
 "G.init" = { keys = "k", status = "ok" }
-"Gx.init" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "draft", note = "proposal: G.init + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
+"Gx.init" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "ok", note = "proposal: G.init + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
 "Hx.medi" = { keys = "g", status = "ok" }
 "H.medi" = { keys = "ee", after = { "@arch" = "Ee" }, status = "ok", note = "E only right after an arch: ee by default, Ee after one (baγsi = bEeesI)" }
-"Gx.medi" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "draft", note = "proposal: G.medi + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
-"H.fina" = { keys = "ea", status = "draft", note = "from editor: h · final" }
+"Gx.medi" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "ok", note = "proposal: G.medi + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
+"H.fina" = { keys = "(", status = "ok", note = "from editor: h · final" }
 "Hx.fina" = { keys = ")", status = "ok" }
-"M.init" = { keys = "M", status = "draft", note = "from editor: m · isolated, m · initial" }
-"M.medi" = { keys = "m", status = "draft", note = "from editor: m · medial" }
-"M.fina" = { keys = "^", status = "draft", note = "from editor: m · final" }
-"L.init" = { keys = "L", status = "draft", note = "from editor: l · isolated, l · initial" }
+"M.init" = { keys = "M", status = "ok", note = "from editor: m · isolated, m · initial" }
+"M.medi" = { keys = "m", status = "ok", note = "from editor: m · medial" }
+"M.fina" = { keys = "^", status = "ok", note = "from editor: m · final" }
+"L.init" = { keys = "L", status = "ok", note = "from editor: l · isolated, l · initial" }
 "L.medi" = { keys = "l", after = { "@arch" = "l" }, status = "draft", note = "from editor: l · medial | after an arch it is E with the horn (jöblel), which no 1998 key draws: a new drawing, cmsr.L.medi.after.@arch in drawings/<cut>.ufo; l stands in until then" }
 "L.fina" = { keys = "&", status = "draft", note = "from editor: l · final" }
 "S.init" = { keys = "S", status = "draft", note = "from editor: s · isolated, s · initial" }
@@ -100,7 +100,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "D.fina" = { keys = "dA", status = "ok" }
 "Ch.init" = { keys = "C", status = "draft", note = "from editor: ch · isolated, ch · initial | set to C from the cinu-a example (CinOT); was 'c'" }
 "Ch.medi" = { keys = "c", status = "draft", note = "from editor: ch · medial" }
-"Ch.fina" = { keys = "cA", status = "draft", note = "from editor: ch · final" }
+"Ch.fina" = { keys = "cA", status = "ok", note = "from editor: ch · final" }
 "J.medi" = { keys = "j", status = "ok" }
 "J.fina" = { keys = "jA", status = "ok" }
 "Y.init" = { keys = "Y", status = "ok" }
@@ -139,8 +139,8 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 [ligatures]
 "BAa.isol" = { status = "auto" }  # required
 "BI.isol" = { status = "auto" }  # required
-"BO.isol" = { keys = "B", trim = "end", status = "draft", note = "bo/bu is B, with the trailing stub cut as for o" }  # required
-"BUe.isol" = { keys = "BA", status = "draft", note = "given by hand: standalone bü = BA, without the shilbe, as other fonts draw it" }  # required
+"BO.isol" = { keys = "B", trim = "end", status = "ok", note = "bo/bu is B, with the trailing stub cut as for o" }  # required
+"BUe.isol" = { keys = "BA", status = "ok", note = "given by hand: standalone bü = BA, without the shilbe, as other fonts draw it" }  # required
 "BW.isol" = { status = "auto" }  # required
 "FAa.isol" = { status = "auto" }  # required
 "FI.isol" = { status = "auto" }  # required
@@ -209,8 +209,8 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "PW.init" = { status = "auto" }  # required
 "BA.medi" = { status = "auto" }  # required
 "BI.medi" = { status = "auto" }  # required
-"BO.medi" = { keys = "B", status = "draft", note = "given by hand: bo/bu is B (abuγad = feBgeoa)" }  # required
-"BOI.medi" = { keys = "Bi", status = "draft", note = "given by hand: bö/bü is Bi" }  # required
+"BO.medi" = { keys = "B", status = "ok", note = "given by hand: bo/bu is B (abuγad = feBgeoa)" }  # required
+"BOI.medi" = { keys = "Bi", status = "ok", note = "given by hand: bö/bü is Bi" }  # required
 "BW.medi" = { status = "auto" }  # required
 "FA.medi" = { status = "auto" }  # required
 "FI.medi" = { status = "auto" }  # required
@@ -219,8 +219,8 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "FW.medi" = { status = "auto" }  # required
 "GA.medi" = { status = "auto" }  # required
 "GI.medi" = { status = "auto" }  # required
-"GO.medi" = { keys = "K", status = "draft", note = "given by hand: medial gü/hü is K, the bow with its vowel (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki" }  # required
-"GOI.medi" = { keys = "Ki", status = "draft", note = "by the rule given with eγüdqü: K, plus i where the vowel has its shilbe, as GOI.init" }  # required
+"GO.medi" = { keys = "K", status = "ok", note = "given by hand: medial gü/hü is K, the bow with its vowel (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki" }  # required
+"GOI.medi" = { keys = "Ki", status = "ok", note = "by the rule given with eγüdqü: K, plus i where the vowel has its shilbe, as GOI.init" }  # required
 "GW.medi" = { status = "auto" }  # required
 "GxA.medi" = { status = "auto" }  # required
 "GxI.medi" = { status = "auto" }  # required
@@ -244,7 +244,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "PW.medi" = { status = "auto" }  # required
 "BAa.fina" = { status = "auto" }  # required
 "BI.fina" = { status = "auto" }  # required
-"BO.fina" = { keys = "B", trim = "end", status = "draft", note = "bo/bu is B, with the trailing stub cut as for o" }  # required
+"BO.fina" = { keys = "B", trim = "end", status = "ok", note = "bo/bu is B, with the trailing stub cut as for o" }  # required
 "BUe.fina" = { status = "auto" }  # required
 "BW.fina" = { status = "auto" }  # required
 "FAa.fina" = { status = "auto" }  # required
@@ -254,7 +254,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "FW.fina" = { status = "auto" }  # required
 "GAa.fina" = { status = "auto" }  # required
 "GI.fina" = { status = "auto" }  # required
-"GO.fina" = { keys = "K", status = "draft", note = "given by hand: final gü/hü is K (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki" }  # required
+"GO.fina" = { keys = "K", status = "ok", note = "given by hand: final gü/hü is K (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki" }  # required
 "GUe.fina" = { status = "auto" }  # required
 "GW.fina" = { status = "auto" }  # required
 "GxAa.fina" = { status = "auto" }  # required
@@ -293,7 +293,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "LL.medi" = { keys = "lX", status = "ok" }
 "ML.medi" = { status = "auto" }
 "MM.medi" = { status = "auto" }
-"AGH.fina" = { keys = "ekEa", after = { "@arch" = "EkEa" }, status = "draft", note = "was EkEa; the leading E made e by the E-only-after-arch rule, EkEa kept for after an arch: check" }
+"AGH.fina" = { after = { "@arch" = "EkEa" }, status = "new", note = "was EkEa; the leading E made e by the E-only-after-arch rule, EkEa kept for after an arch: check" }
 
 [chars]
 "U+1800" = { status = "todo" }
