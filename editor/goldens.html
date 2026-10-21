@@ -16,29 +16,38 @@
     header select { padding: 3px 6px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: inherit; }
     header a { color: var(--accent); }
     header .hint { color: var(--muted); font-size: 12px; flex: 1; }
-    main { padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
-    .golden { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
-    .golden.ok { border-color: var(--ok); }
-    .golden.fail { border-color: var(--bad); }
-    .golden h2 { margin: 0; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-    .chip { font-size: 11px; font-weight: normal; padding: 1px 7px; border-radius: 99px; border: 1px solid currentColor; }
+    main { padding: 16px; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+    .golden { display: grid; grid-template-columns: 130px auto minmax(260px, 1fr); align-items: center; gap: 12px 20px; padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; }
+    .golden.ok { border-left-color: var(--ok); }
+    .golden.fail { border-left-color: var(--bad); }
+    .golden.focus { box-shadow: 0 0 0 2px var(--accent); }
+    .name { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+    .name b { font-size: 16px; }
+    .chip { font-size: 11px; padding: 1px 7px; border-radius: 99px; border: 1px solid currentColor; }
     .chip.pending { color: var(--pending); }
     .chip.ok { color: var(--ok); }
     .chip.fixed { color: #6b5bd6; }
-    .row button.secondary { background: none; color: inherit; border-color: var(--line); }
-    .verdict { margin-left: auto; font-size: 12px; font-weight: normal; }
+    .verdict { font-size: 12px; }
     .verdict.pass { color: var(--ok); }
     .verdict.fail { color: var(--bad); }
-    .renders { display: flex; gap: 18px; align-items: flex-start; min-height: 150px; }
-    figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    figcaption { font-size: 10px; color: var(--muted); }
-    .v { writing-mode: vertical-lr; font-size: 46px; line-height: 1.2; white-space: pre; }
-    .ref { font-family: "Reference"; color: var(--muted); }
-    .row { display: flex; align-items: center; gap: 8px; }
-    .row input { flex: 1; font: 17px ui-monospace, monospace; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: inherit; }
-    .row button { padding: 4px 12px; border: 1px solid var(--ink); border-radius: 6px; background: var(--ink); color: var(--panel); cursor: pointer; }
+    .renders { display: flex; gap: 14px; align-items: flex-start; }
+    figure { margin: 0; width: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    figcaption { font-size: 10px; color: var(--muted); white-space: nowrap; }
+    .v { writing-mode: vertical-lr; line-height: 1; white-space: pre; max-height: 170px; overflow: hidden; }
+    /* CMs draws its letters smaller within the em than Noto; this brings them to the same size */
+    .v.cms { font-size: 50px; }
+    .v.ref { font-size: 36px; font-family: "Reference"; color: var(--muted); }
+    .controls { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .row input { flex: 1 1 120px; min-width: 0; font: 17px ui-monospace, monospace; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: inherit; }
+    .row button { flex: none; white-space: nowrap; padding: 5px 12px; border: 1px solid var(--ink); border-radius: 6px; background: var(--ink); color: var(--panel); cursor: pointer; font-size: 13px; }
+    .row button.secondary { background: none; color: inherit; border-color: var(--line); }
     .draws { font-size: 12px; color: var(--muted); }
-    .draws code { color: var(--ink); }
+    .draws code { color: var(--bad); font-size: 13px; }
+    @media (max-width: 720px) {
+      .golden { grid-template-columns: 1fr auto; }
+      .controls { grid-column: 1 / -1; }
+    }
   </style>
 </head>
 <body>
@@ -86,18 +95,25 @@
       $("#goldens").innerHTML = state.data.goldens.map((golden, index) => {
         const fixed = golden.status === "fixed";
         const verdict = golden.passed
-          ? `<span class="verdict pass">✓ ${fixed ? "as accepted" : "matches"}</span>`
-          : `<span class="verdict fail">✗ ${fixed ? "changed since accepted" : "differs"}</span>`;
+          ? `<span class="verdict pass">✓ ${fixed ? "as accepted" : "matches CMs"}</span>`
+          : `<span class="verdict fail">✗ ${fixed ? "changed since accepted" : "differs from CMs"}</span>`;
         const border = golden.status === "pending" ? "" : golden.passed ? "ok" : "fail";
+        const draws = golden.produced !== golden.keys ? `<div class="draws">the font draws <code>${escape(golden.produced)}</code></div>` : "";
         return `<section class="golden ${border}" data-index="${index}">
-          <h2>${escape(golden.latin)} <span class="chip ${golden.status}">${golden.status}</span>${verdict}</h2>
+          <div class="name"><b>${escape(golden.latin)}</b><span class="chip ${golden.status}">${golden.status}</span>${verdict}</div>
           <div class="renders">
             <figure><span class="v ref">${escape(golden.text)}</span><figcaption>Unicode</figcaption></figure>
-            <figure><span class="v" style="font-family:'${font.css}'">${escape(golden.text)}</span><figcaption>Revived</figcaption></figure>
-            <figure><span class="v" style="font-family:'legacy-${state.cut}'">${escape(golden.keys)}</span><figcaption>CMs typed</figcaption></figure>
+            <figure><span class="v cms" style="font-family:'${font.css}'">${escape(golden.text)}</span><figcaption>Revived</figcaption></figure>
+            <figure><span class="v cms typed" style="font-family:'legacy-${state.cut}'">${escape(golden.keys)}</span><figcaption>CMs typed</figcaption></figure>
           </div>
-          <div class="row"><input value="${escape(golden.keys)}" spellcheck="false" autocomplete="off" aria-label="CMs keys for ${escape(golden.latin)}"><button data-status="ok">Confirm</button><button data-status="fixed" class="secondary" title="Our font differs from CMs here on purpose: pin what it draws now">Differs on purpose</button></div>
-          <div class="draws">the font draws <code>${escape(golden.produced)}</code></div>
+          <div class="controls">
+            <div class="row">
+              <input value="${escape(golden.keys)}" spellcheck="false" autocomplete="off" aria-label="CMs keys for ${escape(golden.latin)}">
+              <button data-status="ok">Confirm ↵</button>
+              <button data-status="fixed" class="secondary" title="Our font differs from CMs here on purpose: pin what it draws now">Differs on purpose</button>
+            </div>
+            ${draws}
+          </div>
         </section>`;
       }).join("");
     }
@@ -121,7 +137,11 @@
     $("#goldens").addEventListener("input", (event) => {
       const section = event.target.closest(".golden");
       if (!section) return;
-      section.querySelector(`.v[style*="legacy"]`).textContent = event.target.value;
+      section.querySelector(".v.typed").textContent = event.target.value;
+    });
+    $("#goldens").addEventListener("focusin", (event) => {
+      document.querySelectorAll(".golden.focus").forEach((element) => element.classList.remove("focus"));
+      event.target.closest(".golden")?.classList.add("focus");
     });
     $("#goldens").addEventListener("keydown", (event) => {
       if (event.key !== "Enter" || event.target.tagName !== "INPUT") return;
