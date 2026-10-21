@@ -208,9 +208,31 @@ function groupExample(previous) {
   return previous.startsWith("@") ? (state.groups[previous.slice(1)] || [])[0] : previous;
 }
 
+// A hand drawing replaces keys, as in the build: for a rule, the piece's own rule drawing
+// wins over its group's; then a drawing of the whole piece.
+function drawingPart(name, cut, previous, item) {
+  const drawings = state.data.drawings?.[cut] || {};
+  const names = [];
+  if (previous && ruleKeys(item, previous) !== null) {
+    names.push(`cmsr.${name}.after.${previous}`);
+    if (item.after[previous] === undefined) {
+      for (const key of Object.keys(item.after)) {
+        if (key.startsWith("@") && (state.groups[key.slice(1)] || []).includes(previous)) names.push(`cmsr.${name}.after.${key}`);
+      }
+    }
+  } else {
+    const glyph = target(name)?.glyph;
+    if (glyph) names.push(glyph);
+  }
+  const drawing = names.map((found) => drawings[found]).find(Boolean);
+  return drawing ? { path: drawing.path, advance: drawing.advance, bounds: drawing.bounds, drawn: true } : null;
+}
+
 // `previous` is the piece right before, for the neighbour rules.
 function namedParts(name, cut = state.ui.cut, previous = null) {
   const item = entry(name);
+  const drawn = drawingPart(name, cut, previous, item);
+  if (drawn) return [drawn];
   const ruleKeys_ = ruleKeys(item, previous);
   if (ruleKeys_ || hasDrawing(item, cut)) {
     const parts = ruleKeys_ ? keyParts(ruleKeys_, cut) : keyParts(keysFor(item, cut) || "", cut, item?.shift || {});
@@ -919,6 +941,7 @@ async function revertKeys() {
   const response = await fetch("/api/data");
   const data = await response.json();
   state.entries = data.entries;
+  state.data.drawings = data.drawings;
   renderAll();
 }
 

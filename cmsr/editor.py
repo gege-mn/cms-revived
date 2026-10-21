@@ -20,6 +20,7 @@ from fontTools.pens.recordingPen import DecomposingRecordingPen
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.ttLib import TTFont
 from mongfontbuilder import data, splitWrittens
+from ufoLib2 import Font
 
 from . import config, goldens
 from .build import _stem, build
@@ -80,6 +81,27 @@ def _legacy(cut_id: str) -> dict:
     }
 
 
+def _drawings(cut_id: str) -> dict:
+    """The hand drawings of a cut, read fresh: they change in a drawing app while this runs."""
+
+    path = config.CUTS[cut_id].drawings_path
+    if not path.exists():
+        return {}
+    ufo = Font.open(path)
+    found = {}
+    for glyph in ufo:
+        pen = SVGPathPen(ufo, ntos=_number)
+        bounds = BoundsPen(ufo)
+        glyph.draw(pen)
+        glyph.draw(bounds)
+        found[glyph.name] = {
+            "advance": glyph.width,
+            "path": pen.getCommands(),
+            "bounds": [round(value) for value in bounds.bounds or (0, 0, 0, 0)],
+        }
+    return found
+
+
 def _label(code_point: int) -> str:
     alias = data.aliases[unicodedata.name(chr(code_point))]
     return alias if isinstance(alias, str) else alias.get(LOCALE, f"u{code_point:04X}")
@@ -133,6 +155,7 @@ def _static_data() -> dict:
         target_rows.append(
             {
                 "name": target.name,
+                "glyph": target.glyph,
                 "kind": target.kind,
                 "required": target.required,
                 "atoms": atoms,
@@ -242,7 +265,8 @@ class Handler(SimpleHTTPRequestHandler):
         if path == "/api/data":
             with lock:
                 mapping = Mapping.load()
-                return self._json({**_static_data(), **_mapping_state(mapping), "builds": last_builds})
+                drawings = {cut_id: _drawings(cut_id) for cut_id in config.CUTS}
+                return self._json({**_static_data(), **_mapping_state(mapping), "drawings": drawings, "builds": last_builds})
         if path == "/api/goldens":
             with lock:
                 return self._json(_goldens())
