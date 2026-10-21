@@ -6,7 +6,7 @@
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
 #         new    CMs has no such piece; drawn in drawings/<cut>.ufo
-#         auto   built from its parts (ligatures, pre-MVS forms, whole forms)
+#         auto   built from its parts (ligatures, pre-MVS forms)
 #
 # pieces     single written units in a joining position: everything is built from these
 # mvs        the shape a unit takes before an MVS, where it has one of its own
@@ -17,11 +17,11 @@
 # The editor (cmsr editor) rewrites this file; comments other than this header are not kept.
 
 [pieces]
-"A.isol" = { keys = "ft", status = "draft", note = "from editor: e · isolated" }
+"A.isol" = { keys = "ft", status = "ok", note = "from editor: e · isolated" }
 "Aa.isol" = { status = "todo" }
-"A.init" = { keys = "f", status = "draft", note = "from editor: e · initial, a · isolated (split), a · initial (split), i · isolated (split), i · initial (split), o · isolated (split), o · initial (split), u · isolated (split), u · initial (split), oe · isolated (split), ue · isolated (split), ee · isolated (split), ee · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | u · initial: spine" }
-"A.fina" = { keys = "a", status = "draft", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
-"A.medi" = { keys = "e", status = "draft", note = "from editor: a · medial, e · medial, n · medial, a · initial (split), ng · isolated (split), ng · initial (split), ng · medial (split), ng · final (split)" }
+"A.init" = { keys = "f", status = "ok", note = "from editor: e · initial, a · isolated (split), a · initial (split), i · isolated (split), i · initial (split), o · isolated (split), o · initial (split), u · isolated (split), u · initial (split), oe · isolated (split), ue · isolated (split), ee · isolated (split), ee · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | u · initial: spine" }
+"A.fina" = { keys = "a", status = "ok", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
+"A.medi" = { keys = "E", status = "draft", note = "so it's little complicated, Noto seems to have no leading nirugu, and displaying immediate pointy part of the sidu. I've updated it to \"E\", which is sidu with no leading nirugu , but that makes it look incorrect (i've put correct CMs after the glyph in parentheses) for AA.init (Fe), and AA.medi (Ee) AG.medi (the first is e, not E). AG.fina and other unmentioned ones are correct" }
 "Aa.fina" = { status = "todo" }
 "I.isol" = { status = "todo" }
 "Ix.isol" = { status = "todo" }

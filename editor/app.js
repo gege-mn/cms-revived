@@ -318,30 +318,38 @@ function renderTarget() {
   $("#keys").focus();
 }
 
-function codeChips(variant) {
-  const chips = [`U+${variant.codePoint.toString(16).toUpperCase()}`];
-  if (variant.fvs) chips.push(`FVS${variant.fvs}`);
-  return chips.map((chip) => `<i class="cp">${chip}</i>`).join("");
+function useChip(variant) {
+  const code = `U+${variant.codePoint.toString(16).toUpperCase()}${variant.fvs ? ` + FVS${variant.fvs}` : ""}`;
+  const fvs = variant.fvs ? ` <b>fvs${variant.fvs}</b>` : "";
+  return `<i class="use ${variant.default ? "" : "alt"}" title="${code}${variant.default ? "" : " (variant)"}">${escapeHtml(variant.label)} ${variant.position}${fvs}</i>`;
 }
 
+// One card per written form: the drawing depends only on it, not on which letter uses it.
 function renderUsage() {
   const element = $("#forms");
   if (!element) return;
   const name = state.ui.current;
-  const ids = target(name).usedBy || [];
-  if (!ids.length) {
+  const groups = new Map();
+  for (const id of target(name).usedBy || []) {
+    const variant = state.variantsById[id];
+    if (!groups.has(variant.written)) groups.set(variant.written, []);
+    groups.get(variant.written).push(variant);
+  }
+  if (!groups.size) {
     element.innerHTML = "";
     return;
   }
-  const cards = ids.map((id) => {
-    const variant = state.variantsById[id];
-    return `<div class="card ${variant.default ? "" : "alt"}${variant.written === name ? " self" : ""}" data-written="${escapeAttr(variant.written)}" title="Map ${escapeAttr(variant.written)} as a whole form">
-      <header>${escapeHtml(variant.label)} · ${POSITIONS[variant.position]} ${codeChips(variant)}</header>
-      <div class="pair">${referenceSvg(variant.reference, 64)}${legacySvg(variantParts(variant, name), 64)}</div>
-      <footer><code>${escapeHtml(variant.written)}</code>${variant.default ? "" : " · variant"}</footer>
+  const cards = [...groups].map(([written, uses]) => {
+    const first = uses[0];
+    const onlyVariants = uses.every((variant) => !variant.default);
+    return `<div class="card ${onlyVariants ? "alt" : ""}${written === name ? " self" : ""}" data-written="${escapeAttr(written)}" title="Map ${escapeAttr(written)} as a whole form">
+      <header><code>${escapeHtml(written)}</code></header>
+      <div class="pair">${referenceSvg(first.reference, 64)}${legacySvg(variantParts(first, name), 64)}</div>
+      <footer>${uses.map(useChip).join("")}</footer>
     </div>`;
   });
-  element.innerHTML = `<h3>${ids.length} forms <span class="hint">Unicode left · CMs right, this piece highlighted</span></h3><div class="cards">${cards.join("")}</div>`;
+  const total = target(name).usedBy.length;
+  element.innerHTML = `<h3>${groups.size} written forms <span class="hint">used by ${total} letter forms · Unicode left · CMs right, this piece highlighted</span></h3><div class="cards">${cards.join("")}</div>`;
 }
 
 function renderWords() {

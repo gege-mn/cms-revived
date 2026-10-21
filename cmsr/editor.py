@@ -87,7 +87,7 @@ def _static_data() -> dict:
     variant_rows = []
     used_by: dict[str, list[str]] = {}
     for variant in variants():
-        for atom in variant.atoms:
+        for atom in dict.fromkeys(variant.atoms):
             used_by.setdefault(atom, []).append(variant.id)
         variant_rows.append(
             {

@@ -124,6 +124,10 @@ figcaption { font-size: 11px; color: var(--muted); }
 .card { cursor: pointer; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
 .card.alt { border-style: dashed; }
 .card.self { border-color: var(--accent); }
+.card footer { display: flex; flex-wrap: wrap; gap: 3px; }
+.use { font-style: normal; font-size: 11px; padding: 0 5px; border-radius: 4px; background: var(--bg); color: var(--ink); }
+.use.alt { color: var(--muted); }
+.use b { font-weight: normal; color: var(--accent); }
 .cp { font-style: normal; font-family: var(--mono); font-size: 10px; padding: 0 4px; border-radius: 4px; background: var(--bg); color: var(--muted); }
 .card header { font-size: 12px; }
 .card footer { font-size: 11px; color: var(--muted); }
