@@ -34,7 +34,8 @@ HEADER = """\
 #         marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }]
 #         contours count from 0 in the key's own order; dx/dy move them, in font units
 # after   other keys when a given piece comes right before, in any letter:
-#         after = { "A.init" = "e" } types the piece "e" when it follows the crown
+#         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
+#         "@arch" names a group from [groups]; a piece named on its own wins over a group
 # status  todo   not mapped yet; the build draws a placeholder box
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
@@ -42,6 +43,7 @@ HEADER = """\
 #                there; keys, if any, stand in until it is drawn
 #         auto   built from its parts (ligatures, pre-MVS forms, whole forms)
 #
+# groups     named sets of pieces for "after" rules, such as the arch-shaped letters
 # pieces     single written units in a joining position: everything is built from these
 # mvs        the shape a unit takes before an MVS, where it has one of its own
 # ligatures  bow letters and others drawn as one form; "auto" joins the parts as they are
@@ -113,16 +115,21 @@ def default_entry(target: Target) -> Entry:
 
 
 class Mapping:
-    def __init__(self, entries: dict[str, Entry], path: Path = MAPPING_FILE) -> None:
+    def __init__(
+        self, entries: dict[str, Entry], path: Path = MAPPING_FILE, groups: dict[str, list[str]] | None = None
+    ) -> None:
         self.entries = entries
         self.path = path
+        self.groups = groups or {}
         self.targets = {target.name: target for target in targets()}
 
     @classmethod
     def load(cls, path: Path = MAPPING_FILE) -> Mapping:
         entries: dict[str, Entry] = {}
+        groups: dict[str, list[str]] = {}
         if path.exists():
             raw = tomllib.loads(path.read_text(encoding="utf-8"))
+            groups = {name: list(members) for name, members in raw.get("groups", {}).items()}
             for section, kind in SECTIONS.items():
                 for name, fields in raw.get(section, {}).items():
                     entries[name] = Entry(
@@ -135,7 +142,20 @@ class Mapping:
                         marks=[Mark.from_dict(mark) for mark in fields.get("marks", [])],
                         after=dict(fields.get("after", {})),
                     )
-        return cls(entries, path)
+        return cls(entries, path, groups)
+
+    def rules(self, entry: Entry) -> dict[str, str]:
+        """The entry's "after" rules by single piece: groups expanded, named pieces winning."""
+
+        found: dict[str, str] = {}
+        for previous, keys in entry.after.items():
+            if previous.startswith("@"):
+                for member in self.groups.get(previous[1:], []):
+                    found.setdefault(member, keys)
+        for previous, keys in entry.after.items():
+            if not previous.startswith("@"):
+                found[previous] = keys
+        return found
 
     def get(self, name: str) -> Entry:
         if name in self.entries:
@@ -175,7 +195,10 @@ class Mapping:
                 if missing:
                     found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(missing)!r}")
                 for previous, rule_keys in entry.after.items():
-                    if previous not in self.targets or self.targets[previous].kind != "piece":
+                    if previous.startswith("@"):
+                        if previous[1:] not in self.groups:
+                            found.append(f"{entry.name}: rule after {previous!r}, which is not a group")
+                    elif previous not in self.targets or self.targets[previous].kind != "piece":
                         found.append(f"{entry.name}: rule after {previous!r}, which is not a piece")
                     if bad := sorted({key for key in rule_keys if key not in keyed}):
                         found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(bad)!r} (after {previous})")
@@ -187,6 +210,10 @@ class Mapping:
                     bad = [index for index in mark.contours or [] if not 0 <= index < count]
                     if bad:
                         found.append(f"{entry.name}: {cut_id} key {mark.key!r} has {count} contours, not {bad}")
+        for group, members in self.groups.items():
+            for member in members:
+                if member not in self.targets or self.targets[member].kind != "piece":
+                    found.append(f"group {group}: {member!r} is not a piece")
         return found
 
     def save(self) -> None:
@@ -196,6 +223,11 @@ class Mapping:
             by_section[kind_to_section[entry.kind]].append(entry)
 
         lines = [HEADER]
+        if self.groups:
+            lines.append("[groups]")
+            for group, members in self.groups.items():
+                lines.append(f"{group} = [{', '.join(_string(member) for member in members)}]")
+            lines.append("")
         for section, entries in by_section.items():
             if not entries:
                 continue

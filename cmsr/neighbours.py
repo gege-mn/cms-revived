@@ -28,7 +28,7 @@ def rule_glyph(piece: str, previous: str) -> str:
 
 
 def rules(mapping: Mapping) -> dict[Rule, str]:
-    return {(entry.name, previous): keys for entry in mapping.all() for previous, keys in entry.after.items()}
+    return {(entry.name, previous): keys for entry in mapping.all() for previous, keys in mapping.rules(entry).items()}
 
 
 def add_inner_forms(ufo: Font, found: dict[Rule, str]) -> None:

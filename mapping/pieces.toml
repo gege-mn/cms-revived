@@ -6,7 +6,8 @@
 #         marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }]
 #         contours count from 0 in the key's own order; dx/dy move them, in font units
 # after   other keys when a given piece comes right before, in any letter:
-#         after = { "A.init" = "e" } types the piece "e" when it follows the crown
+#         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
+#         "@arch" names a group from [groups]; a piece named on its own wins over a group
 # status  todo   not mapped yet; the build draws a placeholder box
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
@@ -14,6 +15,7 @@
 #                there; keys, if any, stand in until it is drawn
 #         auto   built from its parts (ligatures, pre-MVS forms, whole forms)
 #
+# groups     named sets of pieces for "after" rules, such as the arch-shaped letters
 # pieces     single written units in a joining position: everything is built from these
 # mvs        the shape a unit takes before an MVS, where it has one of its own
 # ligatures  bow letters and others drawn as one form; "auto" joins the parts as they are
@@ -22,18 +24,21 @@
 #
 # The editor (cmsr editor) rewrites this file; comments other than this header are not kept.
 
+[groups]
+arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "Gx.medi", "F.init", "F.medi", "K2.init", "K2.medi", "K.init", "K.medi"]
+
 [pieces]
 "A.isol" = { keys = "ft", status = "ok", note = "from editor: e · isolated" }
 "Aa.isol" = { keys = "T", status = "draft", note = "T is the orkhits for the a/e after an MVS (chachlag), with the gap built in: cinu-a is typed CinOT. Lowercase t is the ordinary orkhits (bichig's feminine final g)." }
 "A.init" = { keys = "f", status = "ok", note = "from editor: e · initial, a · isolated (split), a · initial (split), i · isolated (split), i · initial (split), o · isolated (split), o · initial (split), u · isolated (split), u · initial (split), oe · isolated (split), ue · isolated (split), ee · isolated (split), ee · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | u · initial: spine" }
 "A.fina" = { keys = "a", status = "ok", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
-"A.medi" = { keys = "e", after = { "G.medi" = "E", "B.init" = "E", "B.medi" = "E", "P.init" = "E", "P.medi" = "E", "G.init" = "E", "Gx.init" = "E", "Gx.medi" = "E", "F.init" = "E", "F.medi" = "E", "K2.init" = "E", "K2.medi" = "E", "K.init" = "E", "K.medi" = "E" }, status = "draft", note = "e by default; E only right after an arch: feminine g/h (G, Gx) and the b family (B, P, F, K, K2). Earlier: Noto has no leading nirugu, CMs pieces carry theirs." }
+"A.medi" = { keys = "e", after = { "@arch" = "E" }, status = "draft", note = "e by default; E only right after an arch: feminine g/h (G, Gx) and the b family (B, P, F, K, K2). Earlier: Noto has no leading nirugu, CMs pieces carry theirs." }
 "Aa.fina" = { keys = "t", status = "draft" }
 "I.isol" = { keys = "I", status = "draft" }
 "Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "draft", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
 "I.fina" = { keys = "I", status = "draft", note = "CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
 "I.init" = { keys = "J", status = "draft", note = "from editor: j · isolated" }
-"I.medi" = { keys = "i", status = "draft", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial." }
+"I.medi" = { keys = "i", after = { "@arch" = "u" }, status = "draft", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial. | u is the wavy shilbe that joins an arch directly (bi, pi, hi, gi)" }
 "O.fina" = { keys = "o", status = "draft", note = "has trailing nirugu" }
 "O.medi" = { keys = "o", status = "ok", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
 "U.fina" = { keys = "O", status = "draft", note = "from editor: o · final, u · final, oe · final, ue · final" }

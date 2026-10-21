@@ -159,6 +159,7 @@ def _static_data() -> dict:
 def _mapping_state(mapping: Mapping) -> dict:
     return {
         "entries": {entry.name: entry.as_dict() for entry in mapping.all()},
+        "groups": mapping.groups,
         "problems": mapping.problems(),
     }
 

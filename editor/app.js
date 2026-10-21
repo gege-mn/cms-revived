@@ -16,6 +16,7 @@ const DEFAULT_WORDS = "ᠮᠣᠩᠭᠣᠯ ᠪᠢᠴᠢᠭ ᠰᠠᠮᠪᠠ ᠦᠰ
 const state = {
   data: null,
   entries: {},
+  groups: {},
   problems: [],
   builds: {},
   ui: loadUi(),
@@ -48,6 +49,7 @@ async function boot() {
   const data = await response.json();
   state.data = data;
   state.entries = data.entries;
+  state.groups = data.groups || {};
   state.problems = data.problems;
   state.builds = data.builds || {};
   for (const target of data.targets) state.targetsByName[target.name] = target;
@@ -171,12 +173,26 @@ function hasDrawing(item, cut = state.ui.cut) {
   return Boolean(keysFor(item, cut) || item?.marks?.length);
 }
 
+// A piece named on its own wins over a group that contains it, as in the build.
+function ruleKeys(item, previous) {
+  if (!previous || !item?.after) return null;
+  if (item.after[previous] !== undefined) return item.after[previous];
+  for (const [key, keys] of Object.entries(item.after)) {
+    if (key.startsWith("@") && (state.groups[key.slice(1)] || []).includes(previous)) return keys;
+  }
+  return null;
+}
+
+function groupExample(previous) {
+  return previous.startsWith("@") ? (state.groups[previous.slice(1)] || [])[0] : previous;
+}
+
 // `previous` is the piece right before, for the neighbour rules.
 function namedParts(name, cut = state.ui.cut, previous = null) {
   const item = entry(name);
-  const ruleKeys = previous && item?.after?.[previous];
-  if (ruleKeys || hasDrawing(item, cut)) {
-    const parts = keyParts(ruleKeys || keysFor(item, cut) || "", cut);
+  const ruleKeys_ = ruleKeys(item, previous);
+  if (ruleKeys_ || hasDrawing(item, cut)) {
+    const parts = keyParts(ruleKeys_ || keysFor(item, cut) || "", cut);
     const advance = parts.reduce((sum, part) => sum + part.advance, 0);
     return [...parts, ...markParts(item, cut, advance)];
   }
@@ -358,10 +374,11 @@ function renderStage() {
       <figure><figcaption>CMs ${escapeHtml(cutName(cut))}</figcaption>${legacySvg(namedParts(name), 150, "big")}</figure>
       ${info.reference ? `<figure><figcaption>Unicode</figcaption>${referenceSvg(info.reference, 150)}</figure>` : ""}
       ${Object.keys(entry(name).after || {})
+        .filter((previous) => groupExample(previous))
         .map(
           (previous) =>
-            `<figure><figcaption>after ${escapeHtml(previous)}</figcaption>${legacySvg(
-              [...namedParts(previous), ...namedParts(name, cut, previous).map((part) => ({ ...part, highlight: true }))],
+            `<figure><figcaption>after ${escapeHtml(previous)}${previous.startsWith("@") ? `<br>(${escapeHtml(groupExample(previous))})` : ""}</figcaption>${legacySvg(
+              [...namedParts(groupExample(previous)), ...namedParts(name, cut, groupExample(previous)).map((part) => ({ ...part, highlight: true }))],
               150,
               "big",
             )}</figure>`,
@@ -415,7 +432,7 @@ function renderRules() {
   );
   $("#rules").innerHTML =
     rows.join("") +
-    `<datalist id="piece-names">${pieces.map((piece) => `<option value="${escapeAttr(piece)}">`).join("")}</datalist>` +
+    `<datalist id="piece-names">${[...Object.keys(state.groups).map((group) => `@${group}`), ...pieces].map((piece) => `<option value="${escapeAttr(piece)}">`).join("")}</datalist>` +
     `<button id="add-rule" class="add-mark">+ After rule</button>`;
 }
 
@@ -610,6 +627,7 @@ async function flushSave() {
     return;
   }
   state.entries = result.entries;
+  state.groups = result.groups || state.groups;
   state.problems = result.problems;
   renderProblems();
   renderList();
