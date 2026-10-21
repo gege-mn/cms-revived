@@ -33,6 +33,8 @@ HEADER = """\
 # marks   contours lifted from another key and laid over the keys, e.g. the dusal of N:
 #         marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }]
 #         contours count from 0 in the key's own order; dx/dy move them, in font units
+# after   other keys when a given piece comes right before, in any letter:
+#         after = { "A.init" = "e" } types the piece "e" when it follows the crown
 # status  todo   not mapped yet; the build draws a placeholder box
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
@@ -85,6 +87,7 @@ class Entry:
     note: str = ""
     cuts: dict[str, str] = field(default_factory=dict)
     marks: list[Mark] = field(default_factory=list)
+    after: dict[str, str] = field(default_factory=dict)
 
     def keys_for(self, cut_id: str) -> str | None:
         return self.cuts.get(cut_id, self.keys)
@@ -97,6 +100,8 @@ class Entry:
             found["cuts"] = self.cuts
         if self.marks:
             found["marks"] = [mark.as_dict() for mark in self.marks]
+        if self.after:
+            found["after"] = self.after
         if self.note:
             found["note"] = self.note
         return found
@@ -128,6 +133,7 @@ class Mapping:
                         note=fields.get("note", ""),
                         cuts=dict(fields.get("cuts", {})),
                         marks=[Mark.from_dict(mark) for mark in fields.get("marks", [])],
+                        after=dict(fields.get("after", {})),
                     )
         return cls(entries, path)
 
@@ -168,6 +174,11 @@ class Mapping:
                 missing = sorted({key for key in keys if key not in keyed})
                 if missing:
                     found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(missing)!r}")
+                for previous, rule_keys in entry.after.items():
+                    if previous not in self.targets or self.targets[previous].kind != "piece":
+                        found.append(f"{entry.name}: rule after {previous!r}, which is not a piece")
+                    if bad := sorted({key for key in rule_keys if key not in keyed}):
+                        found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(bad)!r} (after {previous})")
                 for mark in entry.marks:
                     if mark.key not in keyed:
                         found.append(f"{entry.name}: {cut_id} has no glyph on mark key {mark.key!r}")
@@ -217,6 +228,9 @@ def _inline(entry: Entry) -> str:
         fields.append(f"cuts = {{ {cuts} }}")
     if entry.marks:
         fields.append("marks = [" + ", ".join(_inline_mark(mark) for mark in entry.marks) + "]")
+    if entry.after:
+        rules = ", ".join(f"{_string(previous)} = {_string(keys)}" for previous, keys in entry.after.items())
+        fields.append(f"after = {{ {rules} }}")
     fields.append(f"status = {_string(entry.status)}")
     if entry.note:
         fields.append(f"note = {_string(entry.note)}")

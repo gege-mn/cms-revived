@@ -248,6 +248,7 @@ class Handler(SimpleHTTPRequestHandler):
                             note=body.get("note", ""),
                             cuts={cut: keys for cut, keys in body.get("cuts", {}).items() if keys},
                             marks=[Mark.from_dict(mark) for mark in body.get("marks", [])],
+                            after={previous: keys for previous, keys in body.get("after", {}).items() if previous and keys},
                         )
                     )
                     mapping.save()

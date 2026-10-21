@@ -5,6 +5,8 @@
 # marks   contours lifted from another key and laid over the keys, e.g. the dusal of N:
 #         marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }]
 #         contours count from 0 in the key's own order; dx/dy move them, in font units
+# after   other keys when a given piece comes right before, in any letter:
+#         after = { "A.init" = "e" } types the piece "e" when it follows the crown
 # status  todo   not mapped yet; the build draws a placeholder box
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
@@ -25,7 +27,7 @@
 "Aa.isol" = { keys = "t", status = "draft" }
 "A.init" = { keys = "f", status = "ok", note = "from editor: e · initial, a · isolated (split), a · initial (split), i · isolated (split), i · initial (split), o · isolated (split), o · initial (split), u · isolated (split), u · initial (split), oe · isolated (split), ue · isolated (split), ee · isolated (split), ee · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | u · initial: spine" }
 "A.fina" = { keys = "a", status = "ok", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
-"A.medi" = { keys = "E", status = "draft", note = "so it's little complicated, Noto seems to have no leading nirugu, and displaying immediate pointy part of the sidu. I've updated it to \"E\", which is sidu with no leading nirugu , but that makes it look incorrect (i've put correct CMs after the glyph in parentheses) for AA.init (Fe), and AA.medi (Ee) AG.medi (the first is e, not E). AG.fina and other unmentioned ones are correct" }
+"A.medi" = { keys = "E", after = { "A.init" = "e", "A.medi" = "e" }, status = "draft", note = "so it's little complicated, Noto seems to have no leading nirugu, and displaying immediate pointy part of the sidu. I've updated it to \"E\", which is sidu with no leading nirugu , but that makes it look incorrect (i've put correct CMs after the glyph in parentheses) for AA.init (Fe), and AA.medi (Ee) AG.medi (the first is e, not E). AG.fina and other unmentioned ones are correct | rules from these notes: e after the crown (AA.init fe), e after a tooth (AA.medi Ee)" }
 "Aa.fina" = { keys = "t", status = "draft" }
 "I.isol" = { keys = "I", status = "draft" }
 "Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "draft", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
@@ -35,7 +37,7 @@
 "O.fina" = { keys = "o", status = "draft", note = "has trailing nirugu" }
 "O.medi" = { keys = "o", status = "ok", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
 "U.fina" = { keys = "O", status = "draft", note = "from editor: o · final, u · final, oe · final, ue · final" }
-"U.isol" = { keys = "O", status = "ok" }
+"U.isol" = { keys = "O", status = "draft" }
 "Ux.isol" = { keys = "O", marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }], status = "draft", note = "proposal: U.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
 "O.init" = { keys = "o", status = "ok", note = "plus trailing nirugu is needed" }
 "Ue.fina" = { keys = "oA", status = "draft", note = "from editor: oe · isolated (split), ue · isolated (split)" }

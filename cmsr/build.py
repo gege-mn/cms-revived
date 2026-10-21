@@ -20,7 +20,7 @@ from ufo2ft import compileTTF
 from ufoLib2 import Font
 from ufoLib2.objects import Component
 
-from . import config
+from . import config, neighbours
 from .legacy import LegacyFont
 from .mapping import Mapping, Mark
 from .targets import CONTROLS, Target, targets
@@ -66,6 +66,11 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
         if target.kind == "char":
             ufo[target.glyph].unicodes = [int(target.name[2:], 16)]
 
+    found_rules = neighbours.rules(mapping)
+    for (piece, previous), keys in found_rules.items():
+        _compose_keys(ufo, legacy, neighbours.rule_glyph(piece, previous), keys, mapping.get(piece).marks)
+    neighbours.add_inner_forms(ufo, found_rules)
+
     if strict and result.placeholders:
         raise SystemExit(f"{cut_id}: {len(result.placeholders)} targets still unmapped")
 
@@ -78,7 +83,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
     )
     scale = legacy.units_per_em / 1000
     applySpecToFont(composer.compose(), ufo, initPadding=40 * scale, finaPadding=100 * scale)
-    ufo.features.text = composer.asFeatureFile().asFea()
+    ufo.features.text = composer.asFeatureFile().asFea() + neighbours.features(ufo, found_rules)
 
     cut.output_path.parent.mkdir(parents=True, exist_ok=True)
     # The outlines come straight from a TrueType font: already quadratic and already in
