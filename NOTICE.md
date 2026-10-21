@@ -13,45 +13,56 @@ kept in this repository as the source material of a preservation and
 Unicode-compatibility project. The `DP` cuts are mirrored for letterpress and
 are out of scope.
 
-**No permission is granted** to copy, modify, redistribute, sublicense or sell
-the font files, or works derived from them, until written permission is
-obtained from the copyright holder. This is not an open-source licence, and
-nothing in this repository should be read as granting one.
+## Why this rework exists
+
+CMs is among the most widely used Mongolian script fonts in Mongolia. It is
+taught in government schools as part of the IT curriculum, and many people
+still write with it, because Unicode Mongolian is little known and good input
+methods for it are scarce.
+
+But CMs predates Unicode. It draws Mongolian letters in the place of Latin
+ones, so text typed with it cannot be searched, read by screen readers, or
+displayed by anyone who does not have the font. This rework re-encodes dEgi's
+outlines for Unicode, so the typeface people know can carry text that works
+everywhere.
 
 ## Good faith
 
-This rework exists to keep dEgi's typeface usable now that text is written in
-Unicode, which the 1998 fonts cannot display. It is done in good faith, and
-dEgi remains its author.
+dEgi remains the author of the typeface. We have tried to reach him to ask his
+permission and have not yet succeeded:
 
-We have not yet been able to reach him. As of October 2026:
+- We have written to an email address associated with him from the late
+  1990s. We do not know whether it still reaches him.
+- An academic who knows of him has offered to help find him.
+- We found an archived website that appears to have been his, online from the
+  late 1990s until about 2003. It is no longer online.
 
-- We have written to an email address associated with him around 1999. We do
-  not know whether it still reaches him.
-- A university professor who knows of him has offered to help find him.
-- We found, in the Internet Archive, a website that appears to have been his,
-  online from the late 1990s until about 2003.
+Until he is reached, we commit to the following:
 
-What we commit to:
+- **Free of charge for personal use.** As far as we know, these are the terms
+  the 1998 fonts were shared under, and the rework is shared on the same terms.
+- **Not sold.** Neither the rework nor anything made from it will be sold
+  without dEgi's permission.
+- **Credit.** dEgi is named as the author of the typeface in every font built
+  here, ahead of anyone who worked on the rework. The family names keep his
+  (CMs Urga, CMs Ulaanbaatar, CMs Huree), with the suffix "Revived" so that the
+  rework is not mistaken for his 1998 fonts.
+- **His decision.** Any request from dEgi, or from whoever holds his rights,
+  will be honoured promptly: a change of credit, name or terms, or the
+  withdrawal of the rework.
 
-- dEgi is named as the author of the typeface in every font built here, ahead
-  of anyone who worked on the rework.
-- The family names keep his: CMs Urga, CMs Ulaanbaatar and CMs Huree, with a
-  suffix that keeps the rework from being confused with his 1998 fonts.
-- Any request from dEgi, or from whoever holds his rights, will be honoured
-  promptly: a change of credit, name or terms, or the withdrawal of the
-  rework.
+These commitments are ours. They grant no rights in dEgi's work beyond what he
+gave, and they are not an open-source licence.
 
-If you are dEgi, or know how to reach him, please write to
-batmend@gege.mn.
+If you are dEgi, or know how to reach him, please write to **cms@gege.mn**.
 
 ## The rework
 
 The Unicode rework of the CMs outlines and the tooling in this repository are
 the work of Batmend Ganbaatar and L'Atelier Gege LLC, © 2026. dEgi remains the
 author of the typeface and the original outlines. Glyphs drawn new for the
-rework follow his design. Licensing of the rework will be decided with dEgi;
-until then the same reservation applies.
+rework follow his design. Licensing beyond the commitments above will be
+decided with dEgi.
 
 ## Third-party components
 

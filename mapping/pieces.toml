@@ -27,7 +27,7 @@
 "Ix.isol" = { status = "todo" }
 "I.fina" = { keys = "I", status = "draft", note = "from editor: i · final, i · isolated (split)" }
 "I.init" = { keys = "J", status = "draft", note = "from editor: j · isolated" }
-"I.medi" = { keys = "J", status = "draft", note = "CONFLICT: 'J' from i · medial; 'i' from i · initial (split)" }
+"I.medi" = { keys = "iU", status = "draft", note = "CONFLICT: 'J' from i · medial; 'i' from i · initial (split)" }
 "O.fina" = { keys = "o", status = "draft", note = "from editor: o · isolated (split), u · isolated (split)" }
 "O.medi" = { keys = "o", status = "draft", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
 "U.fina" = { keys = "O", status = "draft", note = "from editor: o · final, u · final, oe · final, ue · final" }
@@ -35,8 +35,8 @@
 "Ux.isol" = { status = "todo" }
 "O.init" = { status = "todo" }
 "Ue.fina" = { keys = "oA", status = "draft", note = "from editor: oe · isolated (split), ue · isolated (split)" }
-"W.fina" = { keys = "WA", status = "draft", note = "CONFLICT: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
-"W.medi" = { keys = "W", status = "draft", note = "CONFLICT: 'W' from ee · medial; 'w' from ee · initial (split)" }
+"W.fina" = { keys = "wA", status = "draft", note = "CONFLICT: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
+"W.medi" = { keys = "w", status = "draft", note = "CONFLICT: 'W' from ee · medial; 'w' from ee · initial (split)" }
 "N.init" = { keys = "N", status = "draft", note = "from editor: n · isolated, n · initial" }
 "N.medi" = { status = "todo" }
 "N.fina" = { status = "todo" }

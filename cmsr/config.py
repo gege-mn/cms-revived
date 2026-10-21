@@ -21,13 +21,18 @@ COPYRIGHT = "Copyright © 1998 dEgi. Unicode rework © 2026 L'Atelier Gege LLC."
 DESIGNER = "dEgi; Batmend Ganbaatar (Unicode rework)"
 MANUFACTURER = "dEgi; L'Atelier Gege LLC"
 VENDOR_ID = "GEGE"
+CONTACT = "cms@gege.mn"
+# Goes into the vendor URL field once the page listing the rework exists.
+VENDOR_URL: str | None = None
 DESCRIPTION = (
     "CMs, the Classical Mongolian script typeface drawn by dEgi in 1998, re-encoded for "
-    "Unicode. The outlines are dEgi's; the rework adds the Unicode encoding and shaping."
+    "Unicode. The outlines are dEgi's; the rework adds the Unicode encoding and shaping. "
+    f"We have not yet reached dEgi. If you are him, or know how to reach him: {CONTACT}"
 )
 LICENSE = (
-    "All rights reserved. No licence is granted until the original author's permission is "
-    "obtained; see NOTICE.md."
+    "Free of charge for personal use. Not to be sold without the permission of dEgi, the "
+    "original author, which has not yet been obtained. No other rights in his work are "
+    f"granted. Contact: {CONTACT}"
 )
 
 

@@ -104,6 +104,8 @@ def _set_info(ufo: Font, cut: config.Cut, legacy: LegacyFont) -> None:
     info.openTypeNameDesigner = config.DESIGNER
     info.openTypeNameManufacturer = config.MANUFACTURER
     info.openTypeOS2VendorID = config.VENDOR_ID
+    if config.VENDOR_URL:
+        info.openTypeNameManufacturerURL = config.VENDOR_URL
     info.openTypeNameDescription = config.DESCRIPTION
     info.openTypeNameLicense = config.LICENSE
     info.openTypeNameVersion = f"Version {major}.{minor:03d}; dEgi 1998, Unicode rework 2026"
