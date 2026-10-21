@@ -42,7 +42,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "A.fina" = { keys = "a", status = "ok", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
 "A.medi" = { keys = "e", after = { "@arch" = "E" }, status = "draft", note = "e by default; E only right after an arch: feminine g/h (G, Gx) and the b family (B, P, F, K, K2). Earlier: Noto has no leading nirugu, CMs pieces carry theirs." }
 "Aa.fina" = { keys = "t", after = { "@arch" = "Et" }, status = "draft", note = "after an arch the final takes the tooth too: k is toothless, so final ge is kEt (temege = DemekEt)" }
-"I.isol" = { keys = "I", trim = "start", status = "draft", note = "I, without its leading stub of nirugu: it starts the -i suffix after the gap (given by hand, from dürim-i)" }
+"I.isol" = { keys = "I", status = "draft", note = "I; it keeps its leading nirugu after the suffix gap (dürim-i = Doiri^ I)" }
 "Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "draft", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
 "I.fina" = { keys = "I", status = "draft", note = "CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
 "I.init" = { keys = "J", status = "draft", note = "from editor: j · isolated" }
@@ -94,7 +94,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "T.medi" = { keys = "D", status = "ok" }
 "D.medi" = { keys = "d", status = "draft", note = "from editor: t · medial" }
 "T.fina" = { keys = "D", status = "draft", note = "from editor: t · final" }
-"D.init" = { keys = "d", trim = "start", status = "draft", note = "d, without its leading stub of nirugu: it starts a suffix such as -dü after the gap (given by hand, from üy-e-dü)" }
+"D.init" = { keys = "d", status = "draft", note = "d; it keeps its leading nirugu after the suffix gap (üy-e-dü = foiIT dO)" }
 "Dd.medi" = { keys = "oe", status = "draft", note = "from editor: d · medial" }
 "Dd.fina" = { keys = "oa", status = "draft", note = "from editor: d · final" }
 "D.fina" = { keys = "dA", status = "ok" }
