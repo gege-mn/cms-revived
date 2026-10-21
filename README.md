@@ -21,6 +21,11 @@ mapping/pieces.toml     written unit (A.init, M.fina, BA.init…) → CMs keys
 The mapping is the only hand-made part. Everything else is derived, so a
 change there reaches all three cuts and all 216 letter forms.
 
+The fonts are Unicode only: the 1998 keys are not encoded at their ASCII
+positions, so documents typed the old way still need dEgi's originals.
+Where the Unicode part needs something no 1998 key draws, it is drawn by hand in
+`drawings/<cut>.ufo` (any UFO editor; the team uses Fontra).
+
 ## Commands
 
 ```sh
