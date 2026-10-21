@@ -12,7 +12,7 @@ import webbrowser
 from functools import cache
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from fontTools import unicodedata
 from fontTools.pens.boundsPen import BoundsPen
@@ -21,7 +21,7 @@ from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.ttLib import TTFont
 from mongfontbuilder import data, splitWrittens
 
-from . import config
+from . import config, goldens
 from .build import _stem, build
 from .check import run
 from .legacy import LegacyFont
@@ -184,6 +184,18 @@ def _build(cut_id: str) -> dict:
     return report
 
 
+def _goldens(cut_id: str) -> dict:
+    cut = config.CUTS[cut_id]
+    if not cut.output_path.exists():
+        build(cut_id)
+    legacy = LegacyFont.open(cut_id)
+    rows = []
+    for golden in goldens.load():
+        result = goldens.check(golden, cut.output_path, legacy)
+        rows.append({**golden.__dict__, "produced": result.produced, "passed": result.passed})
+    return {"cut": cut_id, "legacyFont": f"/cms/{cut.legacy_path.name}", "goldens": rows}
+
+
 def _fonts() -> list[dict]:
     """Every cut's built font, building the ones that are missing."""
 
@@ -220,6 +232,10 @@ class Handler(SimpleHTTPRequestHandler):
             with lock:
                 mapping = Mapping.load()
                 return self._json({**_static_data(), **_mapping_state(mapping), "builds": last_builds})
+        if path == "/api/goldens":
+            cut_id = parse_qs(urlparse(self.path).query).get("cut", [config.DEFAULT_CUT])[0]
+            with lock:
+                return self._json(_goldens(cut_id))
         if path == "/api/fonts":
             with lock:
                 return self._json(_fonts())
@@ -227,7 +243,9 @@ class Handler(SimpleHTTPRequestHandler):
             self.path = "/editor/index.html"
         elif path == "/specimen":
             self.path = "/editor/specimen.html"
-        elif not (path.startswith("/editor/") or path.startswith("/dist/") or path.startswith("/reference/")):
+        elif path == "/goldens":
+            self.path = "/editor/goldens.html"
+        elif not (path.startswith("/editor/") or path.startswith("/dist/") or path.startswith("/reference/") or path.startswith("/cms/")):
             return self.send_error(404)
         super().do_GET()
 
@@ -253,6 +271,17 @@ class Handler(SimpleHTTPRequestHandler):
                     )
                     mapping.save()
                     return self._json(_mapping_state(mapping))
+                if path == "/api/golden":
+                    items = goldens.load()
+                    golden = items[int(body["index"])]
+                    golden.keys = body.get("keys", golden.keys)
+                    golden.status = body.get("status", golden.status)
+                    golden.note = body.get("note", golden.note)
+                    if golden.status == "fixed":
+                        cut = config.CUTS[body.get("cut", config.DEFAULT_CUT)]
+                        golden.snapshot = goldens.check(golden, cut.output_path, LegacyFont.open(cut.id)).signature
+                    goldens.save(items)
+                    return self._json(_goldens(body.get("cut", config.DEFAULT_CUT)))
                 if path == "/api/build":
                     return self._json(_build(body.get("cut", config.DEFAULT_CUT)))
         except (KeyError, ValueError) as error:

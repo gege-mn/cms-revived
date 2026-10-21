@@ -62,6 +62,7 @@ code, kbd { font-family: var(--mono); }
 .brand { letter-spacing: 0.02em; }
 .bar select { padding: 3px 6px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; }
 .progress { display: flex; gap: 8px; align-items: center; flex: 1; font-size: 13px; }
+.nav { color: var(--accent); font-size: 13px; }
 .build { font-size: 12px; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--line); cursor: pointer; color: var(--muted); }
 .build.busy { color: var(--draft); }
 .build.bad { color: var(--bad); border-color: var(--bad); }

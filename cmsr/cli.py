@@ -43,10 +43,13 @@ def _build(args: argparse.Namespace) -> None:
 
 
 def _check(args: argparse.Namespace) -> None:
+    from . import goldens
     from .build import build
     from .check import run
+    from .legacy import LegacyFont
 
     failed = False
+    all_goldens = goldens.load()
     for cut_id in _cuts(args.cut):
         path = build(cut_id).path
         total, failures = run(path)
@@ -56,6 +59,20 @@ def _check(args: argparse.Namespace) -> None:
             failed = True
             print(f"  {failure.case.index}  {failure.case.letters}")
             print(f"    got  {failure.result}\n    want {failure.case.goal}")
+        confirmed = [golden for golden in all_goldens if golden.status in ("ok", "fixed")]
+        broken = [
+            (golden, result)
+            for golden in confirmed
+            if not (result := goldens.check(golden, path, LegacyFont.open(cut_id))).passed
+        ]
+        pending = len(all_goldens) - len(confirmed)
+        print(f"  goldens: {len(confirmed) - len(broken)}/{len(confirmed)} confirmed pass, {pending} pending")
+        for golden, result in broken:
+            failed = True
+            if golden.status == "fixed":
+                print(f"    {golden.latin}: no longer draws the snapshot accepted as a fix (now {result.produced!r})")
+            else:
+                print(f"    {golden.latin}: typed {golden.keys!r}, the font draws {result.produced!r}")
     raise SystemExit(1 if failed else 0)
 
 

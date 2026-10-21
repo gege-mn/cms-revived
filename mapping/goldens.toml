@@ -1,0 +1,66 @@
+# Goldens: words and the CMs keys that type them, checked against every build.
+#
+# status  pending  keys proposed, waiting for a human eye
+#         ok       confirmed: the build must draw the word exactly as these keys did
+#
+# The goldens page (/goldens in the editor) rewrites this file.
+
+[[golden]]
+latin = "ene"
+text = "ᠡᠨᠡ"
+keys = "fna"
+status = "pending"
+
+[[golden]]
+latin = "mongγol"
+text = "ᠮᠣᠩᠭᠣᠯ"
+keys = "Moekgo&"
+status = "pending"
+
+[[golden]]
+latin = "altan"
+text = "ᠠᠯᠲᠠᠨ"
+keys = "feldEa"
+status = "pending"
+
+[[golden]]
+latin = "edür"
+text = "ᠡᠳᠦᠷ"
+keys = "fdo*"
+status = "pending"
+
+[[golden]]
+latin = "ger"
+text = "ᠭᠡᠷ"
+keys = "kE*"
+status = "pending"
+
+[[golden]]
+latin = "usu"
+text = "ᠤᠰᠤ"
+keys = "fosO"
+status = "pending"
+
+[[golden]]
+latin = "sar-a"
+text = "ᠰᠠᠷ᠎ᠠ"
+keys = "SE*t"
+status = "pending"
+
+[[golden]]
+latin = "bičig"
+text = "ᠪᠢᠴᠢᠭ"
+keys = "biciit"
+status = "pending"
+
+[[golden]]
+latin = "temege"
+text = "ᠲᠡᠮᠡᠭᠡ"
+keys = "DEmEkt"
+status = "pending"
+
+[[golden]]
+latin = "kümün"
+text = "ᠬᠦᠮᠦᠨ"
+keys = "koimoa"
+status = "pending"

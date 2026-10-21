@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CMs Revived Goldens</title>
+  <style>
+    @font-face { font-family: "Reference"; src: url("/reference/NotoSansMongolian-Regular.ttf"); }
+    :root { --bg: #f6f5f2; --panel: #fff; --ink: #1d1c1a; --muted: #77736b; --line: #e3e0d9; --accent: #b4441c; --ok: #3f8f4f; --bad: #c0392b; --pending: #d4a017; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) { --bg: #161514; --panel: #201f1d; --ink: #ecebe7; --muted: #9a958c; --line: #34322e; --accent: #f08a5d; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.4 -apple-system, system-ui, sans-serif; }
+    header { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--line); }
+    header select { padding: 3px 6px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: inherit; }
+    header a { color: var(--accent); }
+    header .hint { color: var(--muted); font-size: 12px; flex: 1; }
+    main { padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+    .golden { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+    .golden.ok { border-color: var(--ok); }
+    .golden.fail { border-color: var(--bad); }
+    .golden h2 { margin: 0; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+    .chip { font-size: 11px; font-weight: normal; padding: 1px 7px; border-radius: 99px; border: 1px solid currentColor; }
+    .chip.pending { color: var(--pending); }
+    .chip.ok { color: var(--ok); }
+    .chip.fixed { color: #6b5bd6; }
+    .row button.secondary { background: none; color: inherit; border-color: var(--line); }
+    .verdict { margin-left: auto; font-size: 12px; font-weight: normal; }
+    .verdict.pass { color: var(--ok); }
+    .verdict.fail { color: var(--bad); }
+    .renders { display: flex; gap: 18px; align-items: flex-start; min-height: 150px; }
+    figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    figcaption { font-size: 10px; color: var(--muted); }
+    .v { writing-mode: vertical-lr; font-size: 46px; line-height: 1.2; white-space: pre; }
+    .ref { font-family: "Reference"; color: var(--muted); }
+    .row { display: flex; align-items: center; gap: 8px; }
+    .row input { flex: 1; font: 17px ui-monospace, monospace; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: inherit; }
+    .row button { padding: 4px 12px; border: 1px solid var(--ink); border-radius: 6px; background: var(--ink); color: var(--panel); cursor: pointer; }
+    .draws { font-size: 12px; color: var(--muted); }
+    .draws code { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Goldens</strong>
+    <select id="cut"></select>
+    <span class="hint">Type the keys you would use in CMs and press ↵ to confirm. A confirmed golden must keep matching on every build.</span>
+    <a href="/">editor</a> <a href="/specimen">specimen</a>
+  </header>
+  <main id="goldens"></main>
+  <script>
+    "use strict";
+    const $ = (selector) => document.querySelector(selector);
+    const escape = (value) => String(value).replace(/[&<>"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character]);
+    let state = { cut: null, fonts: [], legacyFamilies: {}, data: null };
+
+    async function boot() {
+      state.fonts = await fetch("/api/fonts").then((response) => response.json());
+      state.cut = (() => { try { return localStorage.getItem("cmsr.goldens.cut"); } catch { return null; } })() || state.fonts[0].cut;
+      $("#cut").innerHTML = state.fonts.map((font) => `<option value="${font.cut}">${font.name}</option>`).join("");
+      $("#cut").value = state.cut;
+      await Promise.all(state.fonts.map(async (font) => {
+        font.css = `golden-${font.cut}-${font.revision}`;
+        const face = new FontFace(font.css, `url(${font.url}?v=${font.revision})`);
+        await face.load();
+        document.fonts.add(face);
+      }));
+      await load();
+    }
+
+    async function load() {
+      state.data = await fetch(`/api/goldens?cut=${state.cut}`).then((response) => response.json());
+      const family = `legacy-${state.cut}`;
+      if (!state.legacyFamilies[family]) {
+        const face = new FontFace(family, `url(${state.data.legacyFont})`);
+        await face.load();
+        document.fonts.add(face);
+        state.legacyFamilies[family] = true;
+      }
+      render();
+    }
+
+    function render() {
+      const font = state.fonts.find((item) => item.cut === state.cut);
+      $("#goldens").innerHTML = state.data.goldens.map((golden, index) => {
+        const fixed = golden.status === "fixed";
+        const verdict = golden.passed
+          ? `<span class="verdict pass">✓ ${fixed ? "as accepted" : "matches"}</span>`
+          : `<span class="verdict fail">✗ ${fixed ? "changed since accepted" : "differs"}</span>`;
+        const border = golden.status === "pending" ? "" : golden.passed ? "ok" : "fail";
+        return `<section class="golden ${border}" data-index="${index}">
+          <h2>${escape(golden.latin)} <span class="chip ${golden.status}">${golden.status}</span>${verdict}</h2>
+          <div class="renders">
+            <figure><span class="v ref">${escape(golden.text)}</span><figcaption>Unicode</figcaption></figure>
+            <figure><span class="v" style="font-family:'${font.css}'">${escape(golden.text)}</span><figcaption>Revived</figcaption></figure>
+            <figure><span class="v" style="font-family:'legacy-${state.cut}'">${escape(golden.keys)}</span><figcaption>CMs typed</figcaption></figure>
+          </div>
+          <div class="row"><input value="${escape(golden.keys)}" spellcheck="false" autocomplete="off" aria-label="CMs keys for ${escape(golden.latin)}"><button data-status="ok">Confirm</button><button data-status="fixed" class="secondary" title="Our font differs from CMs here on purpose: pin what it draws now">Differs on purpose</button></div>
+          <div class="draws">the font draws <code>${escape(golden.produced)}</code></div>
+        </section>`;
+      }).join("");
+    }
+
+    async function confirm(index, keys, status = "ok") {
+      state.data = await fetch("/api/golden", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ index, keys, status, cut: state.cut }),
+      }).then((response) => response.json());
+      render();
+      const next = document.querySelector(`.golden[data-index="${index + 1}"] input`);
+      next?.focus();
+    }
+
+    $("#cut").addEventListener("change", (event) => {
+      state.cut = event.target.value;
+      try { localStorage.setItem("cmsr.goldens.cut", state.cut); } catch {}
+      load();
+    });
+    $("#goldens").addEventListener("input", (event) => {
+      const section = event.target.closest(".golden");
+      if (!section) return;
+      section.querySelector(`.v[style*="legacy"]`).textContent = event.target.value;
+    });
+    $("#goldens").addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" || event.target.tagName !== "INPUT") return;
+      confirm(Number(event.target.closest(".golden").dataset.index), event.target.value);
+    });
+    $("#goldens").addEventListener("click", (event) => {
+      if (event.target.tagName !== "BUTTON") return;
+      const section = event.target.closest(".golden");
+      confirm(Number(section.dataset.index), section.querySelector("input").value, event.target.dataset.status);
+    });
+    boot();
+  </script>
+</body>
+</html>

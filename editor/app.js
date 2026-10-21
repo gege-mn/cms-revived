@@ -171,10 +171,12 @@ function hasDrawing(item, cut = state.ui.cut) {
   return Boolean(keysFor(item, cut) || item?.marks?.length);
 }
 
-function namedParts(name, cut = state.ui.cut) {
+// `previous` is the piece right before, for the neighbour rules.
+function namedParts(name, cut = state.ui.cut, previous = null) {
   const item = entry(name);
-  if (hasDrawing(item, cut)) {
-    const parts = keyParts(keysFor(item, cut) || "", cut);
+  const ruleKeys = previous && item?.after?.[previous];
+  if (ruleKeys || hasDrawing(item, cut)) {
+    const parts = keyParts(ruleKeys || keysFor(item, cut) || "", cut);
     const advance = parts.reduce((sum, part) => sum + part.advance, 0);
     return [...parts, ...markParts(item, cut, advance)];
   }
@@ -190,8 +192,8 @@ function variantParts(variant, highlight, cut = state.ui.cut) {
   if (whole && hasDrawing(whole, cut)) {
     return namedParts(variant.written, cut).map((part) => ({ ...part, highlight: variant.written === highlight }));
   }
-  return variant.atoms.flatMap((atom) =>
-    namedParts(atom, cut).map((part) => ({ ...part, highlight: atom === highlight })),
+  return variant.atoms.flatMap((atom, index) =>
+    namedParts(atom, cut, variant.atoms[index - 1]).map((part) => ({ ...part, highlight: atom === highlight })),
   );
 }
 
@@ -324,10 +326,12 @@ function renderTarget() {
       </div>
     </div>
     <div id="marks" class="marks"></div>
+    <div id="rules" class="marks"></div>
     <div id="stage" class="stage"></div>
     <textarea id="note" rows="2" placeholder="Note">${escapeHtml(item.note || "")}</textarea>
     <p class="hint">↵ confirm · Tab / ⇧Tab move · Esc reverts keys · click a form to map it whole · marks: ↑/↓ in dx, dy nudge by 5</p>`;
   renderMarks();
+  renderRules();
   renderStage();
   $("#keys").focus();
 }
@@ -353,6 +357,16 @@ function renderStage() {
     <div class="main-figures">
       <figure><figcaption>CMs ${escapeHtml(cutName(cut))}</figcaption>${legacySvg(namedParts(name), 150, "big")}</figure>
       ${info.reference ? `<figure><figcaption>Unicode</figcaption>${referenceSvg(info.reference, 150)}</figure>` : ""}
+      ${Object.keys(entry(name).after || {})
+        .map(
+          (previous) =>
+            `<figure><figcaption>after ${escapeHtml(previous)}</figcaption>${legacySvg(
+              [...namedParts(previous), ...namedParts(name, cut, previous).map((part) => ({ ...part, highlight: true }))],
+              150,
+              "big",
+            )}</figure>`,
+        )
+        .join("")}
       ${
         AUTO_KINDS.includes(info.kind) && drawn
           ? `<figure><figcaption>From parts</figcaption>${legacySvg(info.atoms.flatMap((atom) => namedParts(atom)), 150, "big")}</figure>`
@@ -383,6 +397,38 @@ function renderMarks() {
     </div>`;
   });
   $("#marks").innerHTML = rows.join("") + `<button id="add-mark" class="add-mark">+ Mark</button>`;
+}
+
+function renderRules() {
+  const item = entry(state.ui.current);
+  if (item.kind !== "piece") {
+    $("#rules").innerHTML = "";
+    return;
+  }
+  const pieces = state.data.targets.filter((info) => info.kind === "piece").map((info) => info.name);
+  const rows = Object.entries(item.after || {}).map(
+    ([previous, keys], index) => `<div class="mark rule" data-index="${index}">
+      <label>After <input class="r-prev" list="piece-names" value="${escapeAttr(previous)}" spellcheck="false"></label>
+      <label>type <input class="r-keys" value="${escapeAttr(keys)}" spellcheck="false"></label>
+      <button class="r-del" title="Remove rule">×</button>
+    </div>`,
+  );
+  $("#rules").innerHTML =
+    rows.join("") +
+    `<datalist id="piece-names">${pieces.map((piece) => `<option value="${escapeAttr(piece)}">`).join("")}</datalist>` +
+    `<button id="add-rule" class="add-mark">+ After rule</button>`;
+}
+
+function editRules(change, { rerender = false } = {}) {
+  const item = entry(state.ui.current);
+  const rules = Object.entries(item.after || {});
+  change(rules);
+  item.after = Object.fromEntries(rules.filter(([previous]) => previous));
+  if (["todo", "ok"].includes(item.status) && hasDrawing(item)) item.status = "draft";
+  if (rerender) renderRules();
+  renderStage();
+  renderStatus();
+  scheduleSave(item.name);
 }
 
 function editMarks(change, { rerenderMarks = false } = {}) {
@@ -556,7 +602,7 @@ async function flushSave() {
   const response = await fetch("/api/entry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [] }),
+    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [], after: item.after || {} }),
   });
   const result = await response.json();
   if (result.error) {
@@ -685,6 +731,12 @@ function wire() {
 
   const work = $("#target");
   work.addEventListener("input", (event) => {
+    const rule = event.target.closest(".rule");
+    if (rule) {
+      const index = Number(rule.dataset.index);
+      if (event.target.classList.contains("r-keys")) editRules((rules) => (rules[index][1] = event.target.value));
+      return;
+    }
     const row = event.target.closest(".mark");
     if (row) {
       const index = Number(row.dataset.index);
@@ -707,6 +759,11 @@ function wire() {
     }
   });
   work.addEventListener("change", (event) => {
+    if (event.target.classList.contains("r-prev")) {
+      const index = Number(event.target.closest(".rule").dataset.index);
+      editRules((rules) => (rules[index][0] = event.target.value.trim()), { rerender: true });
+      return;
+    }
     if (event.target.id !== "cut-only") return;
     const item = entry(state.ui.current);
     if (event.target.checked) item.cuts = { ...(item.cuts || {}), [state.ui.cut]: item.keys || "" };
@@ -716,6 +773,19 @@ function wire() {
     scheduleSave(item.name, 0);
   });
   work.addEventListener("click", (event) => {
+    if (event.target.closest("#add-rule")) {
+      const pieces = state.data.targets.filter((info) => info.kind === "piece").map((info) => info.name);
+      const used = Object.keys(entry(state.ui.current).after || {});
+      const previous = pieces.find((piece) => !used.includes(piece));
+      editRules((rules) => rules.push([previous, keysFor(entry(state.ui.current)) || ""]), { rerender: true });
+      $(`.rule[data-index="${Object.keys(entry(state.ui.current).after || {}).length - 1}"] .r-prev`)?.select();
+      return;
+    }
+    if (event.target.closest(".r-del")) {
+      const index = Number(event.target.closest(".rule").dataset.index);
+      editRules((rules) => rules.splice(index, 1), { rerender: true });
+      return;
+    }
     if (event.target.closest("#add-mark")) {
       editMarks((marks) => marks.push({ key: "N", contours: [1], dx: 0, dy: 0 }), { rerenderMarks: true });
       return;

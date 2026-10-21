@@ -25,7 +25,8 @@ change there reaches all three cuts and all 216 letter forms.
 
 ```sh
 uv run cmsr editor --open   # map and review pieces, see real shaping live
-                            # the specimen (all cuts, real text) is at /specimen
+                            # /specimen: all cuts setting real text
+                            # /goldens: words checked against how CMs typed them
 uv run cmsr build           # build all three cuts into dist/
 uv run cmsr check           # build, then run the 3,689 shaping cases
 uv run cmsr status          # progress, conflicts, problems
@@ -37,6 +38,7 @@ uv run cmsr status          # progress, conflicts, problems
 |---|---|
 | `cms/` | the 1998 fonts, read-only |
 | `mapping/pieces.toml` | the mapping, written by the editor and by hand |
+| `mapping/goldens.toml` | words and the CMs keys that type them; `cmsr check` holds the build to them |
 | `drawings/<CUT>.ufo` | glyphs drawn new (status `new`): missing from CMs, or fixed; optional |
 | `cmsr/` | targets, build, shaping check, editor server |
 | `editor/` | the editor page |
