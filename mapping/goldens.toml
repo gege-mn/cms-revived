@@ -149,7 +149,8 @@ status = "ok"
 latin = "jöblel"
 text = "ᠵᠥᠪᠯᠡᠯ"
 keys = "Joible&"
-status = "pending"
+status = "fixed"
+snapshot = { CMSHR = "6f3d6630220a", CMSUB = "6989f9a6df09", CMSUG = "510867fa7f65" }
 
 [[golden]]
 latin = "intēr"
