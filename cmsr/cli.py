@@ -23,12 +23,16 @@ def main() -> None:
     golden.add_argument("--add", type=int, metavar="N", help="add N pending goldens that cover new joins")
     golden.add_argument("--min-frequency", type=int, default=20, help="only words seen this often in the corpora")
 
+    release = commands.add_parser("release", help="build a labelled snapshot into releases/, e.g. \"Alpha 1\"")
+    release.add_argument("label", help="added to the family name, so a snapshot installs beside later builds")
+
     editor = commands.add_parser("editor", help="run the mapping editor")
     editor.add_argument("--port", type=int, default=8787)
     editor.add_argument("--open", action="store_true", help="open it in the browser")
 
     args = parser.parse_args()
-    {"build": _build, "check": _check, "status": _status, "goldens": _goldens, "editor": _editor}[args.command](args)
+    commands_ = {"build": _build, "check": _check, "status": _status, "goldens": _goldens, "release": _release, "editor": _editor}
+    commands_[args.command](args)
 
 
 def _cuts(choice: str) -> list[str]:
@@ -87,6 +91,51 @@ def _check(args: argparse.Namespace) -> None:
         failed = True
         print(f"editor data: {type(error).__name__}: {error}")
     raise SystemExit(1 if failed else 0)
+
+
+def _release(args: argparse.Namespace) -> None:
+    import datetime
+    import subprocess
+
+    from . import goldens
+    from .build import build
+    from .check import run
+    from .legacy import LegacyFont
+    from .mapping import Mapping
+
+    slug = args.label.lower().replace(" ", "-")
+    # Names and paths are read from config when each cut builds, so the label reaches every name table.
+    config.FAMILY_SUFFIX = f"{config.FAMILY_SUFFIX} {args.label}"
+    config.DIST_DIR = config.ROOT / "releases" / slug
+    commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=config.ROOT).stdout.strip()
+    mapping = Mapping.load()
+    counts = Counter(entry.status for entry in mapping.all() if entry.kind in ("piece", "char"))
+    all_goldens = goldens.load()
+    lines = [
+        f"# CMs Revived {args.label}",
+        "",
+        f"Built {datetime.date.today().isoformat()} from commit {commit}. A snapshot of the work, not a release.",
+        "",
+        f"Pieces and punctuation: {', '.join(f'{status} {count}' for status, count in sorted(counts.items()))}.",
+        "",
+    ]
+    for cut_id, cut in config.CUTS.items():
+        result = build(cut_id, mapping)
+        total, failures = run(result.path)
+        legacy = LegacyFont.open(cut_id)
+        confirmed = [golden for golden in all_goldens if golden.status != "pending"]
+        broken = [golden.latin for golden in confirmed if not goldens.check(golden, result.path, legacy).passed]
+        lines += [
+            f"## {cut.family}",
+            "",
+            f"- `{result.path.name}`",
+            f"- shaping: {total - len(failures)}/{total} cases pass",
+            f"- goldens: {len(confirmed) - len(broken)}/{len(confirmed)} confirmed match" + (f" (not: {', '.join(broken)})" if broken else ""),
+            f"- placeholder boxes: {len(result.placeholders)}" + (f" ({', '.join(result.placeholders)})" if result.placeholders else ""),
+            "",
+        ]
+        print(f"{result.path.relative_to(config.ROOT)}  shaping {total - len(failures)}/{total}, placeholders {len(result.placeholders)}")
+    (config.DIST_DIR / "NOTES.md").write_text("\n".join(lines), encoding="utf-8")
 
 
 def _status(args: argparse.Namespace) -> None:
