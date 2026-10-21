@@ -22,7 +22,7 @@ status = "pending"
 latin = "altan"
 text = "ᠠᠯᠲᠠᠨ"
 keys = "feldea"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "edür"
@@ -40,7 +40,7 @@ status = "ok"
 latin = "usu"
 text = "ᠤᠰᠤ"
 keys = "fosO"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "sar-a"
@@ -52,7 +52,7 @@ status = "ok"
 latin = "bičig"
 text = "ᠪᠢᠴᠢᠭ"
 keys = "buciit"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "temege"
@@ -64,8 +64,9 @@ note = "given by hand: k is toothless, so final ge is kEt"
 [[golden]]
 latin = "kümün"
 text = "ᠬᠦᠮᠦᠨ"
-keys = "koimoa"
-status = "pending"
+keys = "Kimoa"
+status = "ok"
+note = "given by hand: hü is K + i"
 
 [[golden]]
 latin = "čino-a"
@@ -73,3 +74,65 @@ text = "ᠴᠢᠨᠤ᠎ᠠ"
 keys = "CinOT"
 status = "ok"
 note = "given by hand: T carries the chachlag gap"
+
+[[golden]]
+latin = "bayar"
+text = "ᠪᠠᠶᠠᠷ"
+keys = "bE□e*"
+status = "pending"
+
+[[golden]]
+latin = "γajar"
+text = "ᠭᠠᠵᠠᠷ"
+keys = "Ge□e*"
+status = "pending"
+
+[[golden]]
+latin = "ulus"
+text = "ᠤᠯᠤᠰ"
+keys = "folo_"
+status = "pending"
+
+[[golden]]
+latin = "bol"
+text = "ᠪᠣᠯ"
+keys = "B&"
+status = "ok"
+note = "given by hand: B is bo/bu"
+
+[[golden]]
+latin = "yeke"
+text = "ᠶᠡᠬᠡ"
+keys = "□ekEt"
+status = "pending"
+
+[[golden]]
+latin = "nige"
+text = "ᠨᠢᠭᠡ"
+keys = "NikEt"
+status = "ok"
+
+[[golden]]
+latin = "čaγ"
+text = "ᠴᠠᠭ"
+keys = "Ceea"
+status = "ok"
+
+[[golden]]
+latin = "baγsi"
+text = "ᠪᠠᠭᠰᠢ"
+keys = "bEeesI"
+status = "ok"
+note = "given by hand: E only right after an arch"
+
+[[golden]]
+latin = "sin-e"
+text = "ᠰᠢᠨ᠎ᠡ"
+keys = "Si%T"
+status = "ok"
+
+[[golden]]
+latin = "qar-a"
+text = "ᠬᠠᠷ᠎ᠠ"
+keys = "He*T"
+status = "ok"

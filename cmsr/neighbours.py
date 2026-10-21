@@ -35,23 +35,32 @@ def add_inner_forms(ufo: Font, found: dict[Rule, str]) -> None:
     """Draw every written form that has a rule inside it from its pieces, before composing."""
 
     for written in dict.fromkeys(variant.written for variant in variants()):
-        name = "_" + written
-        if name in ufo:
-            continue
-        units, position = GlyphDescriptor.parse(name).units, GlyphDescriptor.parse(name).position
-        atoms = atoms_of(units, position)
-        members = [
-            rule_glyph(atom, atoms[index - 1]) if index and (atom, atoms[index - 1]) in found else "_" + atom
-            for index, atom in enumerate(atoms)
-        ]
-        if members == ["_" + atom for atom in atoms] or not all(member in ufo for member in members):
-            continue
-        glyph = ufo.newGlyph(name)
-        x = 0
-        for member in members:
-            glyph.components.append(Component(member, Transform(dx=x)))
-            x += ufo[member].width
-        glyph.width = x
+        compose_from_pieces(ufo, written, found, only_with_rules=True)
+
+
+def compose_from_pieces(ufo: Font, written: str, found: dict[Rule, str], only_with_rules: bool = False) -> bool:
+    """Draw the written form *written* from its pieces, applying the rules inside it."""
+
+    name = "_" + written
+    if name in ufo:
+        return False
+    descriptor = GlyphDescriptor.parse(name)
+    atoms = atoms_of(descriptor.units, descriptor.position)
+    members = [
+        rule_glyph(atom, atoms[index - 1]) if index and (atom, atoms[index - 1]) in found else "_" + atom
+        for index, atom in enumerate(atoms)
+    ]
+    if not all(member in ufo for member in members):
+        return False
+    if only_with_rules and members == ["_" + atom for atom in atoms]:
+        return False
+    glyph = ufo.newGlyph(name)
+    x = 0
+    for member in members:
+        glyph.components.append(Component(member, Transform(dx=x)))
+        x += ufo[member].width
+    glyph.width = x
+    return True
 
 
 def features(ufo: Font, found: dict[Rule, str]) -> str:

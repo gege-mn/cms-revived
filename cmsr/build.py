@@ -56,7 +56,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
             _copy_drawing(ufo, drawings[target.glyph], target.glyph)
             result.drawn.append(entry.name)
         elif keys or entry.marks:
-            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks)
+            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks, entry.shift)
             result.keyed.append(entry.name)
         elif target.kind in ("piece", "char"):
             _placeholder(ufo, target.glyph, stem)
@@ -70,6 +70,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
     for (piece, previous), keys in found_rules.items():
         _compose_keys(ufo, legacy, neighbours.rule_glyph(piece, previous), keys, mapping.get(piece).marks)
     neighbours.add_inner_forms(ufo, found_rules)
+    _add_shorter_ligatures(ufo, mapping, found_rules)
 
     if strict and result.placeholders:
         raise SystemExit(f"{cut_id}: {len(result.placeholders)} targets still unmapped")
@@ -95,6 +96,26 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
         reverseDirection=False,
     ).save(cut.output_path)
     return result
+
+
+def _add_shorter_ligatures(ufo: Font, mapping: Mapping, found_rules: dict) -> None:
+    """Give every drawn ligature the shorter ligatures it is built on.
+
+    mongfontbuilder writes a longer ligature from the glyph a shorter one produces (GOI from
+    GO + I), so once GOI is drawn the font must carry GO as well; it is drawn from its
+    pieces, which is what the text would show without it.
+    """
+
+    ligatures = [target for target in mapping.targets.values() if target.kind == "ligature"]
+    for target in ligatures:
+        if target.glyph not in ufo:
+            continue
+        units, position = target.name.split(".")[:2]
+        for shorter in ligatures:
+            short_units, short_position = shorter.name.split(".")[:2]
+            prefix_position = "init" if position in ("isol", "init") else "medi"
+            if short_position == prefix_position and units.startswith(short_units) and units != short_units:
+                neighbours.compose_from_pieces(ufo, shorter.name, found_rules)
 
 
 def _set_info(ufo: Font, cut: config.Cut, legacy: LegacyFont) -> None:
@@ -142,16 +163,24 @@ def _import_legacy(ufo: Font, legacy: LegacyFont) -> None:
         target.width = legacy.advance(name)
 
 
-def _compose_keys(ufo: Font, legacy: LegacyFont, glyph_name: str, keys: str, marks: list[Mark] = ()) -> None:
+def _compose_keys(
+    ufo: Font, legacy: LegacyFont, glyph_name: str, keys: str, marks: list[Mark] = (), shift: dict[int, int] | None = None
+) -> None:
     glyph = ufo.newGlyph(glyph_name)
     x = 0
-    for key in keys:
+    origins = []
+    for index, key in enumerate(keys):
+        x += (shift or {}).get(index, 0)
         name = legacy.glyph_name(key)
+        origins.append(x)
         glyph.components.append(Component(legacy_glyph_name(name), Transform(dx=x)))
         x += legacy.advance(name)
     for mark in marks:
         base = _mark_glyph(ufo, legacy, mark)
-        glyph.components.append(Component(base, Transform(dx=mark.dx, dy=mark.dy)))
+        dx = mark.dx
+        if mark.on is not None:
+            dx += origins[mark.on] + legacy.tip(legacy.glyph_name(keys[mark.on])) - legacy.tip(legacy.glyph_name(mark.key))
+        glyph.components.append(Component(base, Transform(dx=dx, dy=mark.dy)))
     glyph.width = x
 
 

@@ -16,6 +16,8 @@
     header select { padding: 3px 6px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: inherit; }
     header a { color: var(--accent); }
     header .hint { color: var(--muted); font-size: 12px; flex: 1; }
+    header .toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .empty { padding: 40px; text-align: center; color: var(--muted); font-size: 15px; }
     main { padding: 16px; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
     .golden { display: grid; grid-template-columns: 130px auto minmax(260px, 1fr); align-items: center; gap: 12px 20px; padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; }
     .golden.ok { border-left-color: var(--ok); }
@@ -54,7 +56,8 @@
   <header>
     <strong>Goldens</strong>
     <select id="cut"></select>
-    <span class="hint">Type the keys you would use in CMs and press ↵ to confirm. A confirmed golden must keep matching on every build.</span>
+    <span class="hint">Type the keys you would use in CMs and press ↵ to confirm. Confirmed goldens that still match are hidden.</span>
+    <label class="toggle"><input id="show-done" type="checkbox"> show <span id="done-count">0</span> confirmed</label>
     <a href="/">editor</a> <a href="/specimen">specimen</a>
   </header>
   <main id="goldens"></main>
@@ -92,7 +95,19 @@
 
     function render() {
       const font = state.fonts.find((item) => item.cut === state.cut);
-      $("#goldens").innerHTML = state.data.goldens.map((golden, index) => {
+      const done = (golden) => golden.status !== "pending" && golden.passed;
+      const showDone = $("#show-done").checked;
+      $("#done-count").textContent = state.data.goldens.filter(done).length;
+      // Broken confirmed goldens first: they are regressions. Then the ones waiting for an answer.
+      const order = state.data.goldens
+        .map((golden, index) => ({ golden, index }))
+        .filter(({ golden }) => showDone || !done(golden))
+        .sort((a, b) => rank(a.golden) - rank(b.golden) || a.index - b.index);
+      if (!order.length) {
+        $("#goldens").innerHTML = `<div class="empty">Every golden is confirmed and matching. ✓</div>`;
+        return;
+      }
+      $("#goldens").innerHTML = order.map(({ golden, index }) => {
         const fixed = golden.status === "fixed";
         const verdict = golden.passed
           ? `<span class="verdict pass">✓ ${fixed ? "as accepted" : "matches CMs"}</span>`
@@ -118,6 +133,12 @@
       }).join("");
     }
 
+    function rank(golden) {
+      if (golden.status !== "pending" && !golden.passed) return 0;
+      if (golden.status === "pending") return 1;
+      return 2;
+    }
+
     async function confirm(index, keys, status = "ok") {
       state.data = await fetch("/api/golden", {
         method: "POST",
@@ -125,8 +146,7 @@
         body: JSON.stringify({ index, keys, status, cut: state.cut }),
       }).then((response) => response.json());
       render();
-      const next = document.querySelector(`.golden[data-index="${index + 1}"] input`);
-      next?.focus();
+      document.querySelector(".golden input")?.focus();
     }
 
     $("#cut").addEventListener("change", (event) => {
@@ -134,6 +154,7 @@
       try { localStorage.setItem("cmsr.goldens.cut", state.cut); } catch {}
       load();
     });
+    $("#show-done").addEventListener("change", render);
     $("#goldens").addEventListener("input", (event) => {
       const section = event.target.closest(".golden");
       if (!section) return;

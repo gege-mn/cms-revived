@@ -4,7 +4,10 @@
 # cuts    per-cut keys where a cut differs, e.g. cuts = { CMSHR = "fx" }
 # marks   contours lifted from another key and laid over the keys, e.g. the dusal of N:
 #         marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }]
-#         contours count from 0 in the key's own order; dx/dy move them, in font units
+#         contours count from 0 in the key's own order; dx/dy move them, in font units;
+#         on = 2 sets the mark on the third key, tooth tip to tooth tip, in every cut
+# shift   move a key and everything after it along the stem, in font units, e.g.
+#         shift = { "2" = -200 } slides the third key back 200 to tighten a join
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
 #         "@arch" names a group from [groups]; a piece named on its own wins over a group
@@ -65,7 +68,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "G.init" = { keys = "k", status = "ok" }
 "Gx.init" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "draft", note = "proposal: G.init + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
 "Hx.medi" = { keys = "g", status = "ok" }
-"H.medi" = { keys = "Ee", status = "ok" }
+"H.medi" = { keys = "ee", after = { "@arch" = "Ee" }, status = "ok", note = "E only right after an arch: ee by default, Ee after one (baγsi = bEeesI)" }
 "Gx.medi" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "draft", note = "proposal: G.medi + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
 "H.fina" = { keys = "ea", status = "draft", note = "from editor: h · final" }
 "Hx.fina" = { keys = ")", status = "ok" }
@@ -93,14 +96,14 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "Ch.init" = { keys = "C", status = "draft", note = "from editor: ch · isolated, ch · initial | set to C from the cinu-a example (CinOT); was 'c'" }
 "Ch.medi" = { keys = "c", status = "draft", note = "from editor: ch · medial" }
 "Ch.fina" = { keys = "cA", status = "draft", note = "from editor: ch · final" }
-"J.medi" = { status = "todo" }
-"J.fina" = { status = "todo" }
-"Y.init" = { status = "todo" }
-"Y.medi" = { status = "todo" }
+"J.medi" = { keys = "j", status = "ok" }
+"J.fina" = { keys = "jA", status = "ok" }
+"Y.init" = { keys = "Y", status = "ok" }
+"Y.medi" = { keys = "y", status = "ok" }
 "R.init" = { keys = "R", status = "ok" }
 "R.medi" = { keys = "r", status = "ok" }
 "R.fina" = { keys = "*", status = "ok" }
-"W.init" = { status = "todo" }
+"W.init" = { keys = "W", status = "ok" }
 "F.init" = { status = "todo" }
 "F.medi" = { status = "todo" }
 "F.fina" = { keys = "@", status = "ok" }
@@ -116,7 +119,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "Z.init" = { status = "todo" }
 "Z.medi" = { status = "todo" }
 "Z.fina" = { status = "todo" }
-"Hr.medi" = { status = "todo" }
+"Hr.medi" = { keys = "~", status = "ok" }
 "Hr.fina" = { status = "todo" }
 "Rh.init" = { status = "todo" }
 "Rh.medi" = { status = "todo" }
@@ -166,8 +169,8 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "PW.isol" = { status = "auto" }  # required
 "BA.init" = { status = "auto" }  # required
 "BI.init" = { status = "auto" }  # required
-"BO.init" = { status = "auto" }  # required
-"BOI.init" = { status = "auto" }  # required
+"BO.init" = { keys = "B", status = "ok", note = "given by hand: B is bo/bu" }  # required
+"BOI.init" = { keys = "Bi", status = "ok", note = "given by hand: bö/bü is B + i, i adds the shilbe" }  # required
 "BW.init" = { status = "auto" }  # required
 "FA.init" = { status = "auto" }  # required
 "FI.init" = { status = "auto" }  # required
@@ -177,7 +180,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "GA.init" = { status = "auto" }  # required
 "GI.init" = { status = "auto" }  # required
 "GO.init" = { status = "auto" }  # required
-"GOI.init" = { status = "auto" }  # required
+"GOI.init" = { keys = "Ki", status = "ok", note = "given by hand: initial hü is K + i (K is h with the bowl, i adds the shilbe); kümün = Kimoa" }  # required
 "GW.init" = { status = "auto" }  # required
 "GxA.init" = { status = "auto" }  # required
 "GxI.init" = { status = "auto" }  # required
@@ -274,7 +277,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "GL.init" = { status = "auto" }
 "GM.init" = { status = "auto" }
 "AGH.medi" = { keys = "ekEe", status = "ok" }
-"AGHx.medi" = { keys = "ekg", status = "new", note = "so it look visually broken, and because n or masculine g doesn't have equivalent of e E (one with no leading nirugu), so our country has accepted this for ages, but this font shall fix it." }
+"AGHx.medi" = { keys = "ekEe", marks = [{ key = "n", contours = [1], on = 2, dx = 0, dy = 0 }, { key = "n", contours = [1], on = 3, dx = 0, dy = 0 }], status = "draft", note = "fix, as asked: CMs Ee for the masculine g's two teeth, with the dot of n on each (tooth tip to tooth tip), instead of g, whose lead-in stem broke the join" }
 "AGL.medi" = { status = "auto" }
 "AGM.medi" = { status = "auto" }
 "AGN.medi" = { status = "auto" }
@@ -285,7 +288,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "LL.medi" = { keys = "lX", status = "ok" }
 "ML.medi" = { status = "auto" }
 "MM.medi" = { status = "auto" }
-"AGH.fina" = { keys = "EkEa", status = "ok" }
+"AGH.fina" = { keys = "ekEa", after = { "@arch" = "EkEa" }, status = "draft", note = "was EkEa; the leading E made e by the E-only-after-arch rule, EkEa kept for after an arch: check" }
 
 [chars]
 "U+1800" = { status = "todo" }

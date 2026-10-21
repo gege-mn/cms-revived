@@ -32,7 +32,10 @@ HEADER = """\
 # cuts    per-cut keys where a cut differs, e.g. cuts = { CMSHR = "fx" }
 # marks   contours lifted from another key and laid over the keys, e.g. the dusal of N:
 #         marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }]
-#         contours count from 0 in the key's own order; dx/dy move them, in font units
+#         contours count from 0 in the key's own order; dx/dy move them, in font units;
+#         on = 2 sets the mark on the third key, tooth tip to tooth tip, in every cut
+# shift   move a key and everything after it along the stem, in font units, e.g.
+#         shift = { "2" = -200 } slides the third key back 200 to tighten a join
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
 #         "@arch" names a group from [groups]; a piece named on its own wins over a group
@@ -60,6 +63,7 @@ class Mark:
     contours: list[int] | None = None
     dx: int = 0
     dy: int = 0
+    on: int | None = None
 
     @classmethod
     def from_dict(cls, fields: dict) -> Mark:
@@ -69,6 +73,7 @@ class Mark:
             [int(index) for index in contours] if contours is not None else None,
             int(fields.get("dx", 0)),
             int(fields.get("dy", 0)),
+            int(fields["on"]) if fields.get("on") is not None else None,
         )
 
     def as_dict(self) -> dict:
@@ -77,6 +82,8 @@ class Mark:
             found["contours"] = self.contours
         found["dx"] = self.dx
         found["dy"] = self.dy
+        if self.on is not None:
+            found["on"] = self.on
         return found
 
 
@@ -90,6 +97,7 @@ class Entry:
     cuts: dict[str, str] = field(default_factory=dict)
     marks: list[Mark] = field(default_factory=list)
     after: dict[str, str] = field(default_factory=dict)
+    shift: dict[int, int] = field(default_factory=dict)
 
     def keys_for(self, cut_id: str) -> str | None:
         return self.cuts.get(cut_id, self.keys)
@@ -104,6 +112,8 @@ class Entry:
             found["marks"] = [mark.as_dict() for mark in self.marks]
         if self.after:
             found["after"] = self.after
+        if self.shift:
+            found["shift"] = {str(index): units for index, units in self.shift.items()}
         if self.note:
             found["note"] = self.note
         return found
@@ -141,6 +151,7 @@ class Mapping:
                         cuts=dict(fields.get("cuts", {})),
                         marks=[Mark.from_dict(mark) for mark in fields.get("marks", [])],
                         after=dict(fields.get("after", {})),
+                        shift={int(index): int(units) for index, units in fields.get("shift", {}).items()},
                     )
         return cls(entries, path, groups)
 
@@ -202,10 +213,14 @@ class Mapping:
                         found.append(f"{entry.name}: rule after {previous!r}, which is not a piece")
                     if bad := sorted({key for key in rule_keys if key not in keyed}):
                         found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(bad)!r} (after {previous})")
+                if bad := [index for index in entry.shift if not 0 < index < len(keys)]:
+                    found.append(f"{entry.name}: {cut_id} shift for key {bad}, but the keys are {keys!r}")
                 for mark in entry.marks:
                     if mark.key not in keyed:
                         found.append(f"{entry.name}: {cut_id} has no glyph on mark key {mark.key!r}")
                         continue
+                    if mark.on is not None and not 0 <= mark.on < len(keys):
+                        found.append(f"{entry.name}: {cut_id} mark on key {mark.on}, but the keys are {keys!r}")
                     count = len(font.contours(keyed[mark.key]))
                     bad = [index for index in mark.contours or [] if not 0 <= index < count]
                     if bad:
@@ -260,6 +275,9 @@ def _inline(entry: Entry) -> str:
         fields.append(f"cuts = {{ {cuts} }}")
     if entry.marks:
         fields.append("marks = [" + ", ".join(_inline_mark(mark) for mark in entry.marks) + "]")
+    if entry.shift:
+        shifts = ", ".join(f'"{index}" = {units}' for index, units in sorted(entry.shift.items()))
+        fields.append(f"shift = {{ {shifts} }}")
     if entry.after:
         rules = ", ".join(f"{_string(previous)} = {_string(keys)}" for previous, keys in entry.after.items())
         fields.append(f"after = {{ {rules} }}")
@@ -273,5 +291,7 @@ def _inline_mark(mark: Mark) -> str:
     fields = [f"key = {_string(mark.key)}"]
     if mark.contours is not None:
         fields.append(f"contours = [{', '.join(str(index) for index in mark.contours)}]")
+    if mark.on is not None:
+        fields.append(f"on = {mark.on}")
     fields += [f"dx = {mark.dx}", f"dy = {mark.dy}"]
     return "{ " + ", ".join(fields) + " }"

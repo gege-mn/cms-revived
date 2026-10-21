@@ -52,3 +52,9 @@ class LegacyFont:
             if operator in ("closePath", "endPath"):
                 found.append([])
         return [contour for contour in found if contour]
+
+    def tip(self, glyph_name: str) -> float:
+        """Where the glyph's first stroke reaches lowest along the run: a tooth's tip."""
+
+        points = [point for _, arguments in self.contours(glyph_name)[0] for point in arguments if point is not None]
+        return min(points, key=lambda point: point[1])[0] if points else 0

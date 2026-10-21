@@ -148,14 +148,26 @@ function placeholderPart(cut = state.ui.cut) {
   };
 }
 
-function keyParts(keys, cut = state.ui.cut) {
+function keyParts(keys, cut = state.ui.cut, shift = {}) {
   const glyphs = legacy(cut).keys;
-  return [...keys].map((key) => glyphs[key] || { ...placeholderPart(cut), missingKey: key });
+  return [...keys].flatMap((key, index) => {
+    const part = glyphs[key] || { ...placeholderPart(cut), missingKey: key };
+    const units = Number(shift[index] || 0);
+    return units ? [{ path: "", advance: units, bounds: [0, 0, 0, 0] }, part] : [part];
+  });
 }
 
-// Marks sit over the keys at an offset from the piece's start and take no advance.
-function markParts(item, cut, start) {
+// Marks sit over the keys at an offset from the piece's start and take no advance; a mark
+// `on` a key lines up tooth tip to tooth tip with it, as the build does.
+function markParts(item, cut, start, keys = "", shift = {}) {
   const glyphs = legacy(cut).keys;
+  const origins = [];
+  let x = 0;
+  [...keys].forEach((key, index) => {
+    x += Number(shift[index] || 0);
+    origins.push(x);
+    x += glyphs[key]?.advance || 0;
+  });
   return (item?.marks || [])
     .map((mark) => {
       const glyph = glyphs[mark.key];
@@ -164,7 +176,9 @@ function markParts(item, cut, start) {
       if (!contours.length) return null;
       const low = Math.min(...contours.map((contour) => contour.bounds[1])) + mark.dy;
       const high = Math.max(...contours.map((contour) => contour.bounds[3])) + mark.dy;
-      return { path: contours.map((contour) => contour.path).join(""), advance: 0, dx: mark.dx - start, dy: mark.dy, bounds: [0, low, 0, high] };
+      let dx = mark.dx;
+      if (mark.on !== undefined && mark.on !== null && glyphs[keys[mark.on]]) dx += origins[mark.on] + glyphs[keys[mark.on]].tip - glyph.tip;
+      return { path: contours.map((contour) => contour.path).join(""), advance: 0, dx: dx - start, dy: mark.dy, bounds: [0, low, 0, high] };
     })
     .filter(Boolean);
 }
@@ -192,9 +206,9 @@ function namedParts(name, cut = state.ui.cut, previous = null) {
   const item = entry(name);
   const ruleKeys_ = ruleKeys(item, previous);
   if (ruleKeys_ || hasDrawing(item, cut)) {
-    const parts = keyParts(ruleKeys_ || keysFor(item, cut) || "", cut);
+    const parts = ruleKeys_ ? keyParts(ruleKeys_, cut) : keyParts(keysFor(item, cut) || "", cut, item?.shift || {});
     const advance = parts.reduce((sum, part) => sum + part.advance, 0);
-    return [...parts, ...markParts(item, cut, advance)];
+    return [...parts, ...markParts(item, cut, advance, ruleKeys_ ? "" : keysFor(item, cut) || "", ruleKeys_ ? {} : item?.shift || {})];
   }
   const info = target(name);
   if ((item?.status === "auto" || !item) && info.atoms.length) {
@@ -341,11 +355,13 @@ function renderTarget() {
           .join("")}
       </div>
     </div>
+    <div id="spacing" class="spacing"></div>
     <div id="marks" class="marks"></div>
     <div id="rules" class="marks"></div>
     <div id="stage" class="stage"></div>
     <textarea id="note" rows="2" placeholder="Note">${escapeHtml(item.note || "")}</textarea>
     <p class="hint">↵ confirm · Tab / ⇧Tab move · Esc reverts keys · click a form to map it whole · marks: ↑/↓ in dx, dy nudge by 5</p>`;
+  renderSpacing();
   renderMarks();
   renderRules();
   renderStage();
@@ -408,12 +424,33 @@ function renderMarks() {
     return `<div class="mark" data-index="${index}">
       <label>Mark from <input class="m-key" value="${escapeAttr(mark.key)}" maxlength="1" spellcheck="false"></label>
       <span class="contours">${contours || `<span class="hint">no such key</span>`}</span>
+      <label>on <select class="m-on"><option value="">—</option>${[...(keysFor(item) || "")]
+        .map((key, keyIndex) => `<option value="${keyIndex}" ${mark.on === keyIndex ? "selected" : ""}>${keyIndex + 1}: ${escapeHtml(key)}</option>`)
+        .join("")}</select></label>
       <label>dx <input class="m-dx" type="number" step="5" value="${mark.dx}"></label>
       <label>dy <input class="m-dy" type="number" step="5" value="${mark.dy}"></label>
       <button class="m-del" title="Remove mark">×</button>
     </div>`;
   });
   $("#marks").innerHTML = rows.join("") + `<button id="add-mark" class="add-mark">+ Mark</button>`;
+}
+
+function renderSpacing() {
+  const item = entry(state.ui.current);
+  const keys = keysFor(item) || "";
+  if (keys.length < 2) {
+    $("#spacing").innerHTML = "";
+    return;
+  }
+  $("#spacing").innerHTML =
+    `<span class="hint">Spacing before</span>` +
+    [...keys]
+      .map((key, index) =>
+        index
+          ? `<label><kbd>${escapeHtml(key)}</kbd><input class="s-shift" type="number" step="10" data-index="${index}" value="${Number(item.shift?.[index] || 0)}"></label>`
+          : "",
+      )
+      .join("");
 }
 
 function renderRules() {
@@ -575,6 +612,7 @@ function editKeys(value) {
   const hasKeys = hasDrawing(item);
   if (hasKeys && ["todo", "ok", "auto"].includes(item.status)) item.status = "draft";
   if (!hasKeys && item.status === "draft") item.status = AUTO_KINDS.includes(item.kind) ? "auto" : "todo";
+  renderSpacing();
   renderStage();
   renderStatus();
   renderProgress();
@@ -619,7 +657,7 @@ async function flushSave() {
   const response = await fetch("/api/entry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [], after: item.after || {} }),
+    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [], after: item.after || {}, shift: item.shift || {} }),
   });
   const result = await response.json();
   if (result.error) {
@@ -749,6 +787,17 @@ function wire() {
 
   const work = $("#target");
   work.addEventListener("input", (event) => {
+    if (event.target.classList.contains("s-shift")) {
+      const item = entry(state.ui.current);
+      const index = event.target.dataset.index;
+      item.shift = { ...(item.shift || {}), [index]: Math.round(Number(event.target.value) || 0) };
+      if (!item.shift[index]) delete item.shift[index];
+      if (["todo", "ok"].includes(item.status)) item.status = "draft";
+      renderStage();
+      renderStatus();
+      scheduleSave(item.name);
+      return;
+    }
     const rule = event.target.closest(".rule");
     if (rule) {
       const index = Number(rule.dataset.index);
@@ -763,7 +812,7 @@ function wire() {
         if (!key) return;
         editMarks((marks) => (marks[index] = { ...marks[index], key, contours: null }), { rerenderMarks: true });
         $(`.mark[data-index="${index}"] .m-key`)?.focus();
-      } else {
+      } else if (event.target.classList.contains("m-dx") || event.target.classList.contains("m-dy")) {
         const field = event.target.classList.contains("m-dx") ? "dx" : "dy";
         const value = Math.round(Number(event.target.value) || 0);
         editMarks((marks) => (marks[index] = { ...marks[index], [field]: value }));
@@ -777,6 +826,12 @@ function wire() {
     }
   });
   work.addEventListener("change", (event) => {
+    if (event.target.classList.contains("m-on")) {
+      const index = Number(event.target.closest(".mark").dataset.index);
+      const value = event.target.value === "" ? null : Number(event.target.value);
+      editMarks((marks) => (marks[index] = { ...marks[index], on: value }));
+      return;
+    }
     if (event.target.classList.contains("r-prev")) {
       const index = Number(event.target.closest(".rule").dataset.index);
       editRules((rules) => (rules[index][0] = event.target.value.trim()), { rerender: true });
@@ -836,7 +891,8 @@ function wire() {
   });
 
   document.addEventListener("keydown", (event) => {
-    const inText = event.target.tagName === "TEXTAREA" || event.target.id === "search" || Boolean(event.target.closest?.(".marks"));
+    const inText =
+      event.target.tagName === "TEXTAREA" || event.target.id === "search" || Boolean(event.target.closest?.(".marks, .spacing"));
     if (event.key === "Tab" && !inText) {
       event.preventDefault();
       move(event.shiftKey ? -1 : 1);

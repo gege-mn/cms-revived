@@ -71,6 +71,7 @@ def _legacy(cut_id: str) -> dict:
             key: {
                 "glyph": name,
                 "advance": font.advance(name),
+                "tip": font.tip(name),
                 **_outline(glyph_set, name),
                 "contours": [_contour(glyph_set, contour) for contour in font.contours(name)],
             }
@@ -268,6 +269,7 @@ class Handler(SimpleHTTPRequestHandler):
                             cuts={cut: keys for cut, keys in body.get("cuts", {}).items() if keys},
                             marks=[Mark.from_dict(mark) for mark in body.get("marks", [])],
                             after={previous: keys for previous, keys in body.get("after", {}).items() if previous and keys},
+                            shift={int(index): int(units) for index, units in body.get("shift", {}).items() if int(units)},
                         )
                     )
                     mapping.save()
