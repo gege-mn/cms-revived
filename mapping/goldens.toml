@@ -57,8 +57,9 @@ status = "pending"
 [[golden]]
 latin = "temege"
 text = "ᠲᠡᠮᠡᠭᠡ"
-keys = "Demekt"
-status = "pending"
+keys = "DemekEt"
+status = "ok"
+note = "given by hand: k is toothless, so final ge is kEt"
 
 [[golden]]
 latin = "kümün"

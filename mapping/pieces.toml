@@ -33,7 +33,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "A.init" = { keys = "f", status = "ok", note = "from editor: e · initial, a · isolated (split), a · initial (split), i · isolated (split), i · initial (split), o · isolated (split), o · initial (split), u · isolated (split), u · initial (split), oe · isolated (split), ue · isolated (split), ee · isolated (split), ee · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | u · initial: spine" }
 "A.fina" = { keys = "a", status = "ok", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
 "A.medi" = { keys = "e", after = { "@arch" = "E" }, status = "draft", note = "e by default; E only right after an arch: feminine g/h (G, Gx) and the b family (B, P, F, K, K2). Earlier: Noto has no leading nirugu, CMs pieces carry theirs." }
-"Aa.fina" = { keys = "t", status = "draft" }
+"Aa.fina" = { keys = "t", after = { "@arch" = "Et" }, status = "draft", note = "after an arch the final takes the tooth too: k is toothless, so final ge is kEt (temege = DemekEt)" }
 "I.isol" = { keys = "I", status = "draft" }
 "Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "draft", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
 "I.fina" = { keys = "I", status = "draft", note = "CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
