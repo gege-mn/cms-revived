@@ -1,0 +1,304 @@
+# CMs Revived: which 1998 keys draw each Unicode target.
+#
+# keys    the CMs key sequence that draws it, as typed on the 1998 keyboard
+# cuts    per-cut keys where a cut differs, e.g. cuts = { CMSHR = "fx" }
+# status  todo   not mapped yet; the build draws a placeholder box
+#         draft  mapped, waiting for a human eye
+#         ok     confirmed
+#         new    CMs has no such piece; drawn in drawings/<cut>.ufo
+#         auto   built from its parts (ligatures, pre-MVS forms)
+#
+# pieces     single written units in a joining position: everything is built from these
+# mvs        the shape a unit takes before an MVS, where it has one of its own
+# ligatures  bow letters and others drawn as one form; "auto" joins the parts as they are
+# chars      punctuation, digits and the nirugu, by code point
+# forms      any other whole written form drawn differently from its parts
+#
+# The editor (cmsr editor) rewrites this file; comments other than this header are not kept.
+
+[pieces]
+"A.isol" = { keys = "ft", status = "draft", note = "from editor: e · isolated" }
+"Aa.isol" = { status = "todo" }
+"A.init" = { keys = "f", status = "draft", note = "from editor: e · initial, a · isolated (split), a · initial (split), i · isolated (split), i · initial (split), o · isolated (split), o · initial (split), u · isolated (split), u · initial (split), oe · isolated (split), ue · isolated (split), ee · isolated (split), ee · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | u · initial: spine" }
+"A.fina" = { keys = "a", status = "draft", note = "from editor: a · final, e · final, n · final, a · isolated (split)" }
+"A.medi" = { keys = "e", status = "draft", note = "from editor: a · medial, e · medial, n · medial, a · initial (split), ng · isolated (split), ng · initial (split), ng · medial (split), ng · final (split)" }
+"Aa.fina" = { status = "todo" }
+"I.isol" = { status = "todo" }
+"Ix.isol" = { status = "todo" }
+"I.fina" = { keys = "I", status = "draft", note = "from editor: i · final, i · isolated (split)" }
+"I.init" = { keys = "J", status = "draft", note = "from editor: j · isolated" }
+"I.medi" = { keys = "J", status = "draft", note = "CONFLICT: 'J' from i · medial; 'i' from i · initial (split)" }
+"O.fina" = { keys = "o", status = "draft", note = "from editor: o · isolated (split), u · isolated (split)" }
+"O.medi" = { keys = "o", status = "draft", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
+"U.fina" = { keys = "O", status = "draft", note = "from editor: o · final, u · final, oe · final, ue · final" }
+"U.isol" = { status = "todo" }
+"Ux.isol" = { status = "todo" }
+"O.init" = { status = "todo" }
+"Ue.fina" = { keys = "oA", status = "draft", note = "from editor: oe · isolated (split), ue · isolated (split)" }
+"W.fina" = { keys = "WA", status = "draft", note = "CONFLICT: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
+"W.medi" = { keys = "W", status = "draft", note = "CONFLICT: 'W' from ee · medial; 'w' from ee · initial (split)" }
+"N.init" = { keys = "N", status = "draft", note = "from editor: n · isolated, n · initial" }
+"N.medi" = { status = "todo" }
+"N.fina" = { status = "todo" }
+"G.medi" = { keys = "k", status = "draft", note = "CONFLICT: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split)" }
+"G.fina" = { keys = "it", status = "draft", note = "from editor: g · final, ng · final (split)" }
+"B.init" = { keys = "b", status = "draft", note = "CONFLICT: 'O' from b · isolated; 'b' from b · initial" }
+"B.medi" = { keys = "b", status = "draft", note = "from editor: b · medial" }
+"B.fina" = { keys = "$", status = "draft", note = "from editor: b · final" }
+"B2.fina" = { status = "todo" }
+"P.init" = { keys = "p", status = "draft", note = "from editor: p · isolated, p · initial" }
+"P.medi" = { keys = "p", status = "draft", note = "from editor: p · medial" }
+"P.fina" = { keys = "#", status = "draft", note = "from editor: p · final" }
+"H.init" = { keys = "H", status = "draft", note = "from editor: h · isolated, h · initial" }
+"Hx.init" = { keys = "G", status = "draft", note = "from editor: g · isolated, g · initial" }
+"G.init" = { status = "todo" }
+"Gx.init" = { status = "todo" }
+"Hx.medi" = { status = "todo" }
+"H.medi" = { status = "todo" }
+"Gx.medi" = { status = "todo" }
+"H.fina" = { keys = "ea", status = "draft", note = "from editor: h · final" }
+"Hx.fina" = { status = "todo" }
+"M.init" = { keys = "M", status = "draft", note = "from editor: m · isolated, m · initial" }
+"M.medi" = { keys = "m", status = "draft", note = "from editor: m · medial" }
+"M.fina" = { keys = "^", status = "draft", note = "from editor: m · final" }
+"L.init" = { keys = "L", status = "draft", note = "from editor: l · isolated, l · initial" }
+"L.medi" = { keys = "l", status = "draft", note = "from editor: l · medial" }
+"L.fina" = { keys = "&", status = "draft", note = "from editor: l · final" }
+"S.init" = { keys = "S", status = "draft", note = "from editor: s · isolated, s · initial" }
+"S.medi" = { keys = "s", status = "draft", note = "from editor: s · medial" }
+"S.fina" = { keys = "_", status = "draft", note = "from editor: s · final" }
+"Sz.fina" = { status = "todo" }
+"Sh.init" = { keys = "Z", status = "draft", note = "from editor: sh · isolated, sh · initial" }
+"Sh.medi" = { keys = "z", status = "draft", note = "from editor: sh · medial" }
+"Sh.fina" = { keys = "+", status = "draft", note = "from editor: sh · final" }
+"T.init" = { keys = "D", status = "draft", note = "from editor: t · isolated, t · initial, d · initial" }
+"T.medi" = { status = "todo" }
+"D.medi" = { keys = "d", status = "draft", note = "from editor: t · medial" }
+"T.fina" = { keys = "D", status = "draft", note = "from editor: t · final" }
+"D.init" = { keys = "d", status = "draft", note = "from editor: d · isolated" }
+"Dd.medi" = { keys = "oe", status = "draft", note = "from editor: d · medial" }
+"Dd.fina" = { keys = "oa", status = "draft", note = "from editor: d · final" }
+"D.fina" = { status = "todo" }
+"Ch.init" = { keys = "c", status = "draft", note = "from editor: ch · isolated, ch · initial" }
+"Ch.medi" = { keys = "c", status = "draft", note = "from editor: ch · medial" }
+"Ch.fina" = { keys = "cA", status = "draft", note = "from editor: ch · final" }
+"J.medi" = { status = "todo" }
+"J.fina" = { status = "todo" }
+"Y.init" = { status = "todo" }
+"Y.medi" = { status = "todo" }
+"R.init" = { status = "todo" }
+"R.medi" = { status = "todo" }
+"R.fina" = { status = "todo" }
+"W.init" = { status = "todo" }
+"F.init" = { status = "todo" }
+"F.medi" = { status = "todo" }
+"F.fina" = { status = "todo" }
+"K2.init" = { status = "todo" }
+"K2.medi" = { status = "todo" }
+"K2.fina" = { status = "todo" }
+"K.init" = { status = "todo" }
+"K.medi" = { status = "todo" }
+"K.fina" = { status = "todo" }
+"C.init" = { status = "todo" }
+"C.medi" = { status = "todo" }
+"C.fina" = { status = "todo" }
+"Z.init" = { status = "todo" }
+"Z.medi" = { status = "todo" }
+"Z.fina" = { status = "todo" }
+"Hr.medi" = { status = "todo" }
+"Hr.fina" = { status = "todo" }
+"Rh.init" = { status = "todo" }
+"Rh.medi" = { status = "todo" }
+"Rh.fina" = { status = "todo" }
+"Zr.init" = { status = "todo" }
+"Cr.init" = { status = "todo" }
+
+[mvs]
+"Hx.fina.mvs" = { status = "auto" }
+"N.fina.mvs" = { status = "auto" }
+
+[ligatures]
+"BAa.isol" = { status = "auto" }  # required
+"BI.isol" = { status = "auto" }  # required
+"BO.isol" = { status = "auto" }  # required
+"BUe.isol" = { status = "auto" }  # required
+"BW.isol" = { status = "auto" }  # required
+"FAa.isol" = { status = "auto" }  # required
+"FI.isol" = { status = "auto" }  # required
+"FO.isol" = { status = "auto" }  # required
+"FUe.isol" = { status = "auto" }  # required
+"FW.isol" = { status = "auto" }  # required
+"GAa.isol" = { status = "auto" }  # required
+"GI.isol" = { status = "auto" }  # required
+"GO.isol" = { status = "auto" }  # required
+"GUe.isol" = { status = "auto" }  # required
+"GW.isol" = { status = "auto" }  # required
+"GxAa.isol" = { status = "auto" }  # required
+"GxI.isol" = { status = "auto" }  # required
+"GxO.isol" = { status = "auto" }  # required
+"GxUe.isol" = { status = "auto" }  # required
+"GxW.isol" = { status = "auto" }  # required
+"K2Aa.isol" = { status = "auto" }  # required
+"K2I.isol" = { status = "auto" }  # required
+"K2O.isol" = { status = "auto" }  # required
+"K2Ue.isol" = { status = "auto" }  # required
+"K2W.isol" = { status = "auto" }  # required
+"KAa.isol" = { status = "auto" }  # required
+"KI.isol" = { status = "auto" }  # required
+"KO.isol" = { status = "auto" }  # required
+"KUe.isol" = { status = "auto" }  # required
+"KW.isol" = { status = "auto" }  # required
+"PAa.isol" = { status = "auto" }  # required
+"PI.isol" = { status = "auto" }  # required
+"PO.isol" = { status = "auto" }  # required
+"PUe.isol" = { status = "auto" }  # required
+"PW.isol" = { status = "auto" }  # required
+"BA.init" = { status = "auto" }  # required
+"BI.init" = { status = "auto" }  # required
+"BO.init" = { status = "auto" }  # required
+"BOI.init" = { status = "auto" }  # required
+"BW.init" = { status = "auto" }  # required
+"FA.init" = { status = "auto" }  # required
+"FI.init" = { status = "auto" }  # required
+"FO.init" = { status = "auto" }  # required
+"FOI.init" = { status = "auto" }  # required
+"FW.init" = { status = "auto" }  # required
+"GA.init" = { status = "auto" }  # required
+"GI.init" = { status = "auto" }  # required
+"GO.init" = { status = "auto" }  # required
+"GOI.init" = { status = "auto" }  # required
+"GW.init" = { status = "auto" }  # required
+"GxA.init" = { status = "auto" }  # required
+"GxI.init" = { status = "auto" }  # required
+"GxO.init" = { status = "auto" }  # required
+"GxOI.init" = { status = "auto" }  # required
+"GxW.init" = { status = "auto" }  # required
+"K2A.init" = { status = "auto" }  # required
+"K2I.init" = { status = "auto" }  # required
+"K2O.init" = { status = "auto" }  # required
+"K2OI.init" = { status = "auto" }  # required
+"K2W.init" = { status = "auto" }  # required
+"KA.init" = { status = "auto" }  # required
+"KI.init" = { status = "auto" }  # required
+"KO.init" = { status = "auto" }  # required
+"KOI.init" = { status = "auto" }  # required
+"KW.init" = { status = "auto" }  # required
+"PA.init" = { status = "auto" }  # required
+"PI.init" = { status = "auto" }  # required
+"PO.init" = { status = "auto" }  # required
+"POI.init" = { status = "auto" }  # required
+"PW.init" = { status = "auto" }  # required
+"BA.medi" = { status = "auto" }  # required
+"BI.medi" = { status = "auto" }  # required
+"BO.medi" = { status = "auto" }  # required
+"BOI.medi" = { status = "auto" }  # required
+"BW.medi" = { status = "auto" }  # required
+"FA.medi" = { status = "auto" }  # required
+"FI.medi" = { status = "auto" }  # required
+"FO.medi" = { status = "auto" }  # required
+"FOI.medi" = { status = "auto" }  # required
+"FW.medi" = { status = "auto" }  # required
+"GA.medi" = { status = "auto" }  # required
+"GI.medi" = { status = "auto" }  # required
+"GO.medi" = { status = "auto" }  # required
+"GOI.medi" = { status = "auto" }  # required
+"GW.medi" = { status = "auto" }  # required
+"GxA.medi" = { status = "auto" }  # required
+"GxI.medi" = { status = "auto" }  # required
+"GxO.medi" = { status = "auto" }  # required
+"GxOI.medi" = { status = "auto" }  # required
+"GxW.medi" = { status = "auto" }  # required
+"K2A.medi" = { status = "auto" }  # required
+"K2I.medi" = { status = "auto" }  # required
+"K2O.medi" = { status = "auto" }  # required
+"K2OI.medi" = { status = "auto" }  # required
+"K2W.medi" = { status = "auto" }  # required
+"KA.medi" = { status = "auto" }  # required
+"KI.medi" = { status = "auto" }  # required
+"KO.medi" = { status = "auto" }  # required
+"KOI.medi" = { status = "auto" }  # required
+"KW.medi" = { status = "auto" }  # required
+"PA.medi" = { status = "auto" }  # required
+"PI.medi" = { status = "auto" }  # required
+"PO.medi" = { status = "auto" }  # required
+"POI.medi" = { status = "auto" }  # required
+"PW.medi" = { status = "auto" }  # required
+"BAa.fina" = { status = "auto" }  # required
+"BI.fina" = { status = "auto" }  # required
+"BO.fina" = { status = "auto" }  # required
+"BUe.fina" = { status = "auto" }  # required
+"BW.fina" = { status = "auto" }  # required
+"FAa.fina" = { status = "auto" }  # required
+"FI.fina" = { status = "auto" }  # required
+"FO.fina" = { status = "auto" }  # required
+"FUe.fina" = { status = "auto" }  # required
+"FW.fina" = { status = "auto" }  # required
+"GAa.fina" = { status = "auto" }  # required
+"GI.fina" = { status = "auto" }  # required
+"GO.fina" = { status = "auto" }  # required
+"GUe.fina" = { status = "auto" }  # required
+"GW.fina" = { status = "auto" }  # required
+"GxAa.fina" = { status = "auto" }  # required
+"GxI.fina" = { status = "auto" }  # required
+"GxO.fina" = { status = "auto" }  # required
+"GxUe.fina" = { status = "auto" }  # required
+"GxW.fina" = { status = "auto" }  # required
+"K2Aa.fina" = { status = "auto" }  # required
+"K2I.fina" = { status = "auto" }  # required
+"K2O.fina" = { status = "auto" }  # required
+"K2Ue.fina" = { status = "auto" }  # required
+"K2W.fina" = { status = "auto" }  # required
+"KAa.fina" = { status = "auto" }  # required
+"KI.fina" = { status = "auto" }  # required
+"KO.fina" = { status = "auto" }  # required
+"KUe.fina" = { status = "auto" }  # required
+"KW.fina" = { status = "auto" }  # required
+"PAa.fina" = { status = "auto" }  # required
+"PI.fina" = { status = "auto" }  # required
+"PO.fina" = { status = "auto" }  # required
+"PUe.fina" = { status = "auto" }  # required
+"PW.fina" = { status = "auto" }  # required
+"BL.init" = { status = "auto" }
+"BM.init" = { status = "auto" }
+"GL.init" = { status = "auto" }
+"GM.init" = { status = "auto" }
+"AGH.medi" = { status = "auto" }
+"AGHx.medi" = { status = "auto" }
+"AGL.medi" = { status = "auto" }
+"AGM.medi" = { status = "auto" }
+"AGN.medi" = { status = "auto" }
+"BL.medi" = { status = "auto" }
+"BM.medi" = { status = "auto" }
+"GL.medi" = { status = "auto" }
+"GM.medi" = { status = "auto" }
+"LL.medi" = { status = "auto" }
+"ML.medi" = { status = "auto" }
+"MM.medi" = { status = "auto" }
+"AGH.fina" = { status = "auto" }
+
+[chars]
+"U+1800" = { status = "todo" }
+"U+1801" = { status = "todo" }
+"U+1802" = { keys = ",", status = "draft", note = "guess from the glyph sheet" }
+"U+1803" = { keys = ".", status = "draft", note = "guess from the glyph sheet" }
+"U+1804" = { keys = "=", status = "draft", note = "guess from the glyph sheet" }
+"U+1805" = { status = "todo" }
+"U+180A" = { keys = "-", status = "draft", note = "guess from the glyph sheet" }
+"U+1810" = { keys = "0", status = "draft", note = "guess from the glyph sheet" }
+"U+1811" = { keys = "1", status = "draft", note = "guess from the glyph sheet" }
+"U+1812" = { keys = "2", status = "draft", note = "guess from the glyph sheet" }
+"U+1813" = { keys = "3", status = "draft", note = "guess from the glyph sheet" }
+"U+1814" = { keys = "4", status = "draft", note = "guess from the glyph sheet" }
+"U+1815" = { keys = "5", status = "draft", note = "guess from the glyph sheet" }
+"U+1816" = { keys = "6", status = "draft", note = "guess from the glyph sheet" }
+"U+1817" = { keys = "7", status = "draft", note = "guess from the glyph sheet" }
+"U+1818" = { keys = "8", status = "draft", note = "guess from the glyph sheet" }
+"U+1819" = { keys = "9", status = "draft", note = "guess from the glyph sheet" }
+"U+0021" = { keys = "!", status = "draft", note = "guess from the glyph sheet" }
+"U+003F" = { keys = "?", status = "draft", note = "guess from the glyph sheet" }
+"U+0028" = { keys = ":", status = "draft", note = "guess from the glyph sheet" }
+"U+0029" = { keys = "\"", status = "draft", note = "guess from the glyph sheet" }
+"U+3008" = { keys = "<", status = "draft", note = "guess from the glyph sheet" }
+"U+3009" = { keys = ">", status = "draft", note = "guess from the glyph sheet" }
+"U+300A" = { status = "todo" }
+"U+300B" = { status = "todo" }

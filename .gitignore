@@ -1,7 +1,11 @@
-# editor runtime state — the working record, not source
-tools/editor/state/
+# build output: always rebuilt from cms/ and mapping/
+dist/
+
+# the first editor's saved records, already migrated into mapping/pieces.toml
+.archive/
 
 # python
+.venv/
 __pycache__/
 *.pyc
 

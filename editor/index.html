@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CMs Revived Editor</title>
+  <link rel="stylesheet" href="/editor/style.css">
+</head>
+<body>
+  <header class="bar">
+    <strong class="brand">CMs Revived</strong>
+    <select id="cut" title="Cut"></select>
+    <div id="progress" class="progress"></div>
+    <div id="build" class="build" title="Click to rebuild">not built</div>
+  </header>
+
+  <aside class="list">
+    <div class="list-tools">
+      <input id="search" type="search" placeholder="Search A.init, ng, BA…" autocomplete="off">
+      <div id="filters" class="filters"></div>
+    </div>
+    <nav id="targets"></nav>
+  </aside>
+
+  <main class="work">
+    <section id="target" class="target"></section>
+    <section id="usage" class="usage"></section>
+  </main>
+
+  <aside class="words">
+    <h3>Words</h3>
+    <p class="hint">Real shaping with the last build, against Noto Sans Mongolian.</p>
+    <textarea id="words-input" spellcheck="false" rows="3"></textarea>
+    <div id="words" class="words-out"></div>
+    <div id="problems" class="problems"></div>
+  </aside>
+
+  <script src="/editor/app.js"></script>
+</body>
+</html>
