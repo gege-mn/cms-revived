@@ -303,6 +303,7 @@ class Handler(SimpleHTTPRequestHandler):
                             after={previous: keys for previous, keys in body.get("after", {}).items() if previous and keys},
                             shift={int(index): int(units) for index, units in body.get("shift", {}).items() if int(units)},
                             trim=body.get("trim") or "",
+                            trims={cut: trim for cut, trim in body.get("trims", {}).items() if trim},
                         )
                     )
                     mapping.save()

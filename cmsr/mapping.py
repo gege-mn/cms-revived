@@ -41,6 +41,7 @@ HEADER = """\
 # trim    "end" cuts the stem the last key runs on past its body, "start" the stem the first
 #         key leads in with, "both" both: in-word keys carry stubs of nirugu that the start
 #         or end of a word (or of a suffix after its gap) should not have
+# trims   per-cut trim where a cut differs, e.g. trims = { CMSUB = "start" }
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
 #         "@arch" names a group from [groups]; a piece named on its own wins over a group;
@@ -106,9 +107,13 @@ class Entry:
     after: dict[str, str] = field(default_factory=dict)
     shift: dict[int, int] = field(default_factory=dict)
     trim: Trim = ""
+    trims: dict[str, Trim] = field(default_factory=dict)
 
     def keys_for(self, cut_id: str) -> str | None:
         return self.cuts.get(cut_id, self.keys)
+
+    def trim_for(self, cut_id: str) -> Trim:
+        return self.trims.get(cut_id, self.trim)
 
     def as_dict(self) -> dict:
         found: dict = {"name": self.name, "kind": self.kind, "status": self.status}
@@ -124,6 +129,8 @@ class Entry:
             found["shift"] = {str(index): units for index, units in self.shift.items()}
         if self.trim:
             found["trim"] = self.trim
+        if self.trims:
+            found["trims"] = self.trims
         if self.note:
             found["note"] = self.note
         return found
@@ -163,6 +170,7 @@ class Mapping:
                         after=dict(fields.get("after", {})),
                         shift={int(index): int(units) for index, units in fields.get("shift", {}).items()},
                         trim=fields.get("trim", ""),
+                        trims=dict(fields.get("trims", {})),
                     )
         return cls(entries, path, groups)
 
@@ -208,9 +216,10 @@ class Mapping:
                 found.append(f"{entry.name}: unknown status {entry.status!r}")
             if entry.status in ("draft", "ok") and not (entry.keys or entry.marks):
                 found.append(f"{entry.name}: {entry.status} without keys")
-            if entry.trim not in TRIMS:
-                found.append(f"{entry.name}: unknown trim {entry.trim!r}")
-            if entry.trim and not (entry.keys or entry.cuts):
+            for trim in (entry.trim, *entry.trims.values()):
+                if trim not in TRIMS:
+                    found.append(f"{entry.name}: unknown trim {trim!r}")
+            if (entry.trim or entry.trims) and not (entry.keys or entry.cuts):
                 found.append(f"{entry.name}: trim without keys")
             if entry.status == "auto" and entry.kind not in AUTO_KINDS:
                 found.append(f"{entry.name}: only ligatures, pre-MVS and whole forms can be auto")
@@ -295,6 +304,9 @@ def _inline(entry: Entry) -> str:
         fields.append(f"shift = {{ {shifts} }}")
     if entry.trim:
         fields.append(f"trim = {_string(entry.trim)}")
+    if entry.trims:
+        trims = ", ".join(f"{cut} = {_string(trim)}" for cut, trim in sorted(entry.trims.items()))
+        fields.append(f"trims = {{ {trims} }}")
     if entry.after:
         rules = ", ".join(f"{_string(previous)} = {_string(keys)}" for previous, keys in entry.after.items())
         fields.append(f"after = {{ {rules} }}")

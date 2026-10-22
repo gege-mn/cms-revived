@@ -11,6 +11,7 @@
 # trim    "end" cuts the stem the last key runs on past its body, "start" the stem the first
 #         key leads in with, "both" both: in-word keys carry stubs of nirugu that the start
 #         or end of a word (or of a suffix after its gap) should not have
+# trims   per-cut trim where a cut differs, e.g. trims = { CMSUB = "start" }
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
 #         "@arch" names a group from [groups]; a piece named on its own wins over a group;
@@ -44,8 +45,8 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "Aa.fina" = { keys = "t", after = { "@arch" = "Et" }, status = "ok", note = "after an arch the final takes the tooth too: k is toothless, so final ge is kEt (temege = DemekEt)" }
 "I.isol" = { keys = "I", status = "ok", note = "I; it keeps its leading nirugu after the suffix gap (dürim-i = Doiri^ I)" }
 "Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "ok", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
-"I.fina" = { keys = "I", after = { "@arch" = "uA" }, status = "draft", note = "after an arch uA, u being dEgi's i after b (golden jangγi = JeekkuA) | CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
-"I.init" = { keys = "J", status = "ok", note = "from editor: j · isolated" }
+"I.fina" = { keys = "I", after = { "@arch" = "uA" }, status = "ok", note = "after an arch uA, u being dEgi's i after b (golden jangγi = JeekkuA) | CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
+"I.init" = { keys = "i", trims = { CMSUB = "start" }, status = "ok", note = "i (the shilbe), for word-initial i FVS1; j keeps J (u1835.I.init), y's -yi keeps the stub (u1836.I.init). Ulaanbaatar's i leads in with a stub of nirugu, cut at the start" }
 "I.medi" = { keys = "i", after = { "@arch" = "u" }, status = "ok", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial. | u is the wavy shilbe that joins an arch directly (bi, pi, hi, gi)" }
 "O.fina" = { keys = "o", trim = "end", status = "ok", note = "o, with its trailing stub of nirugu cut off (given by hand, from rediu)" }
 "O.medi" = { keys = "o", status = "ok", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
@@ -145,12 +146,12 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "FAa.isol" = { status = "auto" }  # required
 "FI.isol" = { status = "auto" }  # required
 "FO.isol" = { keys = "Q", trim = "end", status = "ok", note = "draft by analogy with B: Q is f with the closed bowl, as B is b with it" }  # required
-"FUe.isol" = { keys = "QA", status = "draft", note = "draft by analogy with BUe.isol = BA: the closed-bowl key, then the final tail, without the shilbe" }  # required
+"FUe.isol" = { keys = "QA", status = "ok", note = "draft by analogy with BUe.isol = BA: the closed-bowl key, then the final tail, without the shilbe" }  # required
 "FW.isol" = { status = "auto" }  # required
 "GAa.isol" = { status = "auto" }  # required
 "GI.isol" = { status = "auto" }  # required
 "GO.isol" = { status = "auto" }  # required
-"GUe.isol" = { keys = "KA", status = "draft", note = "draft by analogy with BUe.isol = BA: the closed-bowl key, then the final tail, without the shilbe" }  # required
+"GUe.isol" = { keys = "KA", status = "ok", note = "draft by analogy with BUe.isol = BA: the closed-bowl key, then the final tail, without the shilbe" }  # required
 "GW.isol" = { status = "auto" }  # required
 "GxAa.isol" = { status = "auto" }  # required
 "GxI.isol" = { status = "auto" }  # required
@@ -165,33 +166,33 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "KAa.isol" = { status = "auto" }  # required
 "KI.isol" = { status = "auto" }  # required
 "KO.isol" = { keys = "|", trim = "end", status = "ok", note = "draft by analogy with B: | is k with the closed bowl, as B is b with it" }  # required
-"KUe.isol" = { keys = "|A", status = "draft", note = "draft by analogy with BUe.isol = BA: the closed-bowl key, then the final tail, without the shilbe" }  # required
+"KUe.isol" = { keys = "|A", status = "ok", note = "draft by analogy with BUe.isol = BA: the closed-bowl key, then the final tail, without the shilbe" }  # required
 "KW.isol" = { status = "auto" }  # required
 "PAa.isol" = { status = "auto" }  # required
 "PI.isol" = { status = "auto" }  # required
 "PO.isol" = { keys = "P", trim = "end", status = "ok", note = "draft by analogy with B: P is p with the closed bowl, as B is b with it" }  # required
-"PUe.isol" = { keys = "PA", status = "draft", note = "draft by analogy with BUe.isol = BA: the closed-bowl key, then the final tail, without the shilbe" }  # required
+"PUe.isol" = { keys = "PA", status = "ok", note = "draft by analogy with BUe.isol = BA: the closed-bowl key, then the final tail, without the shilbe" }  # required
 "PW.isol" = { status = "auto" }  # required
 "BA.init" = { status = "auto" }  # required
 "BI.init" = { status = "auto" }  # required
 "BO.init" = { keys = "B", status = "ok", note = "given by hand: B is bo/bu" }  # required
 "BOI.init" = { keys = "Bi", status = "ok", note = "given by hand: bö/bü is B + i, i adds the shilbe" }  # required
-"BW.init" = { keys = "bw", shift = { "1" = -60 }, status = "draft", note = "as BW.medi. Drawn in UB and Urga; hand-edit before a public release (RELEASE.md)" }  # required
+"BW.init" = { keys = "bw", shift = { "1" = -60 }, status = "draft", note = "as BW.medi, drawn in every cut" }  # required
 "FA.init" = { status = "auto" }  # required
 "FI.init" = { status = "auto" }  # required
 "FO.init" = { keys = "Q", status = "ok", note = "draft by analogy with B: Q is f with the closed bowl, as B is b with it" }  # required
 "FOI.init" = { keys = "Qi", status = "ok", note = "draft by analogy with B: Q is f with the closed bowl, as B is b with it; i adds the shilbe, as in Bi" }  # required
-"FW.init" = { status = "auto" }  # required
+"FW.init" = { keys = "qw", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on f's own arch" }  # required
 "GA.init" = { status = "auto" }  # required
 "GI.init" = { status = "auto" }  # required
 "GO.init" = { status = "auto" }  # required
 "GOI.init" = { keys = "Ki", status = "ok", note = "given by hand: initial hü is K + i (K is h with the bowl, i adds the shilbe); kümün = Kimoa" }  # required
-"GW.init" = { status = "auto" }  # required
+"GW.init" = { keys = "kw", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on feminine g/h's own arch" }  # required
 "GxA.init" = { status = "auto" }  # required
 "GxI.init" = { status = "auto" }  # required
 "GxO.init" = { status = "auto" }  # required
 "GxOI.init" = { status = "auto" }  # required
-"GxW.init" = { status = "auto" }  # required
+"GxW.init" = { keys = "kw", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on feminine g/h with its dots's own arch" }  # required
 "K2A.init" = { status = "auto" }  # required
 "K2I.init" = { status = "auto" }  # required
 "K2O.init" = { status = "auto" }  # required
@@ -201,32 +202,32 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "KI.init" = { status = "auto" }  # required
 "KO.init" = { keys = "|", status = "ok", note = "draft by analogy with B: | is k with the closed bowl, as B is b with it" }  # required
 "KOI.init" = { keys = "|i", status = "ok", note = "draft by analogy with B: | is k with the closed bowl, as B is b with it; i adds the shilbe, as in Bi" }  # required
-"KW.init" = { status = "auto" }  # required
+"KW.init" = { keys = "\\w", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on k's own arch" }  # required
 "PA.init" = { status = "auto" }  # required
 "PI.init" = { status = "auto" }  # required
 "PO.init" = { keys = "P", status = "ok", note = "draft by analogy with B: P is p with the closed bowl, as B is b with it" }  # required
 "POI.init" = { keys = "Pi", status = "ok", note = "draft by analogy with B: P is p with the closed bowl, as B is b with it; i adds the shilbe, as in Bi" }  # required
-"PW.init" = { status = "auto" }  # required
+"PW.init" = { keys = "pw", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on p's own arch" }  # required
 "BA.medi" = { status = "auto" }  # required
 "BI.medi" = { status = "auto" }  # required
 "BO.medi" = { keys = "B", status = "ok", note = "given by hand: bo/bu is B (abuγad = feBgeoa)" }  # required
 "BOI.medi" = { keys = "Bi", status = "ok", note = "given by hand: bö/bü is Bi" }  # required
-"BW.medi" = { keys = "bw", shift = { "1" = -60 }, status = "draft", note = "w up 60 under b; drawn per cut, root along u. Hand-edit before a public release (RELEASE.md)" }  # required
+"BW.medi" = { keys = "bw", shift = { "1" = -60 }, status = "draft", note = "keys stand in for the drawings in drawings/<cut>.ufo: b, then w under it; in UB and Urga u's edge carries b's arm through the stem, below it w keeps its own curve" }  # required
 "FA.medi" = { status = "auto" }  # required
 "FI.medi" = { status = "auto" }  # required
 "FO.medi" = { keys = "Q", status = "ok", note = "draft by analogy with B: Q is f with the closed bowl, as B is b with it" }  # required
 "FOI.medi" = { keys = "Qi", status = "ok", note = "draft by analogy with B: Q is f with the closed bowl, as B is b with it; i adds the shilbe, as in Bi" }  # required
-"FW.medi" = { status = "auto" }  # required
+"FW.medi" = { keys = "qw", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on f's own arch" }  # required
 "GA.medi" = { status = "auto" }  # required
 "GI.medi" = { status = "auto" }  # required
 "GO.medi" = { keys = "K", status = "ok", note = "given by hand: medial gü/hü is K, the bow with its vowel (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki" }  # required
 "GOI.medi" = { keys = "Ki", status = "ok", note = "by the rule given with eγüdqü: K, plus i where the vowel has its shilbe, as GOI.init" }  # required
-"GW.medi" = { status = "auto" }  # required
+"GW.medi" = { keys = "kw", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on feminine g/h's own arch" }  # required
 "GxA.medi" = { status = "auto" }  # required
 "GxI.medi" = { status = "auto" }  # required
 "GxO.medi" = { status = "auto" }  # required
 "GxOI.medi" = { status = "auto" }  # required
-"GxW.medi" = { status = "auto" }  # required
+"GxW.medi" = { keys = "kw", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on feminine g/h with its dots's own arch" }  # required
 "K2A.medi" = { status = "auto" }  # required
 "K2I.medi" = { status = "auto" }  # required
 "K2O.medi" = { status = "auto" }  # required
@@ -236,12 +237,12 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "KI.medi" = { status = "auto" }  # required
 "KO.medi" = { keys = "|", status = "ok", note = "draft by analogy with B: | is k with the closed bowl, as B is b with it" }  # required
 "KOI.medi" = { keys = "|i", status = "ok", note = "draft by analogy with B: | is k with the closed bowl, as B is b with it; i adds the shilbe, as in Bi" }  # required
-"KW.medi" = { status = "auto" }  # required
+"KW.medi" = { keys = "\\w", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on k's own arch" }  # required
 "PA.medi" = { status = "auto" }  # required
 "PI.medi" = { status = "auto" }  # required
 "PO.medi" = { keys = "P", status = "ok", note = "draft by analogy with B: P is p with the closed bowl, as B is b with it" }  # required
 "POI.medi" = { keys = "Pi", status = "ok", note = "draft by analogy with B: P is p with the closed bowl, as B is b with it; i adds the shilbe, as in Bi" }  # required
-"PW.medi" = { status = "auto" }  # required
+"PW.medi" = { keys = "pw", shift = { "1" = -60 }, status = "draft", note = "drawn per cut from that cut's bē: its tail, on p's own arch" }  # required
 "BAa.fina" = { status = "auto" }  # required
 "BI.fina" = { status = "auto" }  # required
 "BO.fina" = { keys = "B", trim = "end", status = "ok", note = "bo/bu is B, with the trailing stub cut as for o" }  # required
@@ -300,7 +301,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "U+1801" = { status = "new" }
 "U+1802" = { keys = ",", status = "ok", note = "guess from the glyph sheet" }
 "U+1803" = { keys = ".", status = "ok", note = "guess from the glyph sheet" }
-"U+1804" = { keys = "=", status = "draft", note = "guess from the glyph sheet" }
+"U+1804" = { keys = "=", status = "ok", note = "guess from the glyph sheet" }
 "U+1805" = { status = "new" }
 "U+180A" = { keys = "-", status = "ok", note = "guess from the glyph sheet" }
 "U+1810" = { keys = "0", status = "ok", note = "guess from the glyph sheet" }
@@ -314,14 +315,15 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "U+1818" = { keys = "8", status = "ok", note = "guess from the glyph sheet" }
 "U+1819" = { keys = "9", status = "ok", note = "guess from the glyph sheet" }
 "U+0021" = { keys = "/", status = "ok", note = "guess from the glyph sheet" }
-"U+003F" = { keys = "?", status = "draft", note = "its correct, but CMs rotates it, while Unicode looks incorrect in vertical setting..." }
+"U+003F" = { keys = "?", status = "ok", note = "its correct, but CMs rotates it, while Unicode looks incorrect in vertical setting..." }
 "U+0028" = { keys = ":", status = "ok", note = "guess from the glyph sheet" }
 "U+0029" = { keys = "\"", status = "ok", note = "guess from the glyph sheet" }
 "U+3008" = { keys = "<", status = "ok", note = "guess from the glyph sheet" }
 "U+3009" = { keys = ">", status = "ok", note = "guess from the glyph sheet" }
-"U+300A" = { keys = "<<", status = "draft", note = "two of 〈" }
-"U+300B" = { keys = ">>", status = "draft", note = "two of 〉" }
+"U+300A" = { keys = "<<", status = "ok", note = "two of 〈" }
+"U+300B" = { keys = ">>", status = "ok", note = "two of 〉" }
 
 [forms]
-"u1836.I.init" = { keys = "i", status = "draft", note = "y only: the suffix -yi starts with the shilbe (yoso-yi = YosO iI); j keeps I.init = J" }
+"u1835.I.init" = { keys = "J", status = "draft", note = "j only: J, the consonant's own stroke; the shared I.init is i" }
+"u1836.I.init" = { keys = "i", status = "draft", note = "y only, the suffix -yi after its gap (yoso-yi = YosO iI): i uncut, keeping its leading nirugu; I.init cuts it in Ulaanbaatar for word-initial i" }
 "II.medi" = { keys = "ii", status = "ok", note = "two i keys, not U: the user chose ii (Huree draws U differently)" }

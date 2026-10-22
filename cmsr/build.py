@@ -61,7 +61,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
             _copy_drawing(ufo, drawings[target.glyph], target.glyph)
             result.drawn.append(entry.name)
         elif keys or entry.marks:
-            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks, entry.shift, entry.trim, stem)
+            _compose_keys(ufo, legacy, target.glyph, keys or "", entry.marks, entry.shift, entry.trim_for(cut_id), stem)
             result.keyed.append(entry.name)
         elif target.kind in ("piece", "char"):
             _placeholder(ufo, target.glyph, stem)
@@ -79,7 +79,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
             _copy_drawing(ufo, drawn, name)
         else:
             entry = mapping.get(piece)
-            _compose_keys(ufo, legacy, name, keys, entry.marks, trim=entry.trim, stem=stem)
+            _compose_keys(ufo, legacy, name, keys, entry.marks, trim=entry.trim_for(cut_id), stem=stem)
     neighbours.add_inner_forms(ufo, found_rules)
     _add_shorter_ligatures(ufo, mapping, found_rules)
 
@@ -176,20 +176,22 @@ def _import_legacy(ufo: Font, legacy: LegacyFont) -> None:
 
 
 def _letter_forms(ufo: Font, mapping: Mapping) -> None:
-    """A form mapped for one letter only (u1836.I.init: y's I.init, as in the suffix -yi), where
-    letters share the written unit but CMs typed them differently; j keeps the shared I.init."""
+    """A form mapped for one letter only (u1835.I.init: j's I.init, J), where letters share the
+    written unit but CMs typed them differently; i and y keep the shared I.init. The letter's
+    other glyphs on that unit, such as the isolate drawn with it (u1835.I.init._isol), follow."""
 
     for entry in mapping.all():
         own = f"_{entry.name}"
         if entry.kind != "form" or entry.name not in ufo or own not in ufo:
             continue
         shared = "_" + entry.name.split(".", 1)[1]
-        glyph = ufo[entry.name]
-        for component in glyph.components:
-            if component.baseGlyph == shared:
-                component.baseGlyph = own
-                # keep the padding mongfontbuilder added around the shared piece
-                glyph.width += ufo[own].width - ufo[shared].width
+        for name in [entry.name, *(name for name in ufo.keys() if name.startswith(f"{entry.name}._"))]:
+            glyph = ufo[name]
+            for component in glyph.components:
+                if component.baseGlyph == shared:
+                    component.baseGlyph = own
+                    # keep the padding mongfontbuilder added around the shared piece
+                    glyph.width += ufo[own].width - ufo[shared].width
 
 
 def _override_keys(ufo: Font, drawings: Font | None) -> None:

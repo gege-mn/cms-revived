@@ -175,6 +175,8 @@ def _ligature_order(name: str) -> tuple[int, str]:
 
 
 def is_written_form(name: str) -> bool:
+    if name in {variant.glyph for variant in variants()}:
+        return True
     try:
         GlyphDescriptor.parse("_" + name)
     except (AssertionError, ValueError):

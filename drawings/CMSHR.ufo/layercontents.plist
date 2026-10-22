@@ -10,5 +10,13 @@
       <string>horn</string>
       <string>glyphs.horn</string>
     </array>
+    <array>
+      <string>w</string>
+      <string>glyphs.w</string>
+    </array>
+    <array>
+      <string>bu</string>
+      <string>glyphs.bu</string>
+    </array>
   </array>
 </plist>

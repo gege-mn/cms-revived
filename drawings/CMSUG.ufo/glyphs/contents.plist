@@ -6,5 +6,25 @@
     <string>_B_W_.init.glif</string>
     <key>_BW.medi</key>
     <string>_B_W_.medi.glif</string>
+    <key>_FW.init</key>
+    <string>_F_W_.init.glif</string>
+    <key>_FW.medi</key>
+    <string>_F_W_.medi.glif</string>
+    <key>_GW.init</key>
+    <string>_G_W_.init.glif</string>
+    <key>_GW.medi</key>
+    <string>_G_W_.medi.glif</string>
+    <key>_GxW.init</key>
+    <string>_G_xW_.init.glif</string>
+    <key>_GxW.medi</key>
+    <string>_G_xW_.medi.glif</string>
+    <key>_KW.init</key>
+    <string>_K_W_.init.glif</string>
+    <key>_KW.medi</key>
+    <string>_K_W_.medi.glif</string>
+    <key>_PW.init</key>
+    <string>_P_W_.init.glif</string>
+    <key>_PW.medi</key>
+    <string>_P_W_.medi.glif</string>
   </dict>
 </plist>
