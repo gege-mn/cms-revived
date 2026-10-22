@@ -14,8 +14,12 @@ from pathlib import Path
 from fontTools.misc.transform import Transform
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.pens.recordingPen import DecomposingRecordingPen
+from fontTools.pens.reverseContourPen import ReverseContourPen
+from fontTools.pens.transformPen import TransformPen
 from mongfontbuilder.otl import MongFeaComposer
 from mongfontbuilder.spec import applySpecToFont
+from pathops import Path as Outline
+from pathops import PathOp, op
 from ufo2ft import compileTTF
 from ufoLib2 import Font
 from ufoLib2.objects import Component
@@ -193,6 +197,13 @@ def _compose_keys(
             glyph.components.append(Component(trimmed, Transform(dx=x)))
             x += advance
             continue
+        if (shift or {}).get(index, 0) < 0 and index > 0:
+            previous = legacy.glyph_name(keys[index - 1])
+            reach = origins[index - 1] + legacy.advance(previous) - x
+            clipped = _clipped(ufo, legacy, name, previous, legacy.advance(previous) - reach, reach, stem)
+            glyph.components.append(Component(clipped, Transform(dx=x)))
+            x += legacy.advance(name)
+            continue
         glyph.components.append(Component(legacy_glyph_name(name), Transform(dx=x)))
         x += legacy.advance(name)
     for mark in marks:
@@ -202,6 +213,55 @@ def _compose_keys(
             dx += origins[mark.on] + legacy.tip(legacy.glyph_name(keys[mark.on])) - legacy.tip(legacy.glyph_name(mark.key))
         glyph.components.append(Component(base, Transform(dx=dx, dy=mark.dy)))
     glyph.width = x
+
+
+def _clipped(
+    ufo: Font, legacy: LegacyFont, name: str, previous: str, offset: float, reach: float, stem: tuple[float, float]
+) -> str:
+    """A key moved back into the key before it, without the stem it pokes past that key's bowl.
+
+    Up to the previous key's end its own stub carries the stem, so where the moved key's
+    stem leaves the previous key's ink it is cutting across a counter or a curve."""
+
+    clipped = f"{legacy_glyph_name(name)}.under_{previous}_{round(reach)}"
+    if clipped in ufo:
+        return clipped
+    glyph_set = legacy.ttf.getGlyphSet()
+
+    def outline(glyph_name: str, dx: float = 0) -> Outline:
+        path = Outline()
+        glyph_set[glyph_name].draw(TransformPen(path.getPen(), (1, 0, 0, 1, dx, 0)))
+        path.simplify()
+        return path
+
+    def box(x0: float, y0: float, x1: float, y1: float) -> Outline:
+        path = Outline()
+        pen = path.getPen()
+        pen.moveTo((x0, y0))
+        pen.lineTo((x0, y1))
+        pen.lineTo((x1, y1))
+        pen.lineTo((x1, y0))
+        pen.closePath()
+        return path
+
+    # Line by line along the stem, only up to where the previous key's ink reaches on that
+    # line: past it the moved key is the stem itself, which some keys leave to the next one.
+    before = outline(previous, -offset)
+    left = -legacy.units_per_em
+    behind = Outline()
+    step = 4
+    for y in range(round(stem[0]), round(stem[1]), step):
+        ink = op(box(left, y, reach, y + step), before, PathOp.INTERSECTION)
+        if ink.bounds:
+            behind = op(behind, box(left, y, ink.bounds[2], y + step), PathOp.UNION)
+    uncovered = op(behind, before, PathOp.DIFFERENCE)
+    result = op(outline(name), uncovered, PathOp.DIFFERENCE)
+    glyph = ufo.newGlyph(clipped)
+    glyph.width = legacy.advance(name)
+    # pathops winds contours the PostScript way; overlapping the previous key's TrueType
+    # contours the other way round would cancel out to a hole.
+    result.draw(ReverseContourPen(glyph.getPen()))
+    return clipped
 
 
 def _mark_glyph(ufo: Font, legacy: LegacyFont, mark: Mark) -> str:
