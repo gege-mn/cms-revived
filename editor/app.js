@@ -388,13 +388,47 @@ function renderTarget() {
     <div id="marks" class="marks"></div>
     <div id="rules" class="marks"></div>
     <div id="stage" class="stage"></div>
+    <div id="palette" class="palette"></div>
     <textarea id="note" rows="2" placeholder="Note">${escapeHtml(item.note || "")}</textarea>
     <p class="hint">↵ confirm · Tab / ⇧Tab move · Esc reverts keys · click a form to map it whole · marks: ↑/↓ in dx, dy nudge by 5</p>`;
   renderSpacing();
   renderMarks();
   renderRules();
   renderStage();
+  renderPalette();
   $("#keys").focus();
+}
+
+function usedKeys() {
+  const used = new Set();
+  for (const item of Object.values(state.entries)) {
+    for (const keys of [item.keys, ...Object.values(item.cuts || {}), ...Object.values(item.after || {})]) {
+      for (const key of keys || "") used.add(key);
+    }
+    for (const mark of item.marks || []) used.add(mark.key);
+  }
+  return used;
+}
+
+function renderPalette() {
+  const used = usedKeys();
+  const keys = Object.keys(legacy().keys).filter((key) => key !== " ");
+  const tile = (key) =>
+    `<button class="pkey${used.has(key) ? "" : " unused"}" data-key="${escapeAttr(key)}" title="add ${escapeAttr(key)}">` +
+    `${legacySvg(keyParts(key), 56)}<code>${escapeHtml(key)}</code></button>`;
+  $("#palette").innerHTML =
+    `<h3>Not used anywhere yet</h3><div class="pkeys">${keys.filter((key) => !used.has(key)).map(tile).join("")}</div>` +
+    `<details><summary>All keys</summary><div class="pkeys">${keys.map(tile).join("")}</div></details>`;
+}
+
+function addKey(key) {
+  const input = $("#keys");
+  const start = input.selectionStart ?? input.value.length;
+  const end = input.selectionEnd ?? start;
+  input.value = input.value.slice(0, start) + key + input.value.slice(end);
+  input.focus();
+  input.setSelectionRange(start + key.length, start + key.length);
+  editKeys(input.value);
 }
 
 function renderStatus() {
@@ -875,6 +909,11 @@ function wire() {
     scheduleSave(item.name, 0);
   });
   work.addEventListener("click", (event) => {
+    const paletteKey = event.target.closest(".pkey")?.dataset.key;
+    if (paletteKey) {
+      addKey(paletteKey);
+      return;
+    }
     if (event.target.closest("#add-rule")) {
       const pieces = state.data.targets.filter((info) => info.kind === "piece").map((info) => info.name);
       const used = Object.keys(entry(state.ui.current).after || {});
