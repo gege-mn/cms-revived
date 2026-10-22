@@ -95,6 +95,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
     )
     scale = legacy.units_per_em / 1000
     applySpecToFont(composer.compose(), ufo, initPadding=40 * scale, finaPadding=100 * scale)
+    _letter_forms(ufo, mapping)
     ufo.features.text = composer.asFeatureFile().asFea() + neighbours.features(ufo, found_rules)
 
     cut.output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -172,6 +173,23 @@ def _import_legacy(ufo: Font, legacy: LegacyFont) -> None:
         target = ufo.newGlyph(".notdef" if name == ".notdef" else legacy_glyph_name(name))
         recording.replay(target.getPen())
         target.width = legacy.advance(name)
+
+
+def _letter_forms(ufo: Font, mapping: Mapping) -> None:
+    """A form mapped for one letter only (u1836.I.init: y's I.init, as in the suffix -yi), where
+    letters share the written unit but CMs typed them differently; j keeps the shared I.init."""
+
+    for entry in mapping.all():
+        own = f"_{entry.name}"
+        if entry.kind != "form" or entry.name not in ufo or own not in ufo:
+            continue
+        shared = "_" + entry.name.split(".", 1)[1]
+        glyph = ufo[entry.name]
+        for component in glyph.components:
+            if component.baseGlyph == shared:
+                component.baseGlyph = own
+                # keep the padding mongfontbuilder added around the shared piece
+                glyph.width += ufo[own].width - ufo[shared].width
 
 
 def _override_keys(ufo: Font, drawings: Font | None) -> None:
