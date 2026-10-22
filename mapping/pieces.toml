@@ -86,7 +86,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "S.init" = { keys = "S", status = "draft", note = "from editor: s · isolated, s · initial" }
 "S.medi" = { keys = "s", status = "draft", note = "from editor: s · medial" }
 "S.fina" = { keys = "_", status = "draft", note = "from editor: s · final" }
-"Sz.fina" = { status = "todo" }
+"Sz.fina" = { status = "new" }
 "Sh.init" = { keys = "Z", status = "ok", note = "from editor: sh · isolated, sh · initial" }
 "Sh.medi" = { keys = "z", status = "ok", note = "from editor: sh · medial" }
 "Sh.fina" = { keys = "+", status = "draft", note = "from editor: sh · final" }
@@ -112,7 +112,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "F.init" = { keys = "q", status = "ok" }
 "F.medi" = { keys = "q", status = "ok" }
 "F.fina" = { keys = "@", status = "ok" }
-"K2.init" = { keys = "p; '", status = "new" }
+"K2.init" = { status = "new" }
 "K2.medi" = { status = "new" }
 "K2.fina" = { status = "new" }
 "K.init" = { keys = "\\", status = "ok" }
@@ -125,11 +125,11 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "Z.medi" = { keys = "[", status = "ok" }
 "Z.fina" = { keys = "[A", status = "ok" }
 "Hr.medi" = { keys = "~", status = "ok" }
-"Hr.fina" = { status = "todo" }
-"Rh.init" = { status = "todo" }
-"Rh.medi" = { status = "todo" }
-"Rh.fina" = { status = "todo" }
-"Zr.init" = { status = "todo" }
+"Hr.fina" = { keys = "~A", status = "ok" }
+"Rh.init" = { status = "new" }
+"Rh.medi" = { status = "new" }
+"Rh.fina" = { status = "new" }
+"Zr.init" = { status = "new" }
 "Cr.init" = { keys = "oo-", status = "ok", note = "apparently - is nirugu, i've added one to match noto sans, but may end up being too long." }
 
 [mvs]
@@ -296,12 +296,12 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "AGH.fina" = { after = { "@arch" = "EkEa" }, status = "new", note = "was EkEa; the leading E made e by the E-only-after-arch rule, EkEa kept for after an arch: check" }
 
 [chars]
-"U+1800" = { status = "todo" }
-"U+1801" = { status = "todo" }
+"U+1800" = { status = "new" }
+"U+1801" = { status = "new" }
 "U+1802" = { keys = ",", status = "ok", note = "guess from the glyph sheet" }
 "U+1803" = { keys = ".", status = "ok", note = "guess from the glyph sheet" }
 "U+1804" = { keys = "=", status = "draft", note = "guess from the glyph sheet" }
-"U+1805" = { status = "todo" }
+"U+1805" = { status = "new" }
 "U+180A" = { keys = "-", status = "draft", note = "guess from the glyph sheet" }
 "U+1810" = { keys = "0", status = "draft", note = "guess from the glyph sheet" }
 "U+1811" = { keys = "1", status = "draft", note = "guess from the glyph sheet" }
