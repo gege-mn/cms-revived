@@ -117,8 +117,8 @@ status = "ok"
 [[golden]]
 latin = "čaγ"
 text = "ᠴᠠᠭ"
-keys = "Ceea"
-status = "ok"
+keys = "Ce("
+status = "pending"
 
 [[golden]]
 latin = "baγsi"
