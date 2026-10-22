@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
-    <key>cmsr.L.medi.after.P.init</key>
-    <string>cmsr.L_.medi.after.P_.init.glif</string>
-    <key>cmsr.L.medi.after.P.medi</key>
-    <string>cmsr.L_.medi.after.P_.medi.glif</string>
+    <key>_P.init</key>
+    <string>_P_.init.glif</string>
+    <key>_P.medi</key>
+    <string>_P_.medi.glif</string>
   </dict>
 </plist>
