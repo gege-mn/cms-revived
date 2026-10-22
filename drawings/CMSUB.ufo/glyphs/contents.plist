@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>_BW.init</key>
+    <string>_B_W_.init.glif</string>
+    <key>_BW.medi</key>
+    <string>_B_W_.medi.glif</string>
     <key>cms.backslash</key>
     <string>cms.backslash.glif</string>
     <key>cms.k</key>

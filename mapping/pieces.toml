@@ -176,7 +176,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "BI.init" = { status = "auto" }  # required
 "BO.init" = { keys = "B", status = "ok", note = "given by hand: B is bo/bu" }  # required
 "BOI.init" = { keys = "Bi", status = "ok", note = "given by hand: bö/bü is B + i, i adds the shilbe" }  # required
-"BW.init" = { status = "auto" }  # required
+"BW.init" = { keys = "bw", shift = { "1" = -60 }, status = "draft", note = "as BW.medi. Drawn in UB and Urga; hand-edit before a public release (RELEASE.md)" }  # required
 "FA.init" = { status = "auto" }  # required
 "FI.init" = { status = "auto" }  # required
 "FO.init" = { keys = "Q", status = "ok", note = "draft by analogy with B: Q is f with the closed bowl, as B is b with it" }  # required
@@ -211,7 +211,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "BI.medi" = { status = "auto" }  # required
 "BO.medi" = { keys = "B", status = "ok", note = "given by hand: bo/bu is B (abuγad = feBgeoa)" }  # required
 "BOI.medi" = { keys = "Bi", status = "ok", note = "given by hand: bö/bü is Bi" }  # required
-"BW.medi" = { keys = "bw", shift = { "1" = -60 }, status = "draft" }  # required
+"BW.medi" = { keys = "bw", shift = { "1" = -60 }, status = "draft", note = "w up 60 under b; drawn per cut, root along u. Hand-edit before a public release (RELEASE.md)" }  # required
 "FA.medi" = { status = "auto" }  # required
 "FI.medi" = { status = "auto" }  # required
 "FO.medi" = { keys = "Q", status = "ok", note = "draft by analogy with B: Q is f with the closed bowl, as B is b with it" }  # required
