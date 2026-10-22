@@ -118,7 +118,7 @@ status = "ok"
 latin = "čaγ"
 text = "ᠴᠠᠭ"
 keys = "Ce("
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "baγsi"
@@ -148,8 +148,8 @@ status = "ok"
 [[golden]]
 latin = "jöblel"
 text = "ᠵᠥᠪᠯᠡᠯ"
-keys = "Joible&"
-status = "fixed"
+keys = "Joib;e&"
+status = "ok"
 snapshot = { CMSHR = "ab477b2986bf", CMSUB = "be1050969f67", CMSUG = "23c262d89727" }
 
 [[golden]]
