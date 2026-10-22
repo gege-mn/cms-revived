@@ -87,8 +87,8 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "S.medi" = { keys = "s", status = "draft", note = "from editor: s · medial" }
 "S.fina" = { keys = "_", status = "draft", note = "from editor: s · final" }
 "Sz.fina" = { status = "todo" }
-"Sh.init" = { keys = "Z", status = "draft", note = "from editor: sh · isolated, sh · initial" }
-"Sh.medi" = { keys = "z", status = "draft", note = "from editor: sh · medial" }
+"Sh.init" = { keys = "Z", status = "ok", note = "from editor: sh · isolated, sh · initial" }
+"Sh.medi" = { keys = "z", status = "ok", note = "from editor: sh · medial" }
 "Sh.fina" = { keys = "+", status = "draft", note = "from editor: sh · final" }
 "T.init" = { keys = "D", status = "draft", note = "from editor: t · isolated, t · initial, d · initial" }
 "T.medi" = { keys = "D", status = "ok" }
@@ -118,12 +118,12 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "K.init" = { keys = "\\", status = "ok" }
 "K.medi" = { keys = "\\", status = "ok" }
 "K.fina" = { keys = "!", status = "ok" }
-"C.init" = { status = "todo" }
-"C.medi" = { status = "todo" }
-"C.fina" = { status = "todo" }
-"Z.init" = { status = "todo" }
-"Z.medi" = { status = "todo" }
-"Z.fina" = { status = "todo" }
+"C.init" = { keys = "}", status = "ok" }
+"C.medi" = { keys = "]", status = "ok" }
+"C.fina" = { keys = "]A", status = "ok" }
+"Z.init" = { keys = "{", status = "ok" }
+"Z.medi" = { keys = "[", status = "ok" }
+"Z.fina" = { keys = "[A", status = "ok" }
 "Hr.medi" = { keys = "~", status = "ok" }
 "Hr.fina" = { status = "todo" }
 "Rh.init" = { status = "todo" }
