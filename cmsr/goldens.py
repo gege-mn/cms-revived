@@ -21,7 +21,7 @@ from fontTools.pens.boundsPen import BoundsPen
 from fontTools.pens.recordingPen import RecordingPen
 from fontTools.ttLib import TTFont
 
-from .config import ROOT
+from .config import CUTS, MAPPING_FILE, ROOT
 from .legacy import LegacyFont
 
 GOLDENS_FILE = ROOT / "mapping" / "goldens.toml"
@@ -93,18 +93,50 @@ def save(goldens: list[Golden], path: Path = GOLDENS_FILE) -> None:
 def check(golden: Golden, font_path: Path, legacy: LegacyFont) -> Result:
     built = _built_leaves(font_path, golden.text)
     keys_by_glyph = {name: key for key, name in legacy.keyed_glyphs().items()}
+    stand_ins = _stand_ins(legacy.cut.id, *_revisions(legacy.cut.id))
     gaps = _gaps(font_path, golden.text)
     produced = ""
-    for name, x, _ in built:
+    as_typed: list[tuple[str, float, float]] = []
+    for name, x, y in built:
         while gaps and gaps[0] < x:
             produced += " "
             gaps.pop(0)
-        produced += _typed(name, keys_by_glyph)
+        if name in stand_ins:
+            produced += stand_ins[name] + DRAWN
+            as_typed += [(leaf, x + dx, y) for leaf, dx, _ in _legacy_leaves(legacy, stand_ins[name])]
+        else:
+            produced += _typed(name, keys_by_glyph)
+            as_typed.append((name, x, y))
     signature = _signature(built, font_path)
     if golden.status == "fixed":
         return Result(produced, signature == golden.snapshot.get(legacy.cut.id), signature)
-    passed = _same(built, _legacy_leaves(legacy, golden.keys))
+    passed = _same(as_typed, _legacy_leaves(legacy, golden.keys))
     return Result(produced, passed, signature, None if passed else _suggest(built, produced, golden.keys))
+
+
+def _revisions(cut_id: str) -> tuple[int, int]:
+    contents = CUTS[cut_id].drawings_path / "glyphs" / "contents.plist"
+    return MAPPING_FILE.stat().st_mtime_ns, contents.stat().st_mtime_ns if contents.exists() else 0
+
+
+@cache
+def _stand_ins(cut_id: str, *revisions: int) -> dict[str, str]:
+    """Pieces drawn by hand over keys the mapping still gives, such as a 1998 piece nudged
+    into place: for a golden they stand in for those keys."""
+
+    from ufoLib2 import Font
+
+    from .mapping import Mapping
+
+    path = CUTS[cut_id].drawings_path
+    if not path.exists():
+        return {}
+    mapping = Mapping.load()
+    found = {}
+    for name in Font.open(path).keys():
+        if name.startswith("_") and name[1:] in mapping.entries and (keys := mapping.get(name[1:]).keys_for(cut_id)):
+            found[name] = keys
+    return found
 
 
 def _typed(name: str, keys_by_glyph: dict[str, str]) -> str:
@@ -140,7 +172,7 @@ def _signature(leaves: list[tuple[str, float, float]], path: Path) -> str:
 
     def mark(name: str) -> str:
         # A hand drawing can be redrawn under the same name; dEgi's outlines never change.
-        if not name.startswith("cmsr."):
+        if not name.startswith(("cmsr.", "_")):
             return name
         recording = RecordingPen()
         glyph_set[name].draw(recording)

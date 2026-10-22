@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>_F.init</key>
+    <string>_F_.init.glif</string>
+    <key>_F.medi</key>
+    <string>_F_.medi.glif</string>
+    <key>_K.init</key>
+    <string>_K_.init.glif</string>
+    <key>_K.medi</key>
+    <string>_K_.medi.glif</string>
     <key>_P.init</key>
     <string>_P_.init.glif</string>
     <key>_P.medi</key>
