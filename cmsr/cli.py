@@ -170,11 +170,18 @@ def _goldens(args: argparse.Namespace) -> None:
         raise SystemExit("no corpora in reference/corpora/: see README for how to fetch them")
     if args.add:
         items = goldens.load()
-        for word, roman, new, frequency in coverage.suggest(cut.output_path, args.add, min_frequency=args.min_frequency):
+        added = 0
+        # Ask for spares: a word the font still draws with a placeholder can't be typed in CMs.
+        for word, roman, new, frequency in coverage.suggest(cut.output_path, args.add * 2, min_frequency=args.min_frequency):
             golden = goldens.Golden(word, roman)
             golden.keys = goldens.check(golden, cut.output_path, LegacyFont.open(cut.id)).produced
+            if goldens.PLACEHOLDER in golden.keys:
+                continue
             items.append(golden)
             print(f"added {roman:12} +{new} new joins, {frequency}x in the corpora")
+            added += 1
+            if added == args.add:
+                break
         goldens.save(items)
     glyphs, joins = coverage.report(cut.output_path)
     pending = sum(golden.status == "pending" for golden in goldens.load())
