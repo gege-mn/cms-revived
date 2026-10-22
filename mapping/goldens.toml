@@ -231,7 +231,7 @@ latin = "hēbēi"
 text = "ᠾᠧᠪᠧᠢ"
 keys = "f~wbwI"
 status = "fixed"
-snapshot = { CMSHR = "0543cc8e70c8", CMSUB = "2327382401ba", CMSUG = "1df5eb0be7ee" }
+snapshot = { CMSHR = "0543cc8e70c8", CMSUB = "2327382401ba", CMSUG = "ee85c3e490bf" }
 
 [[golden]]
 latin = "bülqüm"
