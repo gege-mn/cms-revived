@@ -51,6 +51,7 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
     _set_info(ufo, cut, legacy)
     _import_legacy(ufo, legacy)
     drawings = Font.open(cut.drawings_path) if cut.drawings_path.exists() else None
+    _override_keys(ufo, drawings)
     stem = _stem(legacy)
 
     for entry in mapping.all():
@@ -173,6 +174,18 @@ def _import_legacy(ufo: Font, legacy: LegacyFont) -> None:
         target.width = legacy.advance(name)
 
 
+def _override_keys(ufo: Font, drawings: Font | None) -> None:
+    """A drawing named after a 1998 glyph (cms.<name>) redraws that key for the whole cut, so
+    every piece and ligature typed with it gets the fix, such as a bowl nudged into place."""
+
+    for name in drawings.keys() if drawings is not None else ():
+        if name.startswith("cms.") and name in ufo:
+            target = ufo[name]
+            target.clearContours()
+            drawings[name].draw(target.getPen())
+            target.width = drawings[name].width
+
+
 def _compose_keys(
     ufo: Font,
     legacy: LegacyFont,
@@ -226,11 +239,10 @@ def _clipped(
     clipped = f"{legacy_glyph_name(name)}.under_{previous}_{round(reach)}"
     if clipped in ufo:
         return clipped
-    glyph_set = legacy.ttf.getGlyphSet()
 
     def outline(glyph_name: str, dx: float = 0) -> Outline:
         path = Outline()
-        glyph_set[glyph_name].draw(TransformPen(path.getPen(), (1, 0, 0, 1, dx, 0)))
+        ufo[legacy_glyph_name(glyph_name)].draw(TransformPen(path.getPen(), (1, 0, 0, 1, dx, 0)))
         path.simplify()
         return path
 

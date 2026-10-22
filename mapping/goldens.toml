@@ -18,7 +18,7 @@ text = "ᠮᠣᠩᠭᠣᠯ"
 keys = "Moekgo&"
 status = "fixed"
 note = "differs on purpose: CMs had no proper ng + masculine g join"
-snapshot = { CMSHR = "f040c6b1bbd9", CMSUB = "74fd0ec30050", CMSUG = "53b9670d8873" }
+snapshot = { CMSHR = "2bee7980440b", CMSUB = "5c40ae92119a", CMSUG = "1cff3625e16d" }
 
 [[golden]]
 latin = "altan"
@@ -162,7 +162,7 @@ status = "ok"
 latin = "paisa"
 text = "ᠫᠠᠢᠰᠠ"
 keys = "pEiisa"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "eγüdqü"
@@ -206,7 +206,7 @@ latin = "kino"
 text = "ᠻᠢᠨᠣ᠋"
 keys = "\\uno"
 status = "fixed"
-snapshot = { CMSHR = "2d1241771ffd", CMSUB = "c53b94e0136e", CMSUG = "82365f0df678" }
+snapshot = { CMSHR = "2d1241771ffd", CMSUB = "d077ed24de73", CMSUG = "82365f0df678" }
 
 [[golden]]
 latin = "bü"
@@ -260,7 +260,7 @@ status = "ok"
 latin = "qoyitu"
 text = "ᠬᠣᠶ᠋ᠢᠲᠤ᠌"
 keys = "HoiidO"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "luγ-a"

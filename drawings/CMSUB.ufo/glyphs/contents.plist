@@ -2,17 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
-    <key>_F.init</key>
-    <string>_F_.init.glif</string>
-    <key>_F.medi</key>
-    <string>_F_.medi.glif</string>
-    <key>_K.init</key>
-    <string>_K_.init.glif</string>
-    <key>_K.medi</key>
-    <string>_K_.medi.glif</string>
-    <key>_P.init</key>
-    <string>_P_.init.glif</string>
-    <key>_P.medi</key>
-    <string>_P_.medi.glif</string>
+    <key>cms.backslash</key>
+    <string>cms.backslash.glif</string>
+    <key>cms.k</key>
+    <string>cms.k.glif</string>
+    <key>cms.p</key>
+    <string>cms.p.glif</string>
+    <key>cms.q</key>
+    <string>cms.q.glif</string>
   </dict>
 </plist>

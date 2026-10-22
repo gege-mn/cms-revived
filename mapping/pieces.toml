@@ -200,7 +200,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "KA.init" = { status = "auto" }  # required
 "KI.init" = { status = "auto" }  # required
 "KO.init" = { keys = "|", status = "ok", note = "draft by analogy with B: | is k with the closed bowl, as B is b with it" }  # required
-"KOI.init" = { keys = "|i", status = "draft", note = "draft by analogy with B: | is k with the closed bowl, as B is b with it; i adds the shilbe, as in Bi" }  # required
+"KOI.init" = { keys = "|i", status = "ok", note = "draft by analogy with B: | is k with the closed bowl, as B is b with it; i adds the shilbe, as in Bi" }  # required
 "KW.init" = { status = "auto" }  # required
 "PA.init" = { status = "auto" }  # required
 "PI.init" = { status = "auto" }  # required
@@ -282,7 +282,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "GL.init" = { status = "auto" }
 "GM.init" = { status = "auto" }
 "AGH.medi" = { keys = "ekEe", status = "ok" }
-"AGHx.medi" = { keys = "ekEe", marks = [{ key = "n", contours = [1], on = 2, dx = 0, dy = 0 }, { key = "n", contours = [1], on = 3, dx = 0, dy = 0 }], status = "draft", note = "fix, as asked: CMs Ee for the masculine g's two teeth, with the dot of n on each (tooth tip to tooth tip), instead of g, whose lead-in stem broke the join" }
+"AGHx.medi" = { keys = "ekEe", marks = [{ key = "n", contours = [1], on = 2, dx = 0, dy = 0 }, { key = "n", contours = [1], on = 3, dx = 0, dy = 0 }], shift = { "2" = 10 }, status = "ok", note = "fix, as asked: CMs Ee for the masculine g's two teeth, with the dot of n on each (tooth tip to tooth tip), instead of g, whose lead-in stem broke the join" }
 "AGL.medi" = { status = "auto" }
 "AGM.medi" = { status = "auto" }
 "AGN.medi" = { status = "auto" }
@@ -302,17 +302,17 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "U+1803" = { keys = ".", status = "ok", note = "guess from the glyph sheet" }
 "U+1804" = { keys = "=", status = "draft", note = "guess from the glyph sheet" }
 "U+1805" = { status = "new" }
-"U+180A" = { keys = "-", status = "draft", note = "guess from the glyph sheet" }
-"U+1810" = { keys = "0", status = "draft", note = "guess from the glyph sheet" }
-"U+1811" = { keys = "1", status = "draft", note = "guess from the glyph sheet" }
-"U+1812" = { keys = "2", status = "draft", note = "guess from the glyph sheet" }
-"U+1813" = { keys = "3", status = "draft", note = "guess from the glyph sheet" }
-"U+1814" = { keys = "4", status = "draft", note = "guess from the glyph sheet" }
-"U+1815" = { keys = "5", status = "draft", note = "guess from the glyph sheet" }
-"U+1816" = { keys = "6", status = "draft", note = "guess from the glyph sheet" }
-"U+1817" = { keys = "7", status = "draft", note = "guess from the glyph sheet" }
-"U+1818" = { keys = "8", status = "draft", note = "guess from the glyph sheet" }
-"U+1819" = { keys = "9", status = "draft", note = "guess from the glyph sheet" }
+"U+180A" = { keys = "-", status = "ok", note = "guess from the glyph sheet" }
+"U+1810" = { keys = "0", status = "ok", note = "guess from the glyph sheet" }
+"U+1811" = { keys = "1", status = "ok", note = "guess from the glyph sheet" }
+"U+1812" = { keys = "2", status = "ok", note = "guess from the glyph sheet" }
+"U+1813" = { keys = "3", status = "ok", note = "guess from the glyph sheet" }
+"U+1814" = { keys = "4", status = "ok", note = "guess from the glyph sheet" }
+"U+1815" = { keys = "5", status = "ok", note = "guess from the glyph sheet" }
+"U+1816" = { keys = "6", status = "ok", note = "guess from the glyph sheet" }
+"U+1817" = { keys = "7", status = "ok", note = "guess from the glyph sheet" }
+"U+1818" = { keys = "8", status = "ok", note = "guess from the glyph sheet" }
+"U+1819" = { keys = "9", status = "ok", note = "guess from the glyph sheet" }
 "U+0021" = { keys = "/", status = "ok", note = "guess from the glyph sheet" }
 "U+003F" = { keys = "?", status = "draft", note = "its correct, but CMs rotates it, while Unicode looks incorrect in vertical setting..." }
 "U+0028" = { keys = ":", status = "ok", note = "guess from the glyph sheet" }
@@ -323,4 +323,4 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "U+300B" = { keys = ">>", status = "draft", note = "two of 〉" }
 
 [forms]
-"II.medi" = { keys = "ii", status = "draft", note = "two i keys, not U: the user chose ii (Huree draws U differently)" }
+"II.medi" = { keys = "ii", status = "ok", note = "two i keys, not U: the user chose ii (Huree draws U differently)" }

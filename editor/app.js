@@ -157,8 +157,10 @@ function placeholderPart(cut = state.ui.cut) {
 
 function keyParts(keys, cut = state.ui.cut, shift = {}) {
   const glyphs = legacy(cut).keys;
+  const drawings = state.data.drawings?.[cut] || {};
   return [...keys].flatMap((key, index) => {
-    const part = glyphs[key] || { ...placeholderPart(cut), missingKey: key };
+    const redrawn = glyphs[key] && drawings[`cms.${glyphs[key].glyph}`];
+    const part = redrawn ? { ...glyphs[key], ...redrawn } : glyphs[key] || { ...placeholderPart(cut), missingKey: key };
     const units = Number(shift[index] || 0);
     return units ? [{ path: "", advance: units, bounds: [0, 0, 0, 0] }, part] : [part];
   });
