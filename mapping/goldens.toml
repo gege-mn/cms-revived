@@ -161,8 +161,8 @@ status = "ok"
 [[golden]]
 latin = "paisa"
 text = "ᠫᠠᠢᠰᠠ"
-keys = "pEUsa"
-status = "ok"
+keys = "pEiisa"
+status = "pending"
 
 [[golden]]
 latin = "eγüdqü"
@@ -206,10 +206,64 @@ latin = "kino"
 text = "ᠻᠢᠨᠣ᠋"
 keys = "\\uno"
 status = "fixed"
-snapshot = { CMSHR = "2d1241771ffd", CMSUB = "d077ed24de73", CMSUG = "82365f0df678" }
+snapshot = { CMSHR = "2d1241771ffd", CMSUB = "c53b94e0136e", CMSUG = "82365f0df678" }
 
 [[golden]]
 latin = "bü"
 text = "ᠪᠦ"
 keys = "BA"
+status = "ok"
+
+[[golden]]
+latin = "öb-un"
+text = "ᠥᠪ᠎ᠤᠨ"
+keys = "foi$ oa"
+status = "ok"
+
+[[golden]]
+latin = "šasin"
+text = "ᠱᠠᠰᠢᠨ"
+keys = "Zesia"
+status = "ok"
+
+[[golden]]
+latin = "hēbēi"
+text = "ᠾᠧᠪᠧᠢ"
+keys = "f~wbwI"
+status = "pending"
+
+[[golden]]
+latin = "bülqüm"
+text = "ᠪᠦᠯᠬᠦᠮ"
+keys = "BilK^"
+status = "ok"
+
+[[golden]]
+latin = "adquju"
+text = "ᠠᠳᠬᠤᠵᠤ"
+keys = "feoeeeojO"
+status = "ok"
+
+[[golden]]
+latin = "tēlwis"
+text = "ᠲᠧᠯᠸᠢᠰ"
+keys = "Dwlwi_"
+status = "ok"
+
+[[golden]]
+latin = "oomēn-u"
+text = "ᠣᠣᠮᠧᠨ᠎ᠤ"
+keys = "foomwa O"
+status = "ok"
+
+[[golden]]
+latin = "qoyitu"
+text = "ᠬᠣᠶ᠋ᠢᠲᠤ᠌"
+keys = "HoiidO"
+status = "pending"
+
+[[golden]]
+latin = "luγ-a"
+text = "ᠯᠤᠭ᠎ᠠ"
+keys = "Lo)T"
 status = "ok"

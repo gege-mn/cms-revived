@@ -323,4 +323,4 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "U+300B" = { keys = ">>", status = "draft", note = "two of 〉" }
 
 [forms]
-"II.medi" = { keys = "U", status = "ok", note = "CMs draws the double shilbe on one key; used by i and y medial fvs2" }
+"II.medi" = { keys = "ii", status = "draft", note = "two i keys, not U: the user chose ii (Huree draws U differently)" }
