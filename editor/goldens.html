@@ -191,9 +191,17 @@
       document.querySelectorAll(".golden.focus").forEach((element) => element.classList.remove("focus"));
       event.target.closest(".golden")?.classList.add("focus");
     });
+    // Confirming moves the cursor into the next word, so a held or repeated Enter would confirm
+    // that one too: one press confirms one word.
+    let enterArmed = true;
     $("#goldens").addEventListener("keydown", (event) => {
       if (event.key !== "Enter" || event.target.tagName !== "INPUT") return;
+      if (event.repeat || event.isComposing || !enterArmed) return;
+      enterArmed = false;
       confirm(Number(event.target.closest(".golden").dataset.index), event.target.value);
+    });
+    document.addEventListener("keyup", (event) => {
+      if (event.key === "Enter") enterArmed = true;
     });
     $("#goldens").addEventListener("click", async (event) => {
       const map = event.target.closest(".map");

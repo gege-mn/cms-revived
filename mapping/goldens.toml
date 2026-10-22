@@ -272,58 +272,58 @@ status = "ok"
 latin = "γüwē"
 text = "ᠭᠦᠸᠧ"
 keys = "KiwwA"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "qiba"
 text = "ᠬᠢᠪᠠ"
 keys = "kubEt"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "jangγi"
 text = "ᠵᠠᠩᠭᠢ"
 keys = "JeekkuA"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "elbeγ"
 text = "ᠡᠯᠪᠡᠭ"
 keys = "flbEit"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "böqöde"
 text = "ᠪᠥᠬᠥᠳᠡ"
 keys = "BiKda"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "oyunči"
 text = "ᠣᠶᠤᠨᠴᠢ"
 keys = "foyoecI"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "erdeni"
 text = "ᠡᠷᠳᠡᠨᠢ"
 keys = "frdenI"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "jil-eče"
 text = "ᠵᠢᠯ᠎ᠡᠴᠡ"
 keys = "Ji& fca"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "yoso-yi"
 text = "ᠶᠣᠰᠣ᠌᠎ᠶᠢ"
 keys = "YosO iI"
-status = "ok"
+status = "pending"
 
 [[golden]]
 latin = "fü"
 text = "ᠹᠦ"
 keys = "QA"
-status = "ok"
+status = "pending"

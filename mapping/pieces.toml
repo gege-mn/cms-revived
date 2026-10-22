@@ -44,7 +44,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "Aa.fina" = { keys = "t", after = { "@arch" = "Et" }, status = "ok", note = "after an arch the final takes the tooth too: k is toothless, so final ge is kEt (temege = DemekEt)" }
 "I.isol" = { keys = "I", status = "ok", note = "I; it keeps its leading nirugu after the suffix gap (dürim-i = Doiri^ I)" }
 "Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "ok", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
-"I.fina" = { keys = "I", after = { "@arch" = "uA" }, status = "ok", note = "after an arch uA, u being dEgi's i after b (golden jangγi = JeekkuA) | CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
+"I.fina" = { keys = "I", after = { "@arch" = "uA" }, status = "draft", note = "after an arch uA, u being dEgi's i after b (golden jangγi = JeekkuA) | CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
 "I.init" = { keys = "J", status = "ok", note = "from editor: j · isolated" }
 "I.medi" = { keys = "i", after = { "@arch" = "u" }, status = "ok", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial. | u is the wavy shilbe that joins an arch directly (bi, pi, hi, gi)" }
 "O.fina" = { keys = "o", trim = "end", status = "ok", note = "o, with its trailing stub of nirugu cut off (given by hand, from rediu)" }
