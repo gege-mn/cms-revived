@@ -291,7 +291,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "GL.medi" = { status = "auto" }
 "GM.medi" = { status = "auto" }
 "LL.medi" = { keys = "lX", status = "ok" }
-"ML.medi" = { status = "auto" }
+"ML.medi" = { keys = "'", status = "draft", note = "' is dEgi's m + l ligature" }
 "MM.medi" = { status = "auto" }
 "AGH.fina" = { after = { "@arch" = "EkEa" }, status = "new", note = "was EkEa; the leading E made e by the E-only-after-arch rule, EkEa kept for after an arch: check" }
 
