@@ -15,6 +15,15 @@ waits for:
       failures, accepted for Alpha 5 and left pending: nobsi, front (rule glyphs to draw),
       pwptid, jišiγsen, üjeγdel.
 
+## Next version
+
+Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.md) collected.
+
+- [ ] Fix the five known-failure goldens (see [docs/state.md](docs/state.md)): nobsi and front
+      need the owner's rule glyphs (`cmsr.S.medi.after.@arch`, `cmsr.R.medi.after.@arch`).
+- [ ] A licence for the tooling code (`cmsr/`, `editor/`), or a decision to leave it unlicensed.
+- [ ] A home for the news corpora, so the goldens tools work on another machine.
+
 ## After a release
 
 - [ ] Draw the left-out letters. A freehand birga was tried and rejected; it needs a better source.

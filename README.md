@@ -1,5 +1,9 @@
 # Gege CMs Revived
 
+**Gege CMs Ulaanbaatar Revived**, **Gege CMs Urga Revived** and **Gege CMs Huree Revived**.
+Latest: [Alpha 5](https://github.com/gege-mn/cms-revived/releases/tag/alpha-5). Where it
+stands: [docs/state.md](docs/state.md).
+
 dEgi's 1998 CMs fonts (Urga, Ulaanbaatar, Huree) rebuilt as Unicode Mongolian
 fonts, from his own outlines. See [NOTICE.md](NOTICE.md) for authorship and the
 state of permission.
@@ -26,6 +30,33 @@ positions, so documents typed the old way still need dEgi's originals.
 Where the Unicode part needs something no 1998 key draws, it is drawn by hand in
 `drawings/<cut>.ufo` (any UFO editor; the team uses Fontra).
 
+## Setting up
+
+Needs [uv](https://docs.astral.sh/uv/) and git. uv fetches a suitable Python (3.12 or
+later) and the pinned dependencies from `uv.lock`, mongfontbuilder 0.15.3 among them.
+
+```sh
+git clone git@github.com:gege-mn/cms-revived.git && cd cms-revived
+uv sync
+uv run cmsr check --cut all   # should end with "editor data: ok"
+```
+
+Optional: [Fontra Pak](https://fontra.xyz) to edit `drawings/<CUT>.ufo`, the GitHub CLI
+`gh` to publish releases, and the corpora (below) for the goldens tools.
+
+### Corpora
+
+`cmsr goldens` (coverage and `--add`) reads real text from `reference/corpora/*.md`, which
+is not in git. Building and checking don't need it. The two files used so far are scrapes of
+500 articles each, with no Private Use Area characters:
+
+- `nmg-2026-10.md`: the Mongolian portal of the Inner Mongolia government,
+  https://mgl.nmg.gov.cn, and its sub-sites
+- `mgyxw-2026-10.md`: China Mongolian News Network, https://www.mgyxw.cn/
+
+Any Markdown files of Unicode Mongolian text will do: words are counted from every `*.md`
+in that folder.
+
 ## Commands
 
 ```sh
@@ -36,6 +67,7 @@ uv run cmsr build           # build all three cuts into dist/
 uv run cmsr check           # build, then run the 3,689 shaping cases
 uv run cmsr status          # progress, conflicts, problems
 uv run cmsr goldens --add 10  # next goldens: common words with joins no golden checks yet
+uv run cmsr release "Alpha 6" --final-name  # snapshot into releases/ (docs/workflow.md)
 ```
 
 ## Layout
@@ -49,7 +81,9 @@ uv run cmsr goldens --add 10  # next goldens: common words with joins no golden 
 | `cmsr/` | targets, build, shaping check, editor server |
 | `editor/` | the editor page |
 | `reference/` | Noto Sans Mongolian, for comparison only |
-| `reference/corpora/` | mongfontbuilder's news corpora, fetched on demand, not in git |
+| `reference/corpora/` | news text for the goldens tools, not in git (see Corpora) |
+| `releases/` | labelled snapshots, one folder each, with NOTES.md |
+| `docs/` | [state](docs/state.md), [decisions](docs/decisions.md), [workflow](docs/workflow.md), [feedback](docs/feedback.md) |
 
 ## What counts as done
 
