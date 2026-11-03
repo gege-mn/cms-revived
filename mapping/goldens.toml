@@ -328,3 +328,299 @@ latin = "fü"
 text = "ᠹᠦ"
 keys = "QA"
 status = "ok"
+
+[[golden]]
+latin = "cai"
+text = "ᠼᠠᠢ"
+keys = "}eI"
+status = "ok"
+
+[[golden]]
+latin = "šüji"
+text = "ᠱᠦᠵᠢ"
+keys = "ZoijI"
+status = "ok"
+
+[[golden]]
+latin = "miq-a"
+text = "ᠮᠢᠬ᠎ᠠ"
+keys = "Mi(T"
+status = "ok"
+
+[[golden]]
+latin = "ösöγ"
+text = "ᠥᠰᠥᠭ"
+keys = "foisoit"
+status = "ok"
+
+[[golden]]
+latin = "abčö"
+text = "ᠠᠪᠴᠥ"
+keys = "febcO"
+status = "ok"
+
+[[golden]]
+latin = "maγu"
+text = "ᠮᠠᠭᠤ"
+keys = "MegO"
+status = "ok"
+
+[[golden]]
+latin = "mētr"
+text = "ᠮᠧᠲᠷ"
+keys = "MwD*"
+status = "ok"
+
+[[golden]]
+latin = "sonin"
+text = "ᠰᠣᠨᠢᠨ"
+keys = "Sonia"
+status = "ok"
+
+[[golden]]
+latin = "alaša"
+text = "ᠠᠯᠠᠱᠠ"
+keys = "feleza"
+status = "ok"
+
+[[golden]]
+latin = "siqam"
+text = "ᠰᠢᠬᠠᠮ"
+keys = "Sieee^"
+status = "ok"
+
+[[golden]]
+latin = "nobsi"
+text = "ᠨᠣᠪᠰᠢ"
+keys = "NobsI"
+status = "pending"
+
+[[golden]]
+latin = "aziy-a"
+text = "ᠠᠽᠢᠶ᠎ᠠ"
+keys = "fe[iIT"
+status = "ok"
+
+[[golden]]
+latin = "šiγud"
+text = "ᠱᠢᠭᠤᠳ"
+keys = "Sigooa"
+status = "ok"
+
+[[golden]]
+latin = "ebüγe"
+text = "ᠡᠪᠦᠭᠡ"
+keys = "fBkEt"
+status = "fixed"
+snapshot = { CMSHR = "40940e509134", CMSUB = "c00132096d3e", CMSUG = "b7db409e680d" }
+
+[[golden]]
+latin = "neres"
+text = "ᠨᠡᠷᠡᠰ"
+keys = "Nere_"
+status = "ok"
+
+[[golden]]
+latin = "front"
+text = "ᠹᠷᠣᠨᠲ"
+keys = "qroeD"
+status = "pending"
+
+[[golden]]
+latin = "enērγi"
+text = "ᠡᠨᠧᠷᠭᠢ"
+keys = "fnwrkuA"
+status = "ok"
+
+[[golden]]
+latin = "sistēm"
+text = "ᠰᠢᠰᠲᠧᠮ"
+keys = "SisDw^"
+status = "ok"
+
+[[golden]]
+latin = "engneγe"
+text = "ᠡᠩᠨᠡᠭᠡ"
+keys = "feknekEt"
+status = "fixed"
+snapshot = { CMSHR = "e11897a59a09", CMSUB = "d18abb9f998d", CMSUG = "7dd4a8fcc40d" }
+
+[[golden]]
+latin = "bučaju"
+text = "ᠪᠤᠴᠠᠵᠤ"
+keys = "BcejO"
+status = "ok"
+
+[[golden]]
+latin = "pwptid"
+text = "ᠫᠸᠫᠲ᠋ᠢᠳ᠋"
+keys = "pwpDidA"
+status = "pending"
+
+[[golden]]
+latin = "liyouhē"
+text = "ᠯᠢᠶᠣᠤᠾᠧ"
+keys = "Liyoo~wA"
+status = "ok"
+
+[[golden]]
+latin = "ewürüpe"
+text = "ᠡᠸᠦ᠋ᠷᠦᠫᠡ"
+keys = "fwoiropEt"
+status = "ok"
+
+[[golden]]
+latin = "šiidbüri"
+text = "ᠱᠢᠢᠳᠪᠦᠷᠢ"
+keys = "SiioeBrI"
+status = "ok"
+
+[[golden]]
+latin = "qöγjiγen"
+text = "ᠬᠥᠭᠵᠢᠭᠡᠨ"
+keys = "KikjikEa"
+status = "ok"
+
+[[golden]]
+latin = "witamin"
+text = "ᠸᠢᠲ᠋ᠠᠮᠢᠨ"
+keys = "WiDemia"
+status = "ok"
+
+[[golden]]
+latin = "tingqim-ün"
+text = "ᠲᠢᠩᠬᠢᠮ᠎ᠦᠨ"
+keys = "Diekku^ oa"
+status = "ok"
+
+[[golden]]
+latin = "qauli-ača"
+text = "ᠬᠠᠤᠯᠢ᠎ᠠᠴᠠ"
+keys = "HeolI fca"
+status = "ok"
+
+[[golden]]
+latin = "tüngliyoo"
+text = "ᠲᠦᠩᠯᠢᠶᠣᠣ"
+keys = "Doiek;iyoO"
+status = "ok"
+
+[[golden]]
+latin = "jišiγsen"
+text = "ᠵᠢᠱ᠌ᠢᠭᠰᠡᠨ"
+keys = "Jiziksea"
+status = "pending"
+
+[[golden]]
+latin = "čaγdaγ-a"
+text = "ᠴᠠᠭᠳᠠᠭ᠎ᠠ"
+keys = "Ceeede)T"
+status = "pending"
+
+[[golden]]
+latin = "sudulju"
+text = "ᠰᠤᠳᠤᠯᠵᠤ"
+keys = "SodoljO"
+status = "pending"
+
+[[golden]]
+latin = "ulγun-a"
+text = "ᠤᠯᠭᠤᠨ᠎ᠠ"
+keys = "folgo%T"
+status = "pending"
+
+[[golden]]
+latin = "ejemden"
+text = "ᠡᠵᠡᠮᠳᠡᠨ"
+keys = "fjemdea"
+status = "pending"
+
+[[golden]]
+latin = "ajilčid"
+text = "ᠠᠵᠢᠯᠴᠢᠳ"
+keys = "fejilcioa"
+status = "pending"
+
+[[golden]]
+latin = "amjilta"
+text = "ᠠᠮᠵᠢᠯᠲᠠ"
+keys = "femjilda"
+status = "pending"
+
+[[golden]]
+latin = "möčir-ni"
+text = "ᠮᠥᠴᠢᠷ᠎ᠨᠢ"
+keys = "Moici* NI"
+status = "pending"
+
+[[golden]]
+latin = "sorγoγ"
+text = "ᠰᠣᠷᠭᠣᠭ"
+keys = "Sorgo("
+status = "pending"
+
+[[golden]]
+latin = "alqum"
+text = "ᠠᠯᠬᠤᠮ"
+keys = "feleeo^"
+status = "pending"
+
+[[golden]]
+latin = "iüi"
+text = "ᠢᠦᠢ"
+keys = "fioI"
+status = "pending"
+
+[[golden]]
+latin = "budulγ-a"
+text = "ᠪᠤᠳᠤᠯᠭ᠎ᠠ"
+keys = "Bdol)T"
+status = "pending"
+
+[[golden]]
+latin = "arbilan"
+text = "ᠠᠷᠪᠢᠯᠠᠨ"
+keys = "ferbulea"
+status = "pending"
+
+[[golden]]
+latin = "čola"
+text = "ᠴᠣᠯᠠ"
+keys = "Cola"
+status = "pending"
+
+[[golden]]
+latin = "ba"
+text = "ᠪᠠ"
+keys = "bEt"
+status = "pending"
+
+[[golden]]
+latin = "sunusqu"
+text = "ᠰᠤᠨᠤᠰᠬᠤ"
+keys = "SonoseeO"
+status = "pending"
+
+[[golden]]
+latin = "qüčülen"
+text = "ᠬᠦᠴᠦᠯᠡᠨ"
+keys = "Kicolea"
+status = "pending"
+
+[[golden]]
+latin = "üjeγdel"
+text = "ᠦᠵᠡᠭᠳᠡᠯ"
+keys = "foijekde&"
+status = "pending"
+
+[[golden]]
+latin = "orčin"
+text = "ᠣᠷᠴᠢᠨ"
+keys = "forcia"
+status = "pending"
+
+[[golden]]
+latin = "öγčü"
+text = "ᠥᠭᠴᠦ"
+keys = "foikcO"
+status = "pending"

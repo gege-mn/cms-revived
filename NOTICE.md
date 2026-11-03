@@ -45,8 +45,8 @@ Until he is reached, we commit to the following:
   without dEgi's permission.
 - **Credit.** dEgi is named as the author of the typeface in every font built
   here, ahead of anyone who worked on the rework. The family names keep his
-  (CMs Urga, CMs Ulaanbaatar, CMs Huree), with the suffix "Revived" so that the
-  rework is not mistaken for his 1998 fonts.
+  (CMs Urga, CMs Ulaanbaatar, CMs Huree), marked "Gege … Revived" (Gege CMs
+  Ulaanbaatar Revived) so that the rework is not mistaken for his 1998 fonts.
 - **His decision.** Any request from dEgi, or from whoever holds his rights,
   will be honoured promptly: a change of credit, name or terms, or the
   withdrawal of the rework.

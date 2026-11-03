@@ -17,7 +17,7 @@ from mongfontbuilder import GlyphDescriptor
 from ufoLib2 import Font
 from ufoLib2.objects import Component
 
-from .mapping import Mapping
+from .mapping import After, Mapping
 from .targets import atoms_of, variants
 
 Rule = tuple[str, str]  # (piece, the piece right before it)
@@ -27,18 +27,18 @@ def rule_glyph(piece: str, previous: str) -> str:
     return f"cmsr.{piece}.after.{previous}"
 
 
-def rules(mapping: Mapping) -> dict[Rule, str]:
-    return {(entry.name, previous): keys for entry in mapping.all() for previous, keys in mapping.rules(entry).items()}
+def rules(mapping: Mapping) -> dict[Rule, After]:
+    return {(entry.name, previous): rule for entry in mapping.all() for previous, rule in mapping.rules(entry).items()}
 
 
-def add_inner_forms(ufo: Font, found: dict[Rule, str]) -> None:
+def add_inner_forms(ufo: Font, found: dict[Rule, After]) -> None:
     """Draw every written form that has a rule inside it from its pieces, before composing."""
 
     for written in dict.fromkeys(variant.written for variant in variants()):
         compose_from_pieces(ufo, written, found, only_with_rules=True)
 
 
-def compose_from_pieces(ufo: Font, written: str, found: dict[Rule, str], only_with_rules: bool = False) -> bool:
+def compose_from_pieces(ufo: Font, written: str, found: dict[Rule, After], only_with_rules: bool = False) -> bool:
     """Draw the written form *written* from its pieces, applying the rules inside it."""
 
     name = "_" + written
@@ -63,7 +63,7 @@ def compose_from_pieces(ufo: Font, written: str, found: dict[Rule, str], only_wi
     return True
 
 
-def features(ufo: Font, found: dict[Rule, str]) -> str:
+def features(ufo: Font, found: dict[Rule, After]) -> str:
     """The substitutions between letters, as feature code to append to the composer's."""
 
     if not found:
@@ -94,8 +94,13 @@ def features(ufo: Font, found: dict[Rule, str]) -> str:
     lookups: list[str] = []
     for index, ((piece, previous), table) in enumerate(swaps.items()):
         ends = sorted(
-            {name for name, atoms in output.items() if atoms[-1] == previous}
-            | {alternate for name, atoms in output.items() if atoms[-1] == previous for alternate in alternates_of.get(name, [])}
+            {name for name, atoms in output.items() if _ends_with(name, atoms, previous)}
+            | {
+                alternate
+                for name, atoms in output.items()
+                if _ends_with(name, atoms, previous)
+                for alternate in alternates_of.get(name, [])
+            }
         )
         if not table or not ends:
             continue
@@ -113,6 +118,16 @@ def features(ufo: Font, found: dict[Rule, str]) -> str:
     if not lookups:
         return ""
     return "\n".join(blocks) + "\nfeature rclt {\n" + "".join(f"    lookup {name};\n" for name in lookups) + "} rclt;\n"
+
+
+def _ends_with(name: str, atoms: list[str], previous: str) -> bool:
+    """Whether a shaped glyph ends in *previous*: its last piece, or the whole of it for a rule
+    after a ligature (BO.medi, not every glyph ending in O.medi)."""
+
+    if atoms[-1] == previous:
+        return True
+    descriptor = GlyphDescriptor.parse(name)
+    return f"{''.join(descriptor.units)}.{descriptor.position}" == previous
 
 
 def _output_atoms(name: str) -> list[str] | None:

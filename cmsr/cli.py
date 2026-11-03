@@ -7,7 +7,7 @@ from . import config
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="cmsr", description="CMs Revived font tooling.")
+    parser = argparse.ArgumentParser(prog="cmsr", description="Gege CMs Revived font tooling.")
     commands = parser.add_subparsers(dest="command", required=True)
 
     build = commands.add_parser("build", help="build fonts into dist/")
@@ -46,7 +46,7 @@ def _build(args: argparse.Namespace) -> None:
         result = build(cut_id, strict=args.strict)
         print(
             f"{result.path.relative_to(config.ROOT)}  keyed {len(result.keyed)}, "
-            f"drawn {len(result.drawn)}, placeholders {len(result.placeholders)}"
+            f"drawn {len(result.drawn)}, left out {len(result.left_out)}"
         )
 
 
@@ -59,10 +59,14 @@ def _check(args: argparse.Namespace) -> None:
     failed = False
     all_goldens = goldens.load()
     for cut_id in _cuts(args.cut):
-        path = build(cut_id).path
-        total, failures = run(path)
+        built = build(cut_id)
+        path = built.path
+        total, failures, skipped = run(path, built.left_out)
         unexpected = [failure for failure in failures if not failure.expected]
-        print(f"{cut_id}: {total - len(failures)}/{total} pass, {len(failures) - len(unexpected)} expected failures")
+        print(
+            f"{cut_id}: {total - len(failures)}/{total} pass, {len(failures) - len(unexpected)} expected failures, "
+            f"{skipped} skipped (letters left out)"
+        )
         for failure in unexpected:
             failed = True
             print(f"  {failure.case.index}  {failure.case.letters}")
@@ -112,7 +116,7 @@ def _release(args: argparse.Namespace) -> None:
     counts = Counter(entry.status for entry in mapping.all() if entry.kind in ("piece", "char"))
     all_goldens = goldens.load()
     lines = [
-        f"# CMs Revived {args.label}",
+        f"# {config.FAMILY_PREFIX} CMs {config.FAMILY_SUFFIX}",
         "",
         f"Built {datetime.date.today().isoformat()} from commit {commit}. A snapshot of the work, not a release.",
         "",
@@ -121,7 +125,7 @@ def _release(args: argparse.Namespace) -> None:
     ]
     for cut_id, cut in config.CUTS.items():
         result = build(cut_id, mapping)
-        total, failures = run(result.path)
+        total, failures, _ = run(result.path, result.left_out)
         legacy = LegacyFont.open(cut_id)
         confirmed = [golden for golden in all_goldens if golden.status != "pending"]
         broken = [golden.latin for golden in confirmed if not goldens.check(golden, result.path, legacy).passed]
@@ -131,10 +135,10 @@ def _release(args: argparse.Namespace) -> None:
             f"- `{result.path.name}`",
             f"- shaping: {total - len(failures)}/{total} cases pass",
             f"- goldens: {len(confirmed) - len(broken)}/{len(confirmed)} confirmed match" + (f" (not: {', '.join(broken)})" if broken else ""),
-            f"- placeholder boxes: {len(result.placeholders)}" + (f" ({', '.join(result.placeholders)})" if result.placeholders else ""),
+            f"- left out (not drawn yet): {len(result.left_out)}" + (f" ({', '.join(result.left_out)})" if result.left_out else ""),
             "",
         ]
-        print(f"{result.path.relative_to(config.ROOT)}  shaping {total - len(failures)}/{total}, placeholders {len(result.placeholders)}")
+        print(f"{result.path.relative_to(config.ROOT)}  shaping {total - len(failures)}/{total}, left out {len(result.left_out)}")
     (config.DIST_DIR / "NOTES.md").write_text("\n".join(lines), encoding="utf-8")
 
 

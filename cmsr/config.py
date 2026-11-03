@@ -11,7 +11,8 @@ DIST_DIR = ROOT / "dist"
 
 LOCALE = "MNG"
 
-# Working name, pending the author's word (see NOTICE.md). Changing it renames every cut.
+# Changing either renames every cut. dEgi may still ask for another name (NOTICE.md).
+FAMILY_PREFIX = "Gege"
 FAMILY_SUFFIX = "Revived"
 
 VERSION = (0, 100)  # major, minor as the font's three-digit minor: 0.100
@@ -22,8 +23,7 @@ DESIGNER = "dEgi; Batmend Ganbaatar (Unicode rework)"
 MANUFACTURER = "dEgi; L'Atelier Gege LLC"
 VENDOR_ID = "GEGE"
 CONTACT = "cms@gege.mn"
-# Goes into the vendor URL field once the page listing the rework exists.
-VENDOR_URL: str | None = None
+VENDOR_URL: str | None = "https://github.com/gege-mn/cms-revived"
 DESCRIPTION = (
     "CMs, the Classical Mongolian script typeface drawn by dEgi in 1998, re-encoded for "
     "Unicode. The outlines are dEgi's; the rework adds the Unicode encoding and shaping. "
@@ -43,7 +43,7 @@ class Cut:
 
     @property
     def family(self) -> str:
-        return f"CMs {self.name} {FAMILY_SUFFIX}"
+        return f"{FAMILY_PREFIX} CMs {self.name} {FAMILY_SUFFIX}"
 
     @property
     def postscript_name(self) -> str:

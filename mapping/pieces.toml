@@ -1,4 +1,4 @@
-# CMs Revived: which 1998 keys draw each Unicode target.
+# Gege CMs Revived: which 1998 keys draw each Unicode target.
 #
 # keys    the CMs key sequence that draws it, as typed on the 1998 keyboard
 # cuts    per-cut keys where a cut differs, e.g. cuts = { CMSHR = "fx" }
@@ -15,9 +15,11 @@
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
 #         "@arch" names a group from [groups]; a piece named on its own wins over a group;
+#         a rule takes its own shift and trim as a table, for joins no key sequence types:
+#         after = { "@arch" = { keys = "-n", shift = { "1" = -350 } } }
 #         a rule drawn by hand, as glyph cmsr.<piece>.after.<piece or @group> in
 #         drawings/<cut>.ufo, replaces its keys, which stand in until then
-# status  todo   not mapped yet; the build draws a placeholder box
+# status  todo   not mapped yet; the build leaves it out
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
 #         new    needs a new drawing in drawings/<cut>.ufo: missing from CMs, or broken
@@ -58,16 +60,16 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "W.fina" = { keys = "wA", status = "ok", note = "settled by hand; was in conflict: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
 "W.medi" = { keys = "w", status = "ok", note = "has a little bit of leading nirugu, i think it's gonna be a trend..." }
 "N.init" = { keys = "N", status = "ok", note = "from editor: n · isolated, n · initial" }
-"N.medi" = { keys = "n", status = "ok" }
+"N.medi" = { keys = "n", after = { "@arch" = { keys = "E", marks = [{ key = "n", contours = [1], on = 0, dx = 0, dy = 0 }] } }, status = "ok" }
 "N.fina" = { keys = "%", status = "ok" }
-"G.medi" = { keys = "k", status = "ok", note = "settled by hand; was in conflict: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split)" }
+"G.medi" = { keys = "k", after = { "BO.medi" = { keys = "-k", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok", note = "settled by hand; was in conflict: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split)" }
 "G.fina" = { keys = "it", status = "ok", note = "from editor: g · final, ng · final (split)" }
 "B.init" = { keys = "b", status = "ok", note = "settled by hand; was in conflict: 'O' from b · isolated; 'b' from b · initial" }
-"B.medi" = { keys = "b", status = "ok", note = "from editor: b · medial" }
+"B.medi" = { keys = "b", after = { "BO.medi" = { keys = "-b", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok", note = "from editor: b · medial" }
 "B.fina" = { keys = "$", status = "ok", note = "from editor: b · final" }
 "B2.fina" = { keys = "ot", status = "ok" }
 "P.init" = { keys = "p", status = "ok", note = "from editor: p · isolated, p · initial" }
-"P.medi" = { keys = "p", status = "ok", note = "from editor: p · medial" }
+"P.medi" = { keys = "p", after = { "BO.medi" = { keys = "-p", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok", note = "from editor: p · medial" }
 "P.fina" = { keys = "#", status = "ok", note = "from editor: p · final" }
 "H.init" = { keys = "H", status = "ok", note = "from editor: h · isolated, h · initial" }
 "Hx.init" = { keys = "G", status = "ok", note = "from editor: g · isolated, g · initial" }
@@ -111,13 +113,13 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "R.fina" = { keys = "*", status = "ok" }
 "W.init" = { keys = "W", status = "ok" }
 "F.init" = { keys = "q", status = "ok" }
-"F.medi" = { keys = "q", status = "ok" }
+"F.medi" = { keys = "q", after = { "BO.medi" = { keys = "-q", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok" }
 "F.fina" = { keys = "@", status = "ok" }
 "K2.init" = { status = "new" }
 "K2.medi" = { status = "new" }
 "K2.fina" = { status = "new" }
 "K.init" = { keys = "\\", status = "ok" }
-"K.medi" = { keys = "\\", status = "ok" }
+"K.medi" = { keys = "\\", after = { "BO.medi" = { keys = "-\\", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok" }
 "K.fina" = { keys = "!", status = "ok" }
 "C.init" = { keys = "}", status = "ok" }
 "C.medi" = { keys = "]", status = "ok" }

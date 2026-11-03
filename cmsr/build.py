@@ -36,7 +36,9 @@ PLACEHOLDER_WIDTH = 400
 class BuildResult:
     cut_id: str
     path: Path
-    placeholders: list[str] = field(default_factory=list)
+    # Targets nothing draws yet. They are built as boxes, so the shaping can be composed, then cut
+    # out of the font with everything drawn from them: the text falls back to the plain form.
+    left_out: list[str] = field(default_factory=list)
     drawn: list[str] = field(default_factory=list)
     keyed: list[str] = field(default_factory=list)
 
@@ -65,26 +67,28 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
             result.keyed.append(entry.name)
         elif target.kind in ("piece", "char"):
             _placeholder(ufo, target.glyph, stem)
-            result.placeholders.append(entry.name)
+            result.left_out.append(entry.name)
         else:
             continue
         if target.kind == "char":
             ufo[target.glyph].unicodes = [int(target.name[2:], 16)]
 
     found_rules = neighbours.rules(mapping)
-    for (piece, previous), keys in found_rules.items():
+    for (piece, previous), rule in found_rules.items():
         name = neighbours.rule_glyph(piece, previous)
         drawn = _rule_drawing(drawings, mapping, piece, previous)
         if drawn is not None:
             _copy_drawing(ufo, drawn, name)
         else:
             entry = mapping.get(piece)
-            _compose_keys(ufo, legacy, name, keys, entry.marks, trim=entry.trim_for(cut_id), stem=stem)
+            trim = rule.trim or entry.trim_for(cut_id)
+            shift = rule.shifts.get(cut_id, rule.shift)
+            _compose_keys(ufo, legacy, name, rule.keys, rule.marks or entry.marks, shift, trim, stem)
     neighbours.add_inner_forms(ufo, found_rules)
     _add_shorter_ligatures(ufo, mapping, found_rules)
 
-    if strict and result.placeholders:
-        raise SystemExit(f"{cut_id}: {len(result.placeholders)} targets still unmapped")
+    if strict and result.left_out:
+        raise SystemExit(f"{cut_id}: {len(result.left_out)} targets still unmapped")
 
     _add_controls(ufo, legacy)
 
@@ -101,13 +105,56 @@ def build(cut_id: str, mapping: Mapping | None = None, *, strict: bool = False) 
     cut.output_path.parent.mkdir(parents=True, exist_ok=True)
     # The outlines come straight from a TrueType font: already quadratic and already in
     # TrueType contour direction. Glyph names stay readable so shaping can be checked by name.
-    compileTTF(
+    ttf = compileTTF(
         ufo,
         useProductionNames=False,
         removeOverlaps=False,
         reverseDirection=False,
-    ).save(cut.output_path)
+    )
+    left_out = {(mapping.targets.get(name) or Target(name, "form")).glyph for name in result.left_out}
+    _leave_out(ttf, _drawn_from(ufo, left_out))
+    ttf.save(cut.output_path)
     return result
+
+
+def _drawn_from(ufo: Font, names: set[str]) -> set[str]:
+    found = set(names)
+    while True:
+        more = {glyph.name for glyph in ufo if glyph.name not in found and any(c.baseGlyph in found for c in glyph.components)}
+        if not more:
+            return found
+        found |= more
+
+
+def _leave_out(ttf, names: set[str]) -> None:
+    if not names:
+        return
+    from fontTools import subset
+
+    options = subset.Options()
+    options.layout_features = ["*"]
+    options.layout_closure = False
+    options.name_IDs = ["*"]
+    options.name_languages = ["*"]
+    options.name_legacy = True
+    options.glyph_names = True
+    options.notdef_glyph = True
+    options.notdef_outline = True
+    options.legacy_kern = True
+    options.hinting = True
+    options.drop_tables = []
+    options.prune_unicode_ranges = False
+    options.recalc_bounds = True
+    keep = [name for name in ttf.getGlyphOrder() if name not in names]
+    subsetter = subset.Subsetter(options)
+    subsetter.populate(glyphs=keep)
+    subsetter.subset(ttf)
+    # The rules that reached the left-out glyphs are gone now; a second pass from the cmap,
+    # following the rules, drops what only they reached (joins drawn after a left-out piece).
+    options.layout_closure = True
+    subsetter = subset.Subsetter(options)
+    subsetter.populate(unicodes=ttf.getBestCmap().keys())
+    subsetter.subset(ttf)
 
 
 def _add_shorter_ligatures(ufo: Font, mapping: Mapping, found_rules: dict) -> None:
@@ -230,6 +277,16 @@ def _compose_keys(
             glyph.components.append(Component(trimmed, Transform(dx=x)))
             x += advance
             continue
+        if (shift or {}).get(index, 0) < 0 and index > 0 and keys[index - 1] == "-" and glyph.components:
+            # dEgi's stem piece slid under a key would run on through its counter (an arch
+            # would read as KHA): the stem stops where the key begins.
+            previous = legacy.glyph_name(keys[index - 1])
+            if glyph.components[-1].baseGlyph == legacy_glyph_name(previous):
+                length = x - origins[index - 1]
+                glyph.components[-1] = Component(_stem_to(ufo, legacy, previous, length), Transform(dx=origins[index - 1]))
+                glyph.components.append(Component(legacy_glyph_name(name), Transform(dx=x)))
+                x += legacy.advance(name)
+                continue
         if (shift or {}).get(index, 0) < 0 and index > 0:
             previous = legacy.glyph_name(keys[index - 1])
             reach = origins[index - 1] + legacy.advance(previous) - x
@@ -294,6 +351,20 @@ def _clipped(
     # contours the other way round would cancel out to a hole.
     result.draw(ReverseContourPen(glyph.getPen()))
     return clipped
+
+
+def _stem_to(ufo: Font, legacy: LegacyFont, name: str, length: float) -> str:
+    """The stem piece cut to *length*: it is a plain bar, so pulling its end points in is the cut."""
+
+    cut = f"{legacy_glyph_name(name)}.to_{round(length)}"
+    if cut not in ufo:
+        glyph = ufo.newGlyph(cut)
+        pen = glyph.getPen()
+        for contour in legacy.contours(name):
+            for operator, arguments in contour:
+                getattr(pen, operator)(*((min(point[0], length), point[1]) if point is not None else None for point in arguments))
+        glyph.width = length
+    return cut
 
 
 def _mark_glyph(ufo: Font, legacy: LegacyFont, mark: Mark) -> str:

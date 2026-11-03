@@ -1,4 +1,4 @@
-# CMs Revived
+# Gege CMs Revived
 
 dEgi's 1998 CMs fonts (Urga, Ulaanbaatar, Huree) rebuilt as Unicode Mongolian
 fonts, from his own outlines. See [NOTICE.md](NOTICE.md) for authorship and the
@@ -54,7 +54,8 @@ uv run cmsr goldens --add 10  # next goldens: common words with joins no golden 
 ## What counts as done
 
 - every piece is `ok` (or `new` and drawn), so `cmsr build --strict` passes;
-- `cmsr check` passes for all cuts (it checks the shaping, which works even
-  with placeholders: the drawings are checked by eye in the editor);
+- `cmsr check` passes for all cuts (it checks the shaping, skipping letters
+  the build leaves out because nothing draws them yet: the drawings are
+  checked by eye in the editor);
 - required ligatures are reviewed: `auto` joins the pieces as they are, which
   is right only where the CMs pieces already join that way.

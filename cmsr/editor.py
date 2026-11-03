@@ -26,7 +26,7 @@ from . import config, goldens
 from .build import _stem, build
 from .check import run
 from .legacy import LegacyFont
-from .mapping import Entry, Mapping, Mark
+from .mapping import After, Entry, Mapping, Mark
 from .targets import LOCALE, atoms_of, targets, variants
 
 EDITOR_DIR = config.ROOT / "editor"
@@ -190,13 +190,13 @@ def _mapping_state(mapping: Mapping) -> dict:
 
 def _build(cut_id: str) -> dict:
     result = build(cut_id)
-    total, failures = run(result.path)
+    total, failures, _ = run(result.path, result.left_out)
     unexpected = [failure for failure in failures if not failure.expected]
     report = {
         "cut": cut_id,
         "font": f"/dist/{result.path.name}",
         "revision": result.path.stat().st_mtime_ns,
-        "placeholders": len(result.placeholders),
+        "left_out": len(result.left_out),
         "keyed": len(result.keyed),
         "drawn": len(result.drawn),
         "cases": total,
@@ -300,7 +300,11 @@ class Handler(SimpleHTTPRequestHandler):
                             note=body.get("note", ""),
                             cuts={cut: keys for cut, keys in body.get("cuts", {}).items() if keys},
                             marks=[Mark.from_dict(mark) for mark in body.get("marks", [])],
-                            after={previous: keys for previous, keys in body.get("after", {}).items() if previous and keys},
+                            after={
+                                previous: rule
+                                for previous, value in body.get("after", {}).items()
+                                if previous and (rule := After.from_value(value)).keys
+                            },
                             shift={int(index): int(units) for index, units in body.get("shift", {}).items() if int(units)},
                             trim=body.get("trim") or "",
                             trims={cut: trim for cut, trim in body.get("trims", {}).items() if trim},

@@ -28,7 +28,7 @@ SECTIONS: dict[str, Kind] = {
 }
 
 HEADER = """\
-# CMs Revived: which 1998 keys draw each Unicode target.
+# Gege CMs Revived: which 1998 keys draw each Unicode target.
 #
 # keys    the CMs key sequence that draws it, as typed on the 1998 keyboard
 # cuts    per-cut keys where a cut differs, e.g. cuts = { CMSHR = "fx" }
@@ -45,9 +45,11 @@ HEADER = """\
 # after   other keys when a given piece comes right before, in any letter:
 #         after = { "A.init" = "e" } types the piece "e" when it follows the crown;
 #         "@arch" names a group from [groups]; a piece named on its own wins over a group;
+#         a rule takes its own shift and trim as a table, for joins no key sequence types:
+#         after = { "@arch" = { keys = "-n", shift = { "1" = -350 } } }
 #         a rule drawn by hand, as glyph cmsr.<piece>.after.<piece or @group> in
 #         drawings/<cut>.ufo, replaces its keys, which stand in until then
-# status  todo   not mapped yet; the build draws a placeholder box
+# status  todo   not mapped yet; the build leaves it out
 #         draft  mapped, waiting for a human eye
 #         ok     confirmed
 #         new    needs a new drawing in drawings/<cut>.ufo: missing from CMs, or broken
@@ -96,6 +98,48 @@ class Mark:
 
 
 @dataclass
+class After:
+    """An "after" rule's typing: its keys, and the shift, trim and marks they are set with."""
+
+    keys: str
+    shift: dict[int, int] = field(default_factory=dict)
+    trim: Trim = ""
+    marks: list[Mark] = field(default_factory=list)
+    shifts: dict[str, dict[int, int]] = field(default_factory=dict)  # per cut, where a cut differs
+
+    @classmethod
+    def from_value(cls, value: str | dict) -> After:
+        if isinstance(value, str):
+            return cls(value)
+        return cls(
+            value.get("keys", ""),
+            {int(index): int(units) for index, units in value.get("shift", {}).items() if int(units)},
+            value.get("trim") or "",
+            [Mark.from_dict(mark) for mark in value.get("marks", [])],
+            {
+                cut: {int(index): int(units) for index, units in shift.items()}
+                for cut, shift in value.get("shifts", {}).items()
+            },
+        )
+
+    def as_value(self) -> str | dict:
+        """A plain key string unless the rule needs more."""
+
+        if not (self.shift or self.trim or self.marks or self.shifts):
+            return self.keys
+        found: dict = {"keys": self.keys}
+        if self.shift:
+            found["shift"] = {str(index): units for index, units in self.shift.items()}
+        if self.shifts:
+            found["shifts"] = {cut: {str(index): units for index, units in shift.items()} for cut, shift in self.shifts.items()}
+        if self.trim:
+            found["trim"] = self.trim
+        if self.marks:
+            found["marks"] = [mark.as_dict() for mark in self.marks]
+        return found
+
+
+@dataclass
 class Entry:
     name: str
     kind: Kind
@@ -104,7 +148,7 @@ class Entry:
     note: str = ""
     cuts: dict[str, str] = field(default_factory=dict)
     marks: list[Mark] = field(default_factory=list)
-    after: dict[str, str] = field(default_factory=dict)
+    after: dict[str, After] = field(default_factory=dict)
     shift: dict[int, int] = field(default_factory=dict)
     trim: Trim = ""
     trims: dict[str, Trim] = field(default_factory=dict)
@@ -124,7 +168,7 @@ class Entry:
         if self.marks:
             found["marks"] = [mark.as_dict() for mark in self.marks]
         if self.after:
-            found["after"] = self.after
+            found["after"] = {previous: rule.as_value() for previous, rule in self.after.items()}
         if self.shift:
             found["shift"] = {str(index): units for index, units in self.shift.items()}
         if self.trim:
@@ -167,24 +211,24 @@ class Mapping:
                         note=fields.get("note", ""),
                         cuts=dict(fields.get("cuts", {})),
                         marks=[Mark.from_dict(mark) for mark in fields.get("marks", [])],
-                        after=dict(fields.get("after", {})),
+                        after={previous: After.from_value(value) for previous, value in fields.get("after", {}).items()},
                         shift={int(index): int(units) for index, units in fields.get("shift", {}).items()},
                         trim=fields.get("trim", ""),
                         trims=dict(fields.get("trims", {})),
                     )
         return cls(entries, path, groups)
 
-    def rules(self, entry: Entry) -> dict[str, str]:
+    def rules(self, entry: Entry) -> dict[str, After]:
         """The entry's "after" rules by single piece: groups expanded, named pieces winning."""
 
-        found: dict[str, str] = {}
-        for previous, keys in entry.after.items():
+        found: dict[str, After] = {}
+        for previous, rule in entry.after.items():
             if previous.startswith("@"):
                 for member in self.groups.get(previous[1:], []):
-                    found.setdefault(member, keys)
-        for previous, keys in entry.after.items():
+                    found.setdefault(member, rule)
+        for previous, rule in entry.after.items():
             if not previous.startswith("@"):
-                found[previous] = keys
+                found[previous] = rule
         return found
 
     def get(self, name: str) -> Entry:
@@ -229,14 +273,20 @@ class Mapping:
                 missing = sorted({key for key in keys if key not in keyed})
                 if missing:
                     found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(missing)!r}")
-                for previous, rule_keys in entry.after.items():
+                for previous, rule in entry.after.items():
                     if previous.startswith("@"):
                         if previous[1:] not in self.groups:
                             found.append(f"{entry.name}: rule after {previous!r}, which is not a group")
-                    elif previous not in self.targets or self.targets[previous].kind != "piece":
-                        found.append(f"{entry.name}: rule after {previous!r}, which is not a piece")
-                    if bad := sorted({key for key in rule_keys if key not in keyed}):
+                    elif previous not in self.targets or self.targets[previous].kind not in ("piece", "ligature"):
+                        found.append(f"{entry.name}: rule after {previous!r}, which is not a piece or ligature")
+                    if bad := sorted({key for key in rule.keys if key not in keyed}):
                         found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(bad)!r} (after {previous})")
+                    if bad := [index for shift in (rule.shift, *rule.shifts.values()) for index in shift if not 0 < index < len(rule.keys)]:
+                        found.append(f"{entry.name}: shift for key {bad} after {previous}, but the keys are {rule.keys!r}")
+                    if rule.trim not in TRIMS:
+                        found.append(f"{entry.name}: unknown trim {rule.trim!r} after {previous}")
+                    if bad := sorted({mark.key for mark in rule.marks if mark.key not in keyed}):
+                        found.append(f"{entry.name}: {cut_id} has no glyph on mark key {''.join(bad)!r} (after {previous})")
                 if bad := [index for index in entry.shift if not 0 < index < len(keys)]:
                     found.append(f"{entry.name}: {cut_id} shift for key {bad}, but the keys are {keys!r}")
                 for mark in entry.marks:
@@ -308,11 +358,30 @@ def _inline(entry: Entry) -> str:
         trims = ", ".join(f"{cut} = {_string(trim)}" for cut, trim in sorted(entry.trims.items()))
         fields.append(f"trims = {{ {trims} }}")
     if entry.after:
-        rules = ", ".join(f"{_string(previous)} = {_string(keys)}" for previous, keys in entry.after.items())
+        rules = ", ".join(f"{_string(previous)} = {_after(rule)}" for previous, rule in entry.after.items())
         fields.append(f"after = {{ {rules} }}")
     fields.append(f"status = {_string(entry.status)}")
     if entry.note:
         fields.append(f"note = {_string(entry.note)}")
+    return "{ " + ", ".join(fields) + " }"
+
+
+def _shift(shift: dict[int, int]) -> str:
+    return "{ " + ", ".join(f'"{index}" = {units}' for index, units in sorted(shift.items())) + " }"
+
+
+def _after(rule: After) -> str:
+    if not (rule.shift or rule.trim or rule.marks or rule.shifts):
+        return _string(rule.keys)
+    fields = [f"keys = {_string(rule.keys)}"]
+    if rule.shift:
+        fields.append(f"shift = {_shift(rule.shift)}")
+    if rule.shifts:
+        fields.append("shifts = { " + ", ".join(f"{cut} = {_shift(shift)}" for cut, shift in sorted(rule.shifts.items())) + " }")
+    if rule.trim:
+        fields.append(f"trim = {_string(rule.trim)}")
+    if rule.marks:
+        fields.append("marks = [" + ", ".join(_inline_mark(mark) for mark in rule.marks) + "]")
     return "{ " + ", ".join(fields) + " }"
 
 

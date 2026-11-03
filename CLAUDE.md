@@ -1,4 +1,4 @@
-# CMs Revived
+# Gege CMs Revived
 
 Unicode rework of dEgi's 1998 CMs Mongolian piece fonts. Read README.md and NOTICE.md first.
 

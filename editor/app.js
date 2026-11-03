@@ -196,12 +196,17 @@ function hasDrawing(item, cut = state.ui.cut) {
   return Boolean(keysFor(item, cut) || item?.marks?.length);
 }
 
+// A rule is its keys, or a table with the shift and trim they are set with.
+function asRule(value) {
+  return typeof value === "string" ? { keys: value } : value;
+}
+
 // A piece named on its own wins over a group that contains it, as in the build.
-function ruleKeys(item, previous) {
+function ruleFor(item, previous) {
   if (!previous || !item?.after) return null;
-  if (item.after[previous] !== undefined) return item.after[previous];
-  for (const [key, keys] of Object.entries(item.after)) {
-    if (key.startsWith("@") && (state.groups[key.slice(1)] || []).includes(previous)) return keys;
+  if (item.after[previous] !== undefined) return asRule(item.after[previous]);
+  for (const [key, value] of Object.entries(item.after)) {
+    if (key.startsWith("@") && (state.groups[key.slice(1)] || []).includes(previous)) return asRule(value);
   }
   return null;
 }
@@ -215,7 +220,7 @@ function groupExample(previous) {
 function drawingPart(name, cut, previous, item) {
   const drawings = state.data.drawings?.[cut] || {};
   const names = [];
-  if (previous && ruleKeys(item, previous) !== null) {
+  if (previous && ruleFor(item, previous) !== null) {
     names.push(`cmsr.${name}.after.${previous}`);
     if (item.after[previous] === undefined) {
       for (const key of Object.keys(item.after)) {
@@ -235,11 +240,12 @@ function namedParts(name, cut = state.ui.cut, previous = null) {
   const item = entry(name);
   const drawn = drawingPart(name, cut, previous, item);
   if (drawn) return [drawn];
-  const ruleKeys_ = ruleKeys(item, previous);
-  if (ruleKeys_ || hasDrawing(item, cut)) {
-    const parts = ruleKeys_ ? keyParts(ruleKeys_, cut) : keyParts(keysFor(item, cut) || "", cut, item?.shift || {});
+  const rule = ruleFor(item, previous);
+  if (rule?.keys || hasDrawing(item, cut)) {
+    const parts = rule?.keys ? keyParts(rule.keys, cut, rule.shifts?.[cut] || rule.shift || {}) : keyParts(keysFor(item, cut) || "", cut, item?.shift || {});
     const advance = parts.reduce((sum, part) => sum + part.advance, 0);
-    return [...parts, ...markParts(item, cut, advance, ruleKeys_ ? "" : keysFor(item, cut) || "", ruleKeys_ ? {} : item?.shift || {})];
+    if (rule?.keys) return [...parts, ...markParts(rule.marks?.length ? rule : item, cut, advance, rule.keys, rule.shifts?.[cut] || rule.shift || {})];
+    return [...parts, ...markParts(item, cut, advance, keysFor(item, cut) || "", item?.shift || {})];
   }
   const info = target(name);
   if ((item?.status === "auto" || !item) && info.atoms.length) {
@@ -404,7 +410,7 @@ function renderTarget() {
 function usedKeys() {
   const used = new Set();
   for (const item of Object.values(state.entries)) {
-    for (const keys of [item.keys, ...Object.values(item.cuts || {}), ...Object.values(item.after || {})]) {
+    for (const keys of [item.keys, ...Object.values(item.cuts || {}), ...Object.values(item.after || {}).map((value) => asRule(value).keys)]) {
       for (const key of keys || "") used.add(key);
     }
     for (const mark of item.marks || []) used.add(mark.key);
@@ -526,9 +532,9 @@ function renderRules() {
   }
   const pieces = state.data.targets.filter((info) => info.kind === "piece").map((info) => info.name);
   const rows = Object.entries(item.after || {}).map(
-    ([previous, keys], index) => `<div class="mark rule" data-index="${index}">
+    ([previous, value], index) => `<div class="mark rule" data-index="${index}">
       <label>After <input class="r-prev" list="piece-names" value="${escapeAttr(previous)}" spellcheck="false"></label>
-      <label>type <input class="r-keys" value="${escapeAttr(keys)}" spellcheck="false"></label>
+      <label>type <input class="r-keys" value="${escapeAttr(asRule(value).keys)}" spellcheck="false"></label>
       <button class="r-del" title="Remove rule">×</button>
     </div>`,
   );
@@ -629,7 +635,7 @@ function renderBuild() {
     element.classList.add("bad");
   } else {
     const passed = build.cases - build.failures.length;
-    element.textContent = `built · shaping ${passed}/${build.cases} · ${build.placeholders} placeholders`;
+    element.textContent = `built · shaping ${passed}/${build.cases} · ${build.left_out} left out`;
     if (build.failures.length) element.classList.add("bad");
   }
 }
@@ -866,7 +872,10 @@ function wire() {
     const rule = event.target.closest(".rule");
     if (rule) {
       const index = Number(rule.dataset.index);
-      if (event.target.classList.contains("r-keys")) editRules((rules) => (rules[index][1] = event.target.value));
+      if (event.target.classList.contains("r-keys")) {
+        // Keep a rule's shift and trim when only its keys are edited here.
+        editRules((rules) => (rules[index][1] = typeof rules[index][1] === "string" ? event.target.value : { ...rules[index][1], keys: event.target.value }));
+      }
       return;
     }
     const row = event.target.closest(".mark");

@@ -1,7 +1,8 @@
 """Shaping conformance: mongfontbuilder's Hudum suites run against a built font.
 
-The suites check which written units the shaping picks, not what they look like, so they
-pass with placeholders too: they prove the font is wired, and the proofs prove the drawing.
+The suites check which written units the shaping picks, not what they look like: they prove
+the font is wired, and the proofs prove the drawing. Cases with a letter the build leaves out
+(nothing draws it yet) are skipped.
 The reading of glyph names follows the suites' own runner (mongfontbuilder/tests/utils.py).
 """
 
@@ -102,12 +103,14 @@ def _units(name: str) -> str:
     return units
 
 
-def run(path: Path) -> tuple[int, list[Failure]]:
+def run(path: Path, left_out: list[str] = ()) -> tuple[int, list[Failure], int]:
     font = hb.Font(hb.Face(hb.Blob.from_file_path(path)))
+    units = {name.split(".")[0] for name in left_out if not name.startswith("U+")}
     all_cases = cases()
+    kept = [case for case in all_cases if not units & set(case.goal.split())]
     failures = []
-    for case in all_cases:
+    for case in kept:
         result = shape_units(font, case.text)
         if result != case.goal:
             failures.append(Failure(case, result, case.index in EXPECTED_FAILURES))
-    return len(all_cases), failures
+    return len(kept), failures, len(all_cases) - len(kept)
