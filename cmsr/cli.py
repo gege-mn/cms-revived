@@ -25,6 +25,7 @@ def main() -> None:
 
     release = commands.add_parser("release", help="build a labelled snapshot into releases/, e.g. \"Alpha 1\"")
     release.add_argument("label", help="added to the family name, so a snapshot installs beside later builds")
+    release.add_argument("--final-name", action="store_true", help="keep the family name; the label goes in the version string")
 
     editor = commands.add_parser("editor", help="run the mapping editor")
     editor.add_argument("--port", type=int, default=8787)
@@ -109,14 +110,17 @@ def _release(args: argparse.Namespace) -> None:
 
     slug = args.label.lower().replace(" ", "-")
     # Names and paths are read from config when each cut builds, so the label reaches every name table.
-    config.FAMILY_SUFFIX = f"{config.FAMILY_SUFFIX} {args.label}"
+    if args.final_name:
+        config.VERSION_LABEL = args.label
+    else:
+        config.FAMILY_SUFFIX = f"{config.FAMILY_SUFFIX} {args.label}"
     config.DIST_DIR = config.ROOT / "releases" / slug
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=config.ROOT).stdout.strip()
     mapping = Mapping.load()
     counts = Counter(entry.status for entry in mapping.all() if entry.kind in ("piece", "char"))
     all_goldens = goldens.load()
     lines = [
-        f"# {config.FAMILY_PREFIX} CMs {config.FAMILY_SUFFIX}",
+        f"# {config.FAMILY_PREFIX} CMs Revived {args.label}",
         "",
         f"Built {datetime.date.today().isoformat()} from commit {commit}. A snapshot of the work, not a release.",
         "",

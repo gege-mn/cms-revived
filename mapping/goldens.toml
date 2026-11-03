@@ -515,97 +515,97 @@ status = "pending"
 latin = "čaγdaγ-a"
 text = "ᠴᠠᠭᠳᠠᠭ᠎ᠠ"
 keys = "Ceeede)T"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "sudulju"
 text = "ᠰᠤᠳᠤᠯᠵᠤ"
 keys = "SodoljO"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "ulγun-a"
 text = "ᠤᠯᠭᠤᠨ᠎ᠠ"
 keys = "folgo%T"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "ejemden"
 text = "ᠡᠵᠡᠮᠳᠡᠨ"
 keys = "fjemdea"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "ajilčid"
 text = "ᠠᠵᠢᠯᠴᠢᠳ"
 keys = "fejilcioa"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "amjilta"
 text = "ᠠᠮᠵᠢᠯᠲᠠ"
 keys = "femjilda"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "möčir-ni"
 text = "ᠮᠥᠴᠢᠷ᠎ᠨᠢ"
 keys = "Moici* NI"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "sorγoγ"
 text = "ᠰᠣᠷᠭᠣᠭ"
 keys = "Sorgo("
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "alqum"
 text = "ᠠᠯᠬᠤᠮ"
 keys = "feleeo^"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "iüi"
 text = "ᠢᠦᠢ"
 keys = "fioI"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "budulγ-a"
 text = "ᠪᠤᠳᠤᠯᠭ᠎ᠠ"
 keys = "Bdol)T"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "arbilan"
 text = "ᠠᠷᠪᠢᠯᠠᠨ"
 keys = "ferbulea"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "čola"
 text = "ᠴᠣᠯᠠ"
 keys = "Cola"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "ba"
 text = "ᠪᠠ"
 keys = "bEt"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "sunusqu"
 text = "ᠰᠤᠨᠤᠰᠬᠤ"
 keys = "SonoseeO"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "qüčülen"
 text = "ᠬᠦᠴᠦᠯᠡᠨ"
 keys = "Kicolea"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "üjeγdel"
@@ -617,10 +617,10 @@ status = "pending"
 latin = "orčin"
 text = "ᠣᠷᠴᠢᠨ"
 keys = "forcia"
-status = "pending"
+status = "ok"
 
 [[golden]]
 latin = "öγčü"
 text = "ᠥᠭᠴᠦ"
 keys = "foikcO"
-status = "pending"
+status = "ok"

@@ -16,6 +16,7 @@ FAMILY_PREFIX = "Gege"
 FAMILY_SUFFIX = "Revived"
 
 VERSION = (0, 100)  # major, minor as the font's three-digit minor: 0.100
+VERSION_LABEL: str | None = None  # e.g. "Alpha 5", for a snapshot that keeps the family name
 
 # dEgi is named first everywhere; where a field holds one value, the rework comes second.
 COPYRIGHT = "Copyright © 1998 dEgi. Unicode rework © 2026 L'Atelier Gege LLC."

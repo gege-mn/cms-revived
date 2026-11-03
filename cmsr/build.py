@@ -193,7 +193,8 @@ def _set_info(ufo: Font, cut: config.Cut, legacy: LegacyFont) -> None:
         info.openTypeNameManufacturerURL = config.VENDOR_URL
     info.openTypeNameDescription = config.DESCRIPTION
     info.openTypeNameLicense = config.LICENSE
-    info.openTypeNameVersion = f"Version {major}.{minor:03d}; dEgi 1998, Unicode rework 2026"
+    label = f"; {config.VERSION_LABEL}" if config.VERSION_LABEL else ""
+    info.openTypeNameVersion = f"Version {major}.{minor:03d}{label}; dEgi 1998, Unicode rework 2026"
     info.postscriptFontName = cut.postscript_name
     info.unitsPerEm = legacy.units_per_em
     info.ascender = source["hhea"].ascent
