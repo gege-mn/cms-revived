@@ -394,6 +394,7 @@ latin = "nobsi"
 text = "ᠨᠣᠪᠰᠢ"
 keys = "NobsI"
 status = "pending"
+note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
 
 [[golden]]
 latin = "aziy-a"
@@ -425,6 +426,7 @@ latin = "front"
 text = "ᠹᠷᠣᠨᠲ"
 keys = "qroeD"
 status = "pending"
+note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
 
 [[golden]]
 latin = "enērγi"
@@ -456,6 +458,7 @@ latin = "pwptid"
 text = "ᠫᠸᠫᠲ᠋ᠢᠳ᠋"
 keys = "pwpDidA"
 status = "pending"
+note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
 
 [[golden]]
 latin = "liyouhē"
@@ -510,6 +513,7 @@ latin = "jišiγsen"
 text = "ᠵᠢᠱ᠌ᠢᠭᠰᠡᠨ"
 keys = "Jiziksea"
 status = "pending"
+note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
 
 [[golden]]
 latin = "čaγdaγ-a"
@@ -612,6 +616,7 @@ latin = "üjeγdel"
 text = "ᠦᠵᠡᠭᠳᠡᠯ"
 keys = "foijekde&"
 status = "pending"
+note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
 
 [[golden]]
 latin = "orčin"

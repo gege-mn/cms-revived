@@ -11,7 +11,9 @@ waits for:
       from them, so the text falls back to the plain form or to another font. The ellipsis and
       four dots are done, built from dEgi's own dots.
 - [x] Published at https://github.com/gege-mn/cms-revived, also the fonts' vendor URL.
-- [ ] The `auto` ligatures reviewed, through the goldens.
+- [x] The `auto` ligatures reviewed, through the goldens: 96 confirmed. Five are known
+      failures, accepted for Alpha 5 and left pending: nobsi, front (rule glyphs to draw),
+      pwptid, jišiγsen, üjeγdel.
 
 ## After a release
 
