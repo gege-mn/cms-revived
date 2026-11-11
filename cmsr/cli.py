@@ -13,9 +13,11 @@ def main() -> None:
     build = commands.add_parser("build", help="build fonts into dist/")
     build.add_argument("--cut", choices=[*config.CUTS, "all"], default="all")
     build.add_argument("--strict", action="store_true", help="fail while any target is unmapped")
+    build.add_argument("--no-companion", action="store_true", help="skip the legacy-keyed CMs … Revived fonts")
 
     check = commands.add_parser("check", help="build, then run the shaping suites")
     check.add_argument("--cut", choices=[*config.CUTS, "all"], default=config.DEFAULT_CUT)
+    check.add_argument("--no-companion", action="store_true", help="skip the legacy-keyed CMs … Revived fonts")
 
     commands.add_parser("status", help="mapping progress and problems")
 
@@ -49,6 +51,47 @@ def _build(args: argparse.Namespace) -> None:
             f"{result.path.relative_to(config.ROOT)}  keyed {len(result.keyed)}, "
             f"drawn {len(result.drawn)}, left out {len(result.left_out)}"
         )
+        if not args.no_companion and _have_corpora():
+            from .companion import build_companion
+
+            companion = build_companion(cut_id)
+            print(f"{companion.path.relative_to(config.ROOT)}  {companion.rules} rules learned")
+
+
+def _have_corpora() -> bool:
+    from .coverage import CORPORA
+
+    if any(CORPORA.glob("*.md")):
+        return True
+    print("  companion skipped: it learns from the corpora, and reference/corpora/ has none (README)")
+    return False
+
+
+def _check_companion(cut_id: str) -> bool:
+    """Build the legacy-keyed companion and hold it to the Unicode build. True when it fails."""
+
+    from .companion import Drawings, build_companion, check_goldens, evaluate, same_as_1998, tokens, training_words
+
+    companion = build_companion(cut_id)
+    drawings = Drawings(cut_id)
+    found = tokens(cut_id, training_words(cut_id), drawings)
+    result = evaluate(cut_id, found, drawings)
+    off = same_as_1998(cut_id)
+    golden_failures = [(latin, why) for latin, why in check_goldens(cut_id, drawings) if latin not in COMPANION_KNOWN]
+    print(
+        f"  companion {companion.path.name}: {companion.rules} rules; corpora drawn as the Unicode build "
+        f"{result.passed / result.total:.2%} by frequency ({len(result.failures)} words not); "
+        f"features off = 1998: {'yes' if not off else 'NO ' + ''.join(off)}; "
+        f"goldens {'all' if not golden_failures else len(golden_failures)} {'pass' if not golden_failures else 'fail'}"
+    )
+    for latin, why in golden_failures:
+        print(f"    {latin}: {why}")
+    return bool(off or golden_failures or result.passed / result.total < COMPANION_FLOOR)
+
+
+# angq-a's golden was typed with the F crown, the corpora's with f: the companion learns the f.
+COMPANION_KNOWN = {"angq-a"}
+COMPANION_FLOOR = 0.998  # share of the corpora, by frequency, it must draw as the Unicode build
 
 
 def _check(args: argparse.Namespace) -> None:
@@ -86,6 +129,8 @@ def _check(args: argparse.Namespace) -> None:
                 print(f"    {golden.latin}: no longer draws the snapshot accepted as a fix (now {result.produced!r})")
             else:
                 print(f"    {golden.latin}: typed {golden.keys!r}, the font draws {result.produced!r}")
+        if not args.no_companion and _have_corpora():
+            failed = _check_companion(cut_id) or failed
     try:
         from .editor import _goldens, _mapping_state, _static_data
         from .mapping import Mapping

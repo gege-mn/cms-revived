@@ -25,8 +25,10 @@ mapping/pieces.toml     written unit (A.init, M.fina, BA.init…) → CMs keys
 The mapping is the only hand-made part. Everything else is derived, so a
 change there reaches all three cuts and all 216 letter forms.
 
-The fonts are Unicode only: the 1998 keys are not encoded at their ASCII
-positions, so documents typed the old way still need dEgi's originals.
+The Gege fonts are Unicode only: the 1998 keys are not encoded at their ASCII positions.
+For documents typed the old way there is a companion, **CMs Ulaanbaatar Revived** (and Urga,
+Huree): dEgi's 1998 font with his keys where they were, plus the rework's joins as ligatures,
+learned from the corpora by `cmsr/companion.py`. With ligatures off it is his 1998 font.
 Where the Unicode part needs something no 1998 key draws, it is drawn by hand in
 `drawings/<cut>.ufo` (any UFO editor; the team uses Fontra).
 
@@ -63,7 +65,8 @@ in that folder.
 uv run cmsr editor --open   # map and review pieces, see real shaping live
                             # /specimen: all cuts setting real text
                             # /goldens: words checked against how CMs typed them
-uv run cmsr build           # build all three cuts into dist/
+uv run cmsr build           # build all three cuts into dist/, and the companions
+                            # (they need the corpora; --no-companion skips them)
 uv run cmsr check           # build, then run the 3,689 shaping cases
 uv run cmsr status          # progress, conflicts, problems
 uv run cmsr goldens --add 10  # next goldens: common words with joins no golden checks yet

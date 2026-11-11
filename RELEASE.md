@@ -40,9 +40,6 @@ Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.m
 
 ## Ideas
 
-- [ ] A legacy-keyed companion, "CMs Ulaanbaatar Revived" (no Gege prefix, no Unicode): dEgi's
-      ASCII keys in the cmap as in 1998, his glyphs with the rework's fixes, and contextual
-      substitutions that turn the key sequences CMs typed into the fixed joins (`ek(` → the
-      custom angq-a glyph, an arch key + `d` → the drawn d). Old documents typed the CMs way
-      would render fixed. The goldens' typed keys become its test: each must shape like the
-      Unicode build. Raised 2026-11-11; not started.
+- [x] A legacy-keyed companion, "CMs Ulaanbaatar Revived" (no Gege prefix, no Unicode): built
+      by `cmsr build` into `dist/CMs<Cut>Revived-Regular.ttf` (2026-11-12), see docs/decisions.md.
+- [x] Released the companion as `legacy-v1.0.0` (2026-11-12), files in `releases/legacy-1.0.0/`.

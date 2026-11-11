@@ -30,7 +30,16 @@ changes them. Dates are when each was decided.
 ## Scope
 
 - Hudum (locale MNG) only. The `*DP.TTF` cuts in `cms/` are out of scope.
-- **Unicode only** (2026-10-22). The 1998 keys are not encoded at their ASCII positions:
+- **The legacy-keyed companion, CMs Ulaanbaatar Revived** (also Urga, Huree; no Gege prefix)
+  (2026-11-12, owner's call). dEgi's 1998 file as the base, his keys at their ASCII places,
+  his glyphs, metrics and hinting untouched; the Unicode build's joins added as `liga` and
+  `calt` substitutions on the key sequences CMs typed. With ligatures off it is his 1998 font
+  (Word's default), so old documents can switch fonts at once. The substitutions are learned
+  from the corpora and goldens (`cmsr/companion.py`), never listed by hand; `cmsr check` holds
+  it to 99.8% of the corpora (by frequency) drawn as the Unicode build, every golden, and
+  features off identical to 1998. What the keys cannot tell apart (wa and ē after an arch,
+  typos typed like real words) goes to the more common word.
+- **Unicode only** (2026-10-22), for the Gege fonts. The 1998 keys are not encoded at their ASCII positions:
   three keys collide with Unicode punctuation (`!` is final k, `(` and `)` are the Hx
   finals) and Latin text would render as pieces. Old documents typed the CMs way still
   need dEgi's originals.

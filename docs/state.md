@@ -16,6 +16,14 @@ in use in [feedback.md](feedback.md).
 | Goldens | 103/103 confirmed pass in every cut, none pending |
 | Mapping | pieces and punctuation: ok 111, new 9 |
 
+## The companion: legacy-v1.0.0 (2026-11-12)
+
+CMs Ulaanbaatar Revived, CMs Urga Revived, CMs Huree Revived: dEgi's keyboard with the joins of
+the Unicode build as `liga`/`calt` substitutions, built into `dist/` next to the Gege fonts. Released as tag `legacy-v1.0.0`, files in
+`releases/legacy-1.0.0/`; v1.0.0 stays the "latest" GitHub release.
+Draws 99.84–99.87% of the corpora (by frequency) as the Unicode build, every golden, and 1998
+exactly with features off. On words held out of its learning, 99.1%.
+
 ## Since Alpha 5
 
 The joins, drawn or composed from dEgi's outlines, with every rule in

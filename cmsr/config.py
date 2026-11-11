@@ -36,6 +36,17 @@ LICENSE = (
     f"granted. Contact: {CONTACT}"
 )
 
+# The legacy-keyed companion (cmsr/companion.py): dEgi's keyboard, the rework's joins.
+COMPANION_DESCRIPTION = (
+    "CMs, the Classical Mongolian script typeface drawn by dEgi in 1998, typed on his own "
+    "keyboard as in 1998. The outlines are dEgi's; the rework adds the joins of the Unicode "
+    "rework as ligatures, so text typed for CMs draws with them. Turn ligatures off and it is "
+    f"his 1998 font. We have not yet reached dEgi. If you are him, or know how to reach him: {CONTACT}"
+)
+COMPANION_COPYRIGHT = "Copyright © 1998 dEgi. Rework © 2026 L'Atelier Gege LLC."
+COMPANION_DESIGNER = "dEgi; Batmend Ganbaatar (rework)"
+COMPANION_VERSION_NOTE = "dEgi 1998, legacy-keyed rework 2026"
+
 
 @dataclass(frozen=True)
 class Cut:
@@ -49,6 +60,14 @@ class Cut:
     @property
     def postscript_name(self) -> str:
         return self.family.replace(" ", "") + "-Regular"
+
+    @property
+    def companion_family(self) -> str:
+        return f"CMs {self.name} {FAMILY_SUFFIX}"
+
+    @property
+    def companion_path(self) -> Path:
+        return DIST_DIR / f"{self.companion_family.replace(' ', '')}-Regular.ttf"
 
     @property
     def legacy_path(self) -> Path:
