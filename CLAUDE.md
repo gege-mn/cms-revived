@@ -7,7 +7,7 @@ then docs/state.md (where it stands), docs/decisions.md (settled calls) and RELE
 - `cms/*.TTF` are dEgi's originals: never modify them. The `*DP.TTF` cuts are out of scope for the Gege (Unicode) fonts; only the legacy-keyed companion has dp cuts, flipped from the regular companion (docs/decisions.md).
 - Targets come from the pinned mongfontbuilder (`cmsr/targets.py`); don't hand-maintain lists of forms or ligatures.
 - Credits: dEgi first in every field; the rework (Batmend Ganbaatar, L'Atelier Gege LLC) second. Names and metadata live only in `cmsr/config.py`.
-- Scope is Hudum (locale MNG) only. Unicode only: no legacy ASCII keys in the cmap.
+- Scope is Hudum (locale MNG) only. The Gege fonts are Unicode only: no legacy ASCII keys in their cmap. Old documents are served by the legacy-keyed companion (`cmsr/companion.py`), whose features-off check must keep passing.
 - After any change to the build or mapping: `uv run cmsr check --cut all`.
 - The user decides glyph shapes, mapping calls and naming; when a mapping is ambiguous, ask rather than guess.
 - Never set `ok`/`fixed` in goldens.toml or `ok` in pieces.toml: fill keys, leave `pending`/`draft`; the user confirms in the editor. A status that changes while you work was the user: keep it.
