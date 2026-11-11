@@ -10,8 +10,8 @@ Copyright © 1998 dEgi. All rights reserved.
 
 The outlines, the glyph set and the typeface design are dEgi's work. They are
 kept in this repository as the source material of a preservation and
-Unicode-compatibility project. The `DP` cuts are mirrored for letterpress and
-are out of scope.
+Unicode-compatibility project. The `DP` cuts are mirrored for letterpress; only
+the legacy-keyed companion has a mirrored version of them.
 
 ## Why this rework exists
 

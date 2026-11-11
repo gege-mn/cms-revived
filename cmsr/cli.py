@@ -54,8 +54,11 @@ def _build(args: argparse.Namespace) -> None:
         if not args.no_companion and _have_corpora():
             from .companion import build_companion
 
+            from .companion import build_companion_dp
+
             companion = build_companion(cut_id)
             print(f"{companion.path.relative_to(config.ROOT)}  {companion.rules} rules learned")
+            print(f"{build_companion_dp(cut_id).relative_to(config.ROOT)}  the same, mirrored as dEgi's dp cut")
 
 
 def _have_corpora() -> bool:
@@ -70,13 +73,15 @@ def _have_corpora() -> bool:
 def _check_companion(cut_id: str) -> bool:
     """Build the legacy-keyed companion and hold it to the Unicode build. True when it fails."""
 
-    from .companion import Drawings, build_companion, check_goldens, evaluate, same_as_1998, tokens, training_words
+    from .companion import Drawings, build_companion, build_companion_dp, check_goldens, evaluate, same_as_1998, tokens, training_words
 
     companion = build_companion(cut_id)
+    dp = build_companion_dp(cut_id)
     drawings = Drawings(cut_id)
     found = tokens(cut_id, training_words(cut_id), drawings)
     result = evaluate(cut_id, found, drawings)
     off = same_as_1998(cut_id)
+    dp_off = same_as_1998(cut_id, dp=True)
     golden_failures = [(latin, why) for latin, why in check_goldens(cut_id, drawings) if latin not in COMPANION_KNOWN]
     print(
         f"  companion {companion.path.name}: {companion.rules} rules; corpora drawn as the Unicode build "
@@ -86,7 +91,8 @@ def _check_companion(cut_id: str) -> bool:
     )
     for latin, why in golden_failures:
         print(f"    {latin}: {why}")
-    return bool(off or golden_failures or result.passed / result.total < COMPANION_FLOOR)
+    print(f"  companion {dp.name}: the same rules, mirrored; features off = dEgi's dp: {'yes' if not dp_off else 'NO ' + ''.join(dp_off)}")
+    return bool(off or dp_off or golden_failures or result.passed / result.total < COMPANION_FLOOR)
 
 
 # angq-a's golden was typed with the F crown, the corpora's with f: the companion learns the f.

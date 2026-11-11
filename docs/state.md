@@ -19,8 +19,8 @@ in use in [feedback.md](feedback.md).
 ## The companion: legacy-v1.0.0 (2026-11-12)
 
 CMs Ulaanbaatar Revived, CMs Urga Revived, CMs Huree Revived: dEgi's keyboard with the joins of
-the Unicode build as `liga`/`calt` substitutions, built into `dist/` next to the Gege fonts. Released as tag `legacy-v1.0.0`, files in
-`releases/legacy-1.0.0/`; v1.0.0 stays the "latest" GitHub release.
+the Unicode build as `liga`/`calt` substitutions, built into `dist/` next to the Gege fonts. With dp cuts (CMs Ulaanbaatar dp Revived…), mirrored for
+letterpress like dEgi's. Released as tag `legacy-v1.0.0`, files in `releases/legacy-1.0.0/`; v1.0.0 stays the "latest" GitHub release.
 Draws 99.84–99.87% of the corpora (by frequency) as the Unicode build, every golden, and 1998
 exactly with features off. On words held out of its learning, 99.1%.
 

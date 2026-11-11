@@ -70,6 +70,19 @@ class Cut:
         return DIST_DIR / f"{self.companion_family.replace(' ', '')}-Regular.ttf"
 
     @property
+    def companion_dp_family(self) -> str:
+        # dEgi's own name for his mirrored cut is "CMs Ulaanbaatar dp".
+        return f"CMs {self.name} dp {FAMILY_SUFFIX}"
+
+    @property
+    def companion_dp_path(self) -> Path:
+        return DIST_DIR / f"{self.companion_dp_family.replace(' ', '')}-Regular.ttf"
+
+    @property
+    def legacy_dp_path(self) -> Path:
+        return LEGACY_DIR / f"{self.id}DP.TTF"
+
+    @property
     def legacy_path(self) -> Path:
         return LEGACY_DIR / f"{self.id}.TTF"
 

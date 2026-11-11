@@ -15,3 +15,10 @@ ligatures off they draw exactly like 1998.
 | `CMsHureeRevived-Regular.ttf` | 303 | 99.85% | all | yes |
 
 On words held out of the learning: 99.1%.
+
+## dp cuts (added 2026-11-12)
+
+`CMsUlaanbaatardpRevived-Regular.ttf`, `CMsUrgadpRevived-Regular.ttf`, `CMsHureedpRevived-Regular.ttf`:
+dEgi's dp files (mirrored for letterpress) as the base, the same rules, and the added glyphs flipped
+as he flipped his (y → 800 − y). Built from the regular files above; with features off they are his
+dp fonts exactly.

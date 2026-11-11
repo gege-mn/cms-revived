@@ -4,7 +4,7 @@ Unicode rework of dEgi's 1998 CMs Mongolian piece fonts. Read README.md and NOTI
 then docs/state.md (where it stands), docs/decisions.md (settled calls) and RELEASE.md (to-dos).
 
 - `mapping/pieces.toml` is the source of truth. Change the mapping, never the build output; `dist/` is disposable.
-- `cms/*.TTF` are dEgi's originals: never modify them. The `*DP.TTF` cuts are out of scope.
+- `cms/*.TTF` are dEgi's originals: never modify them. The `*DP.TTF` cuts are out of scope for the Gege (Unicode) fonts; only the legacy-keyed companion has dp cuts, flipped from the regular companion (docs/decisions.md).
 - Targets come from the pinned mongfontbuilder (`cmsr/targets.py`); don't hand-maintain lists of forms or ligatures.
 - Credits: dEgi first in every field; the rework (Batmend Ganbaatar, L'Atelier Gege LLC) second. Names and metadata live only in `cmsr/config.py`.
 - Scope is Hudum (locale MNG) only. Unicode only: no legacy ASCII keys in the cmap.

@@ -322,7 +322,8 @@ def learn(found: list[Token]) -> Learned:
     differs gets the shortest context around it that only cases of its own glyph share.
     """
 
-    spans = {tuple(token.units[a:b]) for token in found for a, b, target in token.spans if target}
+    # Sorted, so a rebuild numbers its rules and glyphs the same way (sets come out in hash order).
+    spans = sorted({tuple(token.units[a:b]) for token in found for a, b, target in token.spans if target})
     by_first: dict[str, list[tuple[str, ...]]] = {}
     for span in spans:
         by_first.setdefault(span[0], []).append(span)
@@ -600,11 +601,86 @@ def _write_features(ttf: TTFont, learned: Learned, letters: list[str], markers: 
     addOpenTypeFeaturesFromString(ttf, "\n".join(lines))
 
 
-def _set_companion_names(ttf: TTFont, cut, fs_type: int) -> None:
+def build_companion_dp(cut_id: str) -> Path:
+    """The companion for dEgi's dp cut, mirrored for letterpress: his dp file as the base,
+    and every glyph the companion adds flipped as he flipped his, about the stem's axis.
+
+    The rules are the companion's, unchanged: the keys and the glyph order are the same.
+    """
+
+    import copy
+
+    from fontTools.pens.boundsPen import BoundsPen
+    from fontTools.ttLib.tables.ttProgram import Program
+
+    cut = CUTS[cut_id]
+    companion = TTFont(cut.companion_path)
+    ttf = TTFont(cut.legacy_dp_path)
+    original = TTFont(cut.legacy_path)
+    theirs = set(original.getGlyphOrder())
+    if ttf.getGlyphOrder() != original.getGlyphOrder():
+        raise SystemExit(f"{cut_id}: the dp cut's glyphs are not the regular cut's")
+
+    def bounds(font: TTFont, name: str):
+        pen = BoundsPen(font.getGlyphSet())
+        font.getGlyphSet()[name].draw(pen)
+        return pen.bounds
+
+    # dEgi flipped y about the stem's middle: y -> axis - y (800 in all three cuts).
+    _, regular_bottom, _, regular_top = bounds(original, "hyphen")
+    _, dp_bottom, _, _ = bounds(ttf, "hyphen")
+    axis = round(dp_bottom + regular_top)
+    if axis != round(regular_bottom + bounds(ttf, "hyphen")[3]):
+        raise SystemExit(f"{cut_id}: the dp stem is not the regular one flipped")
+
+    order = companion.getGlyphOrder()
+    glyf, hmtx = ttf["glyf"], ttf["hmtx"]
+    ttf.setGlyphOrder(order)
+    glyf.glyphOrder = order
+    for name in order:
+        if name in theirs:
+            continue
+        glyph = copy.deepcopy(companion["glyf"][name])
+        if glyph.isComposite():
+            # Each part is flipped already (dEgi's dp glyph, or one flipped here): only its offset turns.
+            for component in glyph.components:
+                component.y = -component.y
+        elif glyph.numberOfContours > 0:
+            coordinates = glyph.getCoordinates(companion["glyf"])[0]
+            ends = list(glyph.endPtsOfContours)
+            flags = list(glyph.flags)
+            start, points, new_flags = 0, [], []
+            for end in ends:
+                contour = list(range(start, end + 1))
+                # Flipping turns a contour the other way round: read it backwards to keep TrueType's direction.
+                contour = contour[:1] + contour[1:][::-1]
+                points += [(coordinates[index][0], axis - coordinates[index][1]) for index in contour]
+                new_flags += [flags[index] for index in contour]
+                start = end + 1
+            glyph.coordinates = type(glyph.coordinates)(points)
+            glyph.flags = bytearray(new_flags)
+            glyph.program = Program()
+            glyph.program.fromBytecode(b"")
+        glyf.glyphs[name] = glyph
+        hmtx.metrics[name] = companion["hmtx"][name]
+    for name in order:
+        if name not in theirs:
+            glyf[name].recalcBounds(glyf)
+            hmtx.metrics[name] = (hmtx.metrics[name][0], getattr(glyf[name], "xMin", 0))
+    ttf["GSUB"] = copy.deepcopy(companion["GSUB"])
+    _set_companion_names(ttf, cut, companion["OS/2"].fsType, cut.companion_dp_family)
+    for table in ("hdmx", "LTSH", "VDMX", "kern"):
+        if table in ttf:
+            del ttf[table]
+    ttf.save(cut.companion_dp_path)
+    return cut.companion_dp_path
+
+
+def _set_companion_names(ttf: TTFont, cut, fs_type: int, family: str | None = None) -> None:
     from . import config
 
     major, minor = config.VERSION
-    family = cut.companion_family
+    family = family or cut.companion_family
     postscript = family.replace(" ", "") + "-Regular"
     version = f"Version {major}.{minor:03d}; {config.COMPANION_VERSION_NOTE}"
     names = {
@@ -686,13 +762,15 @@ def evaluate(cut_id: str, found: list[Token], drawings: Drawings, path: Path | N
     return result
 
 
-def same_as_1998(cut_id: str, path: Path | None = None) -> list[str]:
-    """Keys that do not draw exactly as in dEgi's font with features off: should be none."""
+def same_as_1998(cut_id: str, path: Path | None = None, dp: bool = False) -> list[str]:
+    """Keys that do not draw exactly as in dEgi's font (or his dp cut) with features off:
+    should be none."""
 
     from .legacy import LegacyFont
 
-    path = path or CUTS[cut_id].companion_path
-    ttf, original = TTFont(path), LegacyFont.open(cut_id).ttf
+    cut = CUTS[cut_id]
+    path = path or (cut.companion_dp_path if dp else cut.companion_path)
+    ttf, original = TTFont(path), TTFont(cut.legacy_dp_path if dp else cut.legacy_path)
     font = hb.Font(hb.Face(hb.Blob.from_file_path(path)))
     problems = []
     for key, name in LegacyFont.open(cut_id).keyed_glyphs().items():

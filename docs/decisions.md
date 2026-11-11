@@ -29,7 +29,12 @@ changes them. Dates are when each was decided.
 
 ## Scope
 
-- Hudum (locale MNG) only. The `*DP.TTF` cuts in `cms/` are out of scope.
+- Hudum (locale MNG) only. The `*DP.TTF` cuts in `cms/` are out of scope for the Unicode
+  fonts: software that handles Unicode can mirror text itself.
+- **The companion has dp cuts** (2026-11-12, owner's call: some places print from them):
+  CMs Ulaanbaatar dp Revived (also Urga, Huree), dEgi's dp file as the base, the companion's
+  added glyphs flipped as he flipped his (y → 800 − y, the stem's axis), the same rules.
+  `cmsr check` holds features off to his dp file.
 - **The legacy-keyed companion, CMs Ulaanbaatar Revived** (also Urga, Huree; no Gege prefix)
   (2026-11-12, owner's call). dEgi's 1998 file as the base, his keys at their ASCII places,
   his glyphs, metrics and hinting untouched; the Unicode build's joins added as `liga` and
