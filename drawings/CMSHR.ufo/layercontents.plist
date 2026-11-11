@@ -18,5 +18,53 @@
       <string>bu</string>
       <string>glyphs.bu</string>
     </array>
+    <array>
+      <string>arch-g</string>
+      <string>glyphs.arch-g</string>
+    </array>
+    <array>
+      <string>arch-b</string>
+      <string>glyphs.arch-b</string>
+    </array>
+    <array>
+      <string>arch-p</string>
+      <string>glyphs.arch-p</string>
+    </array>
+    <array>
+      <string>arch-gx</string>
+      <string>glyphs.arch-gx</string>
+    </array>
+    <array>
+      <string>arch-f</string>
+      <string>glyphs.arch-f</string>
+    </array>
+    <array>
+      <string>arch-k</string>
+      <string>glyphs.arch-k</string>
+    </array>
+    <array>
+      <string>arch-all</string>
+      <string>glyphs.arch-all</string>
+    </array>
+    <array>
+      <string>before-a</string>
+      <string>glyphs.before-a</string>
+    </array>
+    <array>
+      <string>before-all</string>
+      <string>glyphs.before-all</string>
+    </array>
+    <array>
+      <string>b+g tuned</string>
+      <string>glyphs.b_g tuned</string>
+    </array>
+    <array>
+      <string>auto-trim</string>
+      <string>glyphs.auto-trim</string>
+    </array>
+    <array>
+      <string>w-old</string>
+      <string>glyphs.w-old</string>
+    </array>
   </array>
 </plist>

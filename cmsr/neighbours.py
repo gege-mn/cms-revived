@@ -31,6 +31,16 @@ def rules(mapping: Mapping) -> dict[Rule, After]:
     return {(entry.name, previous): rule for entry in mapping.all() for previous, rule in mapping.rules(entry).items()}
 
 
+def before_rule_glyph(piece: str, following: str) -> str:
+    return f"cmsr.{piece}.before.{following}"
+
+
+def before_rules(mapping: Mapping) -> dict[Rule, After]:
+    """(piece, the piece right after it) for every "before" rule, groups expanded."""
+
+    return {(entry.name, following): rule for entry in mapping.all() for following, rule in mapping.rules(entry, "before").items()}
+
+
 def add_inner_forms(ufo: Font, found: dict[Rule, After]) -> None:
     """Draw every written form that has a rule inside it from its pieces, before composing."""
 
@@ -63,10 +73,11 @@ def compose_from_pieces(ufo: Font, written: str, found: dict[Rule, After], only_
     return True
 
 
-def features(ufo: Font, found: dict[Rule, After]) -> str:
+def features(ufo: Font, found: dict[Rule, After], found_before: dict[Rule, After] | None = None) -> str:
     """The substitutions between letters, as feature code to append to the composer's."""
 
-    if not found:
+    found_before = found_before or {}
+    if not found and not found_before:
         return ""
     output = {name: atoms for name in ufo.keys() if (atoms := _output_atoms(name))}
     flattened = {name: _flatten(ufo, name) for name in output}
@@ -113,6 +124,38 @@ def features(ufo: Font, found: dict[Rule, After]) -> str:
         blocks.append(
             f"lookup {chain} {{\n    lookupflag IgnoreMarks;\n"
             f"    sub [{' '.join(ends)}] [{' '.join(sorted(table))}]' lookup {single};\n}} {chain};\n"
+        )
+        lookups.append(chain)
+    # Then the "before" rules: a glyph whose last piece has one is swapped when what follows
+    # starts with the rule's piece, after the "after" swaps so the context sees those too.
+    before_swaps: dict[Rule, dict[str, str]] = {}
+    for piece, following in sorted(found_before):
+        replacement = before_rule_glyph(piece, following)
+        if replacement not in ufo:
+            continue
+        before_swaps[piece, following] = {}
+        for name, components in flattened.items():
+            if components and components[-1][0] == "_" + piece:
+                alternate = f"{name}._before_{following.replace('.', '_')}"
+                if alternate not in ufo:
+                    _draw_alternate_last(ufo, alternate, ufo[name].width, components, replacement)
+                before_swaps[piece, following][name] = alternate
+    for index, ((piece, following), table) in enumerate(before_swaps.items()):
+        starts = sorted(
+            {name for name, components in flattened.items() if components and components[0][0] == "_" + following}
+            | {alternate for name, components in flattened.items() if components and components[0][0] == "_" + following for alternate in alternates_of.get(name, [])}
+        )
+        if not table or not starts:
+            continue
+        single, chain = f"cmsr_swap_before_{index}", f"cmsr_before_{index}"
+        blocks.append(
+            f"lookup {single} {{\n"
+            + "".join(f"    sub {name} by {alternate};\n" for name, alternate in sorted(table.items()))
+            + f"}} {single};\n"
+        )
+        blocks.append(
+            f"lookup {chain} {{\n    lookupflag IgnoreMarks;\n"
+            f"    sub [{' '.join(sorted(table))}]' lookup {single} [{' '.join(starts)}];\n}} {chain};\n"
         )
         lookups.append(chain)
     if not lookups:
@@ -167,6 +210,15 @@ def _flatten(ufo: Font, name: str, dx: float = 0, dy: float = 0) -> list[tuple[s
         else:
             found.extend(_flatten(ufo, component.baseGlyph, x, y))
     return found
+
+
+def _draw_alternate_last(ufo: Font, name: str, width: float, components: list, replacement: str) -> None:
+    last, x0, y0 = components[-1]
+    glyph = ufo.newGlyph(name)
+    for base, x, y in components[:-1]:
+        glyph.components.append(Component(base, Transform(dx=x, dy=y)))
+    glyph.components.append(Component(replacement, Transform(dx=x0, dy=y0)))
+    glyph.width = width + ufo[replacement].width - ufo[last].width
 
 
 def _draw_alternate(ufo: Font, name: str, width: float, components: list, replacement: str) -> None:

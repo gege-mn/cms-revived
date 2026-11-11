@@ -8,6 +8,9 @@
 #         on = 2 sets the mark on the third key, tooth tip to tooth tip, in every cut
 # shift   move a key and everything after it along the stem, in font units, e.g.
 #         shift = { "2" = -200 } slides the third key back 200 to tighten a join
+# shifts  per-cut shift where a cut differs, e.g. shifts = { CMSHR = { "2" = -164 } }
+# drop    teeth cut off the front of a key where the key before already draws them, with
+#         the stem leading into them: drop = { "3" = 1 } sets the fourth key from its 2nd tooth
 # trim    "end" cuts the stem the last key runs on past its body, "start" the stem the first
 #         key leads in with, "both" both: in-word keys carry stubs of nirugu that the start
 #         or end of a word (or of a suffix after its gap) should not have
@@ -26,6 +29,8 @@
 #                there; keys, if any, stand in until it is drawn
 #         auto   built from its parts (ligatures, pre-MVS forms, whole forms)
 #
+# before  the same, when a given piece comes right after: before = { "@arch" = "h" } types the
+#         small arch when another arch follows; drawn by hand as cmsr.<piece>.before.<piece or @group>
 # groups     named sets of pieces for "after" rules, such as the arch-shaped letters
 # pieces     single written units in a joining position: everything is built from these
 # mvs        the shape a unit takes before an MVS, where it has one of its own
@@ -37,6 +42,11 @@
 
 [groups]
 arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "Gx.medi", "F.init", "F.medi", "K2.init", "K2.medi", "K.init", "K.medi"]
+arch-g = ["G.init", "G.medi", "Gx.init", "Gx.medi"]
+arch-bpf = ["B.init", "B.medi", "P.init", "P.medi", "F.init", "F.medi"]
+arch-k = ["K.init", "K.medi", "K2.init", "K2.medi"]
+arch-p = ["P.init", "P.medi"]
+arch-f = ["F.init", "F.medi"]
 
 [pieces]
 "A.isol" = { keys = "ft", status = "ok", note = "from editor: e · isolated" }
@@ -48,32 +58,32 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "I.isol" = { keys = "I", status = "ok", note = "I; it keeps its leading nirugu after the suffix gap (dürim-i = Doiri^ I)" }
 "Ix.isol" = { keys = "I", marks = [{ key = "N", contours = [1], dx = 0, dy = -75 }], status = "ok", note = "proposal: I.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
 "I.fina" = { keys = "I", after = { "@arch" = "uA" }, status = "ok", note = "after an arch uA, u being dEgi's i after b (golden jangγi = JeekkuA) | CMs ulaanbaatar includes a little bit leading nirugu while noto doesn't. gotta see it in real text, and also huree and urga may not to the same, unsure." }
-"I.init" = { keys = "i", trims = { CMSUB = "start" }, status = "ok", note = "i (the shilbe), for word-initial i FVS1; j keeps J (u1835.I.init), y's -yi keeps the stub (u1836.I.init). Ulaanbaatar's i leads in with a stub of nirugu, cut at the start" }
+"I.init" = { keys = "i", trims = { CMSUB = "start" }, status = "ok", note = "i (the shilbe), for word-initial i FVS1; j keeps J (u1835.I.init), y's -yi keeps the stub (u1836.I.init). Ulaanbaatar's i leads in with a stub of nirugu, cut at the start | Urga: drawn by the owner as _I.init without the leading nirugu, so the suffix i (cag-iyan) starts at the tooth (2026-11-11)" }
 "I.medi" = { keys = "i", after = { "@arch" = "u" }, status = "ok", note = "set to 'i' (one shilbe): 'iU' drew three. Was in conflict: 'J' from i · medial, 'i' from i · initial (split). Check 'J' is not the plain medial. | u is the wavy shilbe that joins an arch directly (bi, pi, hi, gi)" }
 "O.fina" = { keys = "o", trim = "end", status = "ok", note = "o, with its trailing stub of nirugu cut off (given by hand, from rediu)" }
 "O.medi" = { keys = "o", status = "ok", note = "from editor: o · medial, u · medial, oe · medial, ue · medial, o · initial (split), u · initial (split) | o · initial: the thing is it seems like this one is supposed to have longer spine, but idk where the spine is on CMs. I'm not sure if there's a spine at all | o · medial: spine problem | u · initial: spine | u · medial: spine problem again | oe · medial: + spine | ue · medial: spine" }
 "U.fina" = { keys = "O", status = "ok", note = "from editor: o · final, u · final, oe · final, ue · final" }
-"U.isol" = { keys = "O", status = "ok" }
+"U.isol" = { keys = "O", status = "ok", note = "drawn by hand in drawings/<cut>.ufo as _U.isol: the -u/-ü suffix alone after the gap (ulus-u), without the leading nirugu O carries for word-final u (2026-11-11); layer auto-trim has the measured start cut for reference" }
 "Ux.isol" = { keys = "O", marks = [{ key = "N", contours = [1], dx = 15, dy = -65 }], status = "ok", note = "proposal: U.isol + dusal; the dusal is lifted from N (contour 1), placed about where Noto puts it; nudge to taste" }
-"O.init" = { keys = "o", status = "ok", note = "plus trailing nirugu is needed" }
+"O.init" = { keys = "o", status = "ok", note = "plus trailing nirugu is needed | drawn by hand in drawings/<cut>.ufo as _O.init: the -un/-ün suffix's u after the gap, without the leading nirugu (2026-11-11); layer auto-trim has the measured start cut for reference | Huree: the belly carried round into the stem's far edge (from halfway along dEgi's last belly curve, on his tangent), chosen by the owner (2026-11-11)" }
 "Ue.fina" = { keys = "oA", status = "ok", note = "from editor: oe · isolated (split), ue · isolated (split)" }
-"W.fina" = { keys = "wA", status = "ok", note = "settled by hand; was in conflict: 'WA' from ee · final; 'wA' from ee · isolated (split)" }
+"W.fina" = { keys = "wA", after = { "@arch-g" = { keys = "wA", shift = { "0" = -60 } }, "@arch-bpf" = { keys = "wA", shift = { "0" = -60 } }, "@arch-k" = { keys = "wA", shift = { "0" = -60 } } }, status = "ok", note = "settled by hand; was in conflict: 'WA' from ee · final; 'wA' from ee · isolated (split) | after an arch (bē, gē, kē at the end of a word): w set 60 into the arch as in the arch + ē ligatures; one hand drawing per arch family, cmsr.W.fina.after.@arch-g, @arch-bpf, @arch-k (2026-11-11) | Ulaanbaatar: each drawing is the medial arch + ē glyph from 60 units into the arch on, then dEgi's short tail A at the glyph's end, merged into one outline; p and f have their own (cmsr.W.fina.after.P.init/.medi, F.init/.medi) (owner asked, 2026-11-11) | Urga: the owner drew one w per arch family (cms.w.@arch-g, @arch-bpf, @arch-k); p's and f's are b's moved 1 and 7 down the column (cms.w.@arch-p, @arch-f), as dEgi's p and f stems end 1 and 7 later; each final is that w with dEgi's short tail A set 27 back from the w's ink end, as dEgi sets A after his w (2026-11-11) | Huree: built from its Alpha 5 arch + ē glyphs like Ulaanbaatar (the owner preferred them, 2026-11-11) | Huree, after the owner's edits: g/k arch + ē glyphs rebuilt from their halves (arch half + ē cut before the tail + the old stub); p and f take b's ē moved 6 and 2 down the column, as dEgi's p and f stems end 6 and 2 after b's (2026-11-11)" }
 "W.medi" = { keys = "w", status = "ok", note = "has a little bit of leading nirugu, i think it's gonna be a trend..." }
 "N.init" = { keys = "N", status = "ok", note = "from editor: n · isolated, n · initial" }
 "N.medi" = { keys = "n", after = { "@arch" = { keys = "E", marks = [{ key = "n", contours = [1], on = 0, dx = 0, dy = 0 }] } }, status = "ok" }
 "N.fina" = { keys = "%", status = "ok" }
-"G.medi" = { keys = "k", after = { "BO.medi" = { keys = "-k", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok", note = "settled by hand; was in conflict: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split)" }
+"G.medi" = { keys = "k", after = { "P.medi" = "k", "BO.medi" = { keys = "-k", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } }, "@arch-g" = "k", "@arch-bpf" = "k", "@arch-k" = "k" }, before = { "@arch" = "h", "W.fina" = "k" }, status = "ok", note = "settled by hand; was in conflict: 'k' from h · medial, g · medial; 'h' from ng · isolated (split), ng · initial (split), ng · medial (split) | after an arch, one hand drawing per arch family in drawings/<cut>.ufo: cmsr.G.medi.after.@arch-g, @arch-bpf, @arch-k; keys k stand in | Huree, approved by the owner (2026-11-11): leading nirugu in _G.medi; after b/p/f and after g, hand-drawn joins | before an arch (the first of two or more arches): dEgi's small arch h (owner, 2026-11-11); Huree keeps its own g (all its arches are small) through cmsr.G.medi.before.@arch | Ulaanbaatar: after small b/p/f and small k, dEgi's plain g (approved 2026-11-11) | Ulaanbaatar: after small p its own copy of the plain g, 16 lower (p's stem ends 16 after b's; owner asked, 2026-11-11) | Urga g + g drawn by the owner; advance 438 = ink start + dEgi's k reach (463); after small b/p/f/k dEgi's plain g | Urga small g before an arch: dEgi's h with its trailing stub trimmed by the owner, as cmsr.G.medi.before.@arch (it poked into the next arch's counter) | before final ē: its own drawing, cmsr.G.medi.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys k stand in" }
 "G.fina" = { keys = "it", status = "ok", note = "from editor: g · final, ng · final (split)" }
-"B.init" = { keys = "b", status = "ok", note = "settled by hand; was in conflict: 'O' from b · isolated; 'b' from b · initial" }
-"B.medi" = { keys = "b", after = { "BO.medi" = { keys = "-b", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok", note = "from editor: b · medial" }
+"B.init" = { keys = "b", before = { "W.fina" = "b" }, status = "ok", note = "settled by hand; was in conflict: 'O' from b · isolated; 'b' from b · initial | before final ē: its own drawing, cmsr.B.init.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys b stand in" }
+"B.medi" = { keys = "b", after = { "BO.medi" = { keys = "-b", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } }, "@arch-g" = "b" }, before = { "@arch" = "b", "W.fina" = "b" }, status = "ok", note = "from editor: b · medial | after the g arch (Huree): hand drawing cmsr.B.medi.after.@arch-g; keys b stand in | Huree g + b approved by the owner (2026-11-11) | before an arch (the first of two or more): a small arch, drawn by hand as cmsr.B.medi.before.@arch in Ulaanbaatar and Urga (owner, 2026-11-11); keys b stand in | Ulaanbaatar small b before an arch drawn and approved (2026-11-11); b, p and f share one advance (552), as the owner asked for arches of one family | Ulaanbaatar g + b advance 534: the final E after it sits where dEgi's bE puts it (576 minus the 42 the b moved back) | Urga small b before an arch: the owner trimmed the trailing nirugu and kept the arch; b, p, f share 511 from where the owner set the next arch | Urga g + b drawn by the owner; advance 527 = ink start + dEgi's b reach (549) | before final ē: its own drawing, cmsr.B.medi.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys b stand in" }
 "B.fina" = { keys = "$", status = "ok", note = "from editor: b · final" }
 "B2.fina" = { keys = "ot", status = "ok" }
-"P.init" = { keys = "p", status = "ok", note = "from editor: p · isolated, p · initial" }
-"P.medi" = { keys = "p", after = { "BO.medi" = { keys = "-p", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok", note = "from editor: p · medial" }
+"P.init" = { keys = "p", before = { "W.fina" = "p" }, status = "ok", note = "from editor: p · isolated, p · initial | before final ē: its own drawing, cmsr.P.init.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys p stand in" }
+"P.medi" = { keys = "p", after = { "BO.medi" = { keys = "-p", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, before = { "@arch" = "p", "W.fina" = "p" }, status = "ok", note = "from editor: p · medial | before an arch (the first of two or more): a small arch, drawn by hand as cmsr.P.medi.before.@arch in Ulaanbaatar and Urga (owner, 2026-11-11); keys p stand in | Ulaanbaatar small p before an arch drawn and approved (2026-11-11); b, p and f share one advance (552), as the owner asked for arches of one family; trailing nirugu trimmed so it stays under the next arch (approved) | Urga small p before an arch: trailing nirugu trimmed, advance 511 shared with b | before final ē: its own drawing, cmsr.P.medi.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys p stand in" }
 "P.fina" = { keys = "#", status = "ok", note = "from editor: p · final" }
 "H.init" = { keys = "H", status = "ok", note = "from editor: h · isolated, h · initial" }
 "Hx.init" = { keys = "G", status = "ok", note = "from editor: g · isolated, g · initial" }
-"G.init" = { keys = "k", status = "ok" }
+"G.init" = { keys = "k", before = { "W.fina" = "k" }, status = "ok", note = "before final ē: its own drawing, cmsr.G.init.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys k stand in" }
 "Gx.init" = { keys = "k", marks = [{ key = "g", contours = [1, 2], dx = -15, dy = -45 }], status = "ok", note = "proposal: G.init + two dots; the two dots are lifted from g (contours 1, 2), placed about where Noto puts them; nudge to taste" }
 "Hx.medi" = { keys = "g", status = "ok" }
 "H.medi" = { keys = "ee", after = { "@arch" = "Ee" }, status = "ok", note = "E only right after an arch: ee by default, Ee after one (baγsi = bEeesI)" }
@@ -87,7 +97,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "L.medi" = { keys = "l", after = { "@arch" = ";" }, status = "ok", note = "l; after an arch it is dEgi's ; (b; is bl). The hand-drawn horn that came first is kept in the horn layer of drawings/<cut>.ufo" }
 "L.fina" = { keys = "&", status = "ok", note = "from editor: l · final" }
 "S.init" = { keys = "S", status = "ok", note = "from editor: s · isolated, s · initial" }
-"S.medi" = { keys = "s", status = "ok", note = "from editor: s · medial" }
+"S.medi" = { keys = "s", after = { "@arch-g" = "s", "@arch-bpf" = "s", "@arch-k" = "s" }, status = "ok", note = "from editor: s · medial | after an arch, one hand drawing per arch family in drawings/<cut>.ufo: cmsr.S.medi.after.@arch-g, @arch-bpf, @arch-k; keys s stand in | Ulaanbaatar and Urga approved; Huree all three approved (g + s copied to b/p/f and k, then tuned) by the owner (2026-11-11)" }
 "S.fina" = { keys = "_", status = "ok", note = "from editor: s · final" }
 "Sz.fina" = { status = "new" }
 "Sh.init" = { keys = "Z", status = "ok", note = "from editor: sh · isolated, sh · initial" }
@@ -95,7 +105,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "Sh.fina" = { keys = "+", status = "ok", note = "from editor: sh · final" }
 "T.init" = { keys = "D", status = "ok", note = "from editor: t · isolated, t · initial, d · initial" }
 "T.medi" = { keys = "D", status = "ok" }
-"D.medi" = { keys = "d", status = "ok", note = "from editor: t · medial" }
+"D.medi" = { keys = "d", after = { "@arch-g" = "d", "@arch-bpf" = "d", "@arch-k" = "d" }, status = "ok", note = "from editor: t · medial | after an arch, one hand drawing per arch family in drawings/<cut>.ufo: cmsr.D.medi.after.@arch-g (g), @arch-bpf (b, p, f), @arch-k (k); keys d stand in | Ulaanbaatar @arch-g, @arch-bpf and @arch-k approved by the owner (2026-11-11); one cut at a time" }
 "T.fina" = { keys = "D", status = "ok", note = "from editor: t · final" }
 "D.init" = { keys = "d", status = "ok", note = "d; it keeps its leading nirugu after the suffix gap (üy-e-dü = foiIT dO)" }
 "Dd.medi" = { keys = "oe", status = "ok", note = "from editor: d · medial" }
@@ -109,17 +119,17 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "Y.init" = { keys = "Y", status = "ok" }
 "Y.medi" = { keys = "y", status = "ok" }
 "R.init" = { keys = "R", status = "ok" }
-"R.medi" = { keys = "r", status = "ok" }
+"R.medi" = { keys = "r", after = { "@arch-g" = "r", "@arch-bpf" = "r", "@arch-k" = "r" }, status = "ok", note = "after an arch, one hand drawing per arch family in drawings/<cut>.ufo: cmsr.R.medi.after.@arch-g, @arch-bpf, @arch-k; keys r stand in | approved by the owner (2026-11-11): all three families in every cut" }
 "R.fina" = { keys = "*", status = "ok" }
 "W.init" = { keys = "W", status = "ok" }
-"F.init" = { keys = "q", status = "ok" }
-"F.medi" = { keys = "q", after = { "BO.medi" = { keys = "-q", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok" }
+"F.init" = { keys = "q", before = { "W.fina" = "q" }, status = "ok", note = "before final ē: its own drawing, cmsr.F.init.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys q stand in" }
+"F.medi" = { keys = "q", after = { "BO.medi" = { keys = "-q", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, before = { "@arch" = "q", "W.fina" = "q" }, status = "ok", note = " | before an arch (the first of two or more): a small arch, drawn by hand as cmsr.F.medi.before.@arch in Ulaanbaatar and Urga (owner, 2026-11-11); keys q stand in | Ulaanbaatar small f before an arch drawn and approved (2026-11-11); b, p and f share one advance (552), as the owner asked for arches of one family; trailing nirugu trimmed so it stays under the next arch (approved) | Urga small f before an arch: trailing nirugu trimmed, advance 511 shared with b | before final ē: its own drawing, cmsr.F.medi.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys q stand in" }
 "F.fina" = { keys = "@", status = "ok" }
 "K2.init" = { status = "new" }
 "K2.medi" = { status = "new" }
 "K2.fina" = { status = "new" }
-"K.init" = { keys = "\\", status = "ok" }
-"K.medi" = { keys = "\\", after = { "BO.medi" = { keys = "-\\", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, status = "ok" }
+"K.init" = { keys = "\\", before = { "W.fina" = "\\" }, status = "ok", note = "before final ē: its own drawing, cmsr.K.init.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys \\ stand in" }
+"K.medi" = { keys = "\\", after = { "BO.medi" = { keys = "-\\", shift = { "1" = -376 }, shifts = { CMSHR = { "1" = -463 }, CMSUG = { "1" = -368 } } } }, before = { "@arch" = "\\", "W.fina" = "\\" }, status = "ok", note = " | before an arch (the first of two or more): a small arch, drawn by hand as cmsr.K.medi.before.@arch in Ulaanbaatar and Urga (owner, 2026-11-11); keys \\ stand in | Ulaanbaatar small k before an arch drawn and approved (2026-11-11); trailing nirugu trimmed so it stays under the next arch (approved) | Urga small k before an arch: trailing nirugu trimmed, advance 595 from where the owner set the next arch | before final ē: its own drawing, cmsr.K.medi.before.W.fina, the arch half of the Alpha 5 arch + ē glyph (Huree, 2026-11-11); keys \\ stand in" }
 "K.fina" = { keys = "!", status = "ok" }
 "C.init" = { keys = "}", status = "ok" }
 "C.medi" = { keys = "]", status = "ok" }
@@ -257,7 +267,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "FW.fina" = { status = "auto" }  # required
 "GAa.fina" = { status = "auto" }  # required
 "GI.fina" = { status = "auto" }  # required
-"GO.fina" = { keys = "K", status = "ok", note = "given by hand: final gü/hü is K (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki" }  # required
+"GO.fina" = { keys = "K", status = "ok", note = "given by hand: final gü/hü is K (eγüdqü = fKoeK) | from golden eγüdqü = fKoeK: K is g/h with the ü bowl, as in Ki | drawn by hand in drawings/<cut>.ufo as _GO.fina: K without the medial's trailing nirugu, as the final comes only before a space, an MVS or nothing (2026-11-11); layer auto-trim has the measured cut for reference" }  # required
 "GUe.fina" = { status = "auto" }  # required
 "GW.fina" = { status = "auto" }  # required
 "GxAa.fina" = { status = "auto" }  # required
@@ -296,7 +306,7 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 "LL.medi" = { keys = "lX", status = "ok" }
 "ML.medi" = { keys = "'", status = "ok", note = "' is dEgi's m + l ligature" }
 "MM.medi" = { status = "auto" }
-"AGH.fina" = { keys = "ekE", after = { "@arch" = "EkEa" }, status = "ok", note = "may use E instead of e when joining with arch family letters." }
+"AGH.fina" = { keys = "ekE(", shift = { "3" = -331 }, drop = { "3" = 1 }, shifts = { CMSHR = { "3" = -266 }, CMSUG = { "3" = -284 } }, status = "ok", note = "custom glyph, differs from CMs on purpose: CMs typed this ek(, whose nirugu pokes into the arch. Here ekE( as one q: E is the tooth on the arch, and ( drops its own first tooth and the nirugu leading into it, set so that tooth would sit on E's, tip to tip per cut (UB -156, Urga -127 from Urga's g-family E, Huree -166 from E's tip). The old @arch rule EkEa was never built and drew a's tail; dropped." }
 
 [chars]
 "U+1800" = { status = "new" }
@@ -327,5 +337,5 @@ arch = ["G.medi", "B.init", "B.medi", "P.init", "P.medi", "G.init", "Gx.init", "
 
 [forms]
 "u1835.I.init" = { keys = "J", status = "ok", note = "j only: J, the consonant's own stroke; the shared I.init is i" }
-"u1836.I.init" = { keys = "i", status = "ok", note = "y only, the suffix -yi after its gap (yoso-yi = YosO iI): i uncut, keeping its leading nirugu; I.init cuts it in Ulaanbaatar for word-initial i" }
+"u1836.I.init" = { keys = "i", trims = { CMSUB = "start" }, status = "ok", note = "y only, the suffix -yi after its gap (yoso-yi = YosO iI): i uncut, keeping its leading nirugu; I.init cuts it in Ulaanbaatar for word-initial i | Urga: the owner's _I.init copied as _u1836.I.init, so -yin and -yi start at the tooth like -iyan (owner asked, 2026-11-11) | Ulaanbaatar: cut at the start like I.init, so -yin and -yi lose the leading nirugu as -iyar does (owner asked, 2026-11-11)" }
 "II.medi" = { keys = "ii", status = "ok", note = "two i keys, not U: the user chose ii (Huree draws U differently)" }

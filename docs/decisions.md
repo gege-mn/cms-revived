@@ -53,6 +53,10 @@ changes them. Dates are when each was decided.
   on `BO.medi` fixed it). Never run a stem under an arch: it reads as KHA's tick.
 - Joins the owner finds bad in shape they draw themselves in Fontra, as rule glyphs
   `cmsr.<piece>.after.<piece or @group>` in `drawings/<cut>.ufo`.
+- Arch + medial d/t is drawn per arch family, not per arch (2026-11-11): `@arch-g` (g),
+  `@arch-bpf` (b, p, f), `@arch-k` (k). It need not be seamless: the arch's closing slope
+  and the long strokes (shilbe, medial d) differ optically, and other fonts leave that join
+  as it is.
 - Before regenerating anything the owner edited by hand, back it up and say which edits
   would be replaced. (Urga's pē and fē were once overwritten this way and had to be
   restored.)

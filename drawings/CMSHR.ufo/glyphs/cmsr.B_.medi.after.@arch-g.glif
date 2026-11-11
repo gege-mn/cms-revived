@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="cmsr.B.medi.after.@arch-g" format="2">
+  <advance width="522"/>
+  <outline>
+    <contour>
+      <point x="307" y="253" type="qcurve" smooth="yes"/>
+      <point x="118" y="248"/>
+      <point x="21" y="384" type="qcurve"/>
+      <point x="-41" y="516"/>
+      <point x="-41" y="631" type="qcurve" smooth="yes"/>
+      <point x="-41" y="770"/>
+      <point x="48" y="886" type="qcurve"/>
+      <point x="121" y="938"/>
+      <point x="204" y="938" type="qcurve" smooth="yes"/>
+      <point x="256" y="938"/>
+      <point x="331" y="916" type="qcurve"/>
+      <point x="499" y="814"/>
+      <point x="540" y="495" type="qcurve"/>
+      <point x="503" y="499" type="line"/>
+      <point x="451" y="624"/>
+      <point x="361" y="707" type="qcurve" smooth="yes"/>
+      <point x="296" y="768"/>
+      <point x="228" y="768" type="qcurve" smooth="yes"/>
+      <point x="117" y="768"/>
+      <point x="75" y="643" type="qcurve"/>
+      <point x="302" y="590"/>
+      <point x="412" y="397" type="qcurve"/>
+      <point x="416" y="374"/>
+      <point x="416" y="355" type="qcurve" smooth="yes"/>
+      <point x="416" y="258"/>
+    </contour>
+    <contour>
+      <point x="257" y="374" type="qcurve"/>
+      <point x="301" y="388"/>
+      <point x="301" y="414" type="qcurve" smooth="yes"/>
+      <point x="301" y="424"/>
+      <point x="294" y="435" type="qcurve"/>
+      <point x="229" y="501"/>
+      <point x="139" y="501" type="qcurve" smooth="yes"/>
+      <point x="126" y="501"/>
+      <point x="115" y="499" type="qcurve"/>
+      <point x="112" y="487"/>
+      <point x="112" y="476" type="qcurve" smooth="yes"/>
+      <point x="112" y="436"/>
+      <point x="148" y="407" type="qcurve" smooth="yes"/>
+      <point x="188" y="376"/>
+    </contour>
+  </outline>
+</glyph>

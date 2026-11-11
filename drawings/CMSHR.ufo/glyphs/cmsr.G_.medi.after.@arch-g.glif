@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="cmsr.G.medi.after.@arch-g" format="2">
+  <advance width="338"/>
+  <outline>
+    <contour>
+      <point x="157" y="852" type="qcurve" smooth="yes"/>
+      <point x="246" y="839"/>
+      <point x="310" y="711" type="qcurve" smooth="yes"/>
+      <point x="366" y="599"/>
+      <point x="367" y="497" type="qcurve"/>
+      <point x="317" y="497" type="line"/>
+      <point x="288" y="609"/>
+      <point x="262" y="635" type="qcurve"/>
+      <point x="202" y="717"/>
+      <point x="144" y="717" type="qcurve" smooth="yes"/>
+      <point x="73" y="717"/>
+      <point x="73" y="619" type="qcurve" smooth="yes"/>
+      <point x="73" y="582"/>
+      <point x="87" y="539" type="qcurve"/>
+      <point x="89" y="531"/>
+      <point x="135" y="471" type="qcurve" smooth="yes"/>
+      <point x="175" y="419"/>
+      <point x="179" y="369" type="qcurve"/>
+      <point x="151" y="341"/>
+      <point x="138" y="338" type="qcurve"/>
+      <point x="124" y="338"/>
+      <point x="110" y="339" type="qcurve"/>
+      <point x="81" y="363"/>
+      <point x="41" y="422" type="qcurve" smooth="yes"/>
+      <point x="4" y="476"/>
+      <point x="-19" y="493" type="qcurve"/>
+      <point x="-21" y="497" type="line"/>
+      <point x="-49" y="648" type="line"/>
+      <point x="-47" y="734"/>
+      <point x="-9" y="788" type="qcurve" smooth="yes"/>
+      <point x="38" y="854"/>
+      <point x="128" y="854" type="qcurve" smooth="yes"/>
+      <point x="142" y="854"/>
+    </contour>
+  </outline>
+</glyph>

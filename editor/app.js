@@ -56,6 +56,7 @@ async function boot() {
   }
   state.data = data;
   state.entries = data.entries;
+  state.composed = data.composed || {};
   state.groups = data.groups || {};
   state.problems = data.problems;
   state.builds = data.builds || {};
@@ -155,11 +156,38 @@ function placeholderPart(cut = state.ui.cut) {
   };
 }
 
-function keyParts(keys, cut = state.ui.cut, shift = {}) {
+// The build's outline, for keys the browser cannot lay out (dropped teeth, clipped keys),
+// while the entry still matches what it was built from.
+function composedPart(item, cut) {
+  const found = state.composed?.[cut]?.[item?.name];
+  if (!found) return null;
+  const same = (a, b) => JSON.stringify(Object.entries(a || {}).filter(([, v]) => Number(v)).sort()) === JSON.stringify(Object.entries(b || {}).filter(([, v]) => Number(v)).sort());
+  const spec = found.spec;
+  if (spec.keys !== (keysFor(item, cut) || "") || spec.trim !== (item.trims?.[cut] ?? item.trim ?? "")) return null;
+  if (!same(spec.shift, shiftFor(item, cut)) || !same(spec.drop, item.drop)) return null;
+  return { path: found.path, advance: found.advance, bounds: found.bounds };
+}
+
+function shiftFor(item, cut = state.ui.cut) {
+  return item?.shifts?.[cut] || item?.shift || {};
+}
+
+// As the build's _variants: cms.<glyph>.@<group> stands in for a key right after a piece of
+// that group (the key before in the same keys, or the rule's previous piece for the first key).
+function keyVariant(glyph, keys, index, previous, cut, drawings) {
+  const pieces = index > 0 ? Object.values(state.entries).filter((item) => keysFor(item, cut) === keys[index - 1]).map((item) => item.name) : previous ? [previous] : [];
+  const groups = Object.entries(state.groups || {})
+    .filter(([, members]) => members.some((member) => pieces.includes(member)))
+    .sort((a, b) => a[1].length - b[1].length);
+  for (const [group] of groups) if (drawings[`cms.${glyph}.@${group}`]) return drawings[`cms.${glyph}.@${group}`];
+  return drawings[`cms.${glyph}`];
+}
+
+function keyParts(keys, cut = state.ui.cut, shift = {}, previous = null) {
   const glyphs = legacy(cut).keys;
   const drawings = state.data.drawings?.[cut] || {};
   return [...keys].flatMap((key, index) => {
-    const redrawn = glyphs[key] && drawings[`cms.${glyphs[key].glyph}`];
+    const redrawn = glyphs[key] && keyVariant(glyphs[key].glyph, keys, index, previous, cut, drawings);
     const part = redrawn ? { ...glyphs[key], ...redrawn } : glyphs[key] || { ...placeholderPart(cut), missingKey: key };
     const units = Number(shift[index] || 0);
     return units ? [{ path: "", advance: units, bounds: [0, 0, 0, 0] }, part] : [part];
@@ -242,10 +270,12 @@ function namedParts(name, cut = state.ui.cut, previous = null) {
   if (drawn) return [drawn];
   const rule = ruleFor(item, previous);
   if (rule?.keys || hasDrawing(item, cut)) {
-    const parts = rule?.keys ? keyParts(rule.keys, cut, rule.shifts?.[cut] || rule.shift || {}) : keyParts(keysFor(item, cut) || "", cut, item?.shift || {});
+    const built = !rule?.keys && composedPart(item, cut);
+    if (built) return [built];
+    const parts = rule?.keys ? keyParts(rule.keys, cut, rule.shifts?.[cut] || rule.shift || {}, previous) : keyParts(keysFor(item, cut) || "", cut, shiftFor(item, cut));
     const advance = parts.reduce((sum, part) => sum + part.advance, 0);
     if (rule?.keys) return [...parts, ...markParts(rule.marks?.length ? rule : item, cut, advance, rule.keys, rule.shifts?.[cut] || rule.shift || {})];
-    return [...parts, ...markParts(item, cut, advance, keysFor(item, cut) || "", item?.shift || {})];
+    return [...parts, ...markParts(item, cut, advance, keysFor(item, cut) || "", shiftFor(item, cut))];
   }
   const info = target(name);
   if ((item?.status === "auto" || !item) && info.atoms.length) {
@@ -518,7 +548,7 @@ function renderSpacing() {
     [...keys]
       .map((key, index) =>
         index
-          ? `<label><kbd>${escapeHtml(key)}</kbd><input class="s-shift" type="number" step="10" data-index="${index}" value="${Number(item.shift?.[index] || 0)}"></label>`
+          ? `<label><kbd>${escapeHtml(key)}</kbd><input class="s-shift" type="number" step="10" data-index="${index}" value="${Number(shiftFor(item)[index] || 0)}"></label>`
           : "",
       )
       .join("");
@@ -728,7 +758,7 @@ async function flushSave() {
   const response = await fetch("/api/entry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [], after: item.after || {}, shift: item.shift || {}, trim: item.trim || "", trims: item.trims || {} }),
+    body: JSON.stringify({ name, keys: item.keys, status: item.status, note: item.note, cuts: item.cuts || {}, marks: item.marks || [], after: item.after || {}, shift: item.shift || {}, shifts: item.shifts || {}, drop: item.drop || {}, before: item.before || {}, trim: item.trim || "", trims: item.trims || {} }),
   });
   const result = await response.json();
   if (result.error) {
@@ -736,6 +766,7 @@ async function flushSave() {
     return;
   }
   state.entries = result.entries;
+  state.composed = result.composed || {};
   state.groups = result.groups || state.groups;
   state.problems = result.problems;
   renderProblems();
@@ -861,8 +892,12 @@ function wire() {
     if (event.target.classList.contains("s-shift")) {
       const item = entry(state.ui.current);
       const index = event.target.dataset.index;
-      item.shift = { ...(item.shift || {}), [index]: Math.round(Number(event.target.value) || 0) };
-      if (!item.shift[index]) delete item.shift[index];
+      // A cut with its own shifts is edited there; the shared shift otherwise.
+      const own = item.shifts?.[state.ui.cut];
+      const next = { ...(own || item.shift || {}), [index]: Math.round(Number(event.target.value) || 0) };
+      if (!next[index]) delete next[index];
+      if (own) item.shifts = { ...item.shifts, [state.ui.cut]: next };
+      else item.shift = next;
       if (["todo", "ok"].includes(item.status)) item.status = "draft";
       renderStage();
       renderStatus();
@@ -991,6 +1026,7 @@ async function revertKeys() {
   const response = await fetch("/api/data");
   const data = await response.json();
   state.entries = data.entries;
+  state.composed = data.composed || {};
   state.data.drawings = data.drawings;
   renderAll();
 }

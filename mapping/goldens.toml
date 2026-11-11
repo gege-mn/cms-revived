@@ -18,7 +18,7 @@ text = "ᠮᠣᠩᠭᠣᠯ"
 keys = "Moekgo&"
 status = "fixed"
 note = "differs on purpose: CMs had no proper ng + masculine g join"
-snapshot = { CMSHR = "2bee7980440b", CMSUB = "5c40ae92119a", CMSUG = "1cff3625e16d" }
+snapshot = { CMSHR = "2bee7980440b", CMSUB = "5c40ae92119a", CMSUG = "c252f2da39aa" }
 
 [[golden]]
 latin = "altan"
@@ -218,7 +218,8 @@ status = "ok"
 latin = "öb-un"
 text = "ᠥᠪ᠎ᠤᠨ"
 keys = "foi$ oa"
-status = "ok"
+status = "fixed"
+snapshot = { CMSHR = "16da1cca8738", CMSUB = "5afa8751255a", CMSUG = "546a746853ab" }
 
 [[golden]]
 latin = "šasin"
@@ -285,7 +286,8 @@ status = "ok"
 latin = "jangγi"
 text = "ᠵᠠᠩᠭᠢ"
 keys = "JeekkuA"
-status = "ok"
+status = "fixed"
+snapshot = { CMSHR = "2bc3239e57e7", CMSUB = "7fb3398add5f", CMSUG = "a1e29b94fcbb" }
 
 [[golden]]
 latin = "elbeγ"
@@ -321,7 +323,8 @@ status = "ok"
 latin = "yoso-yi"
 text = "ᠶᠣᠰᠣ᠌᠎ᠶᠢ"
 keys = "YosO iI"
-status = "ok"
+status = "fixed"
+snapshot = { CMSHR = "2cd452eec26c", CMSUB = "480b84ea6861", CMSUG = "c469c7bc5ccc" }
 
 [[golden]]
 latin = "fü"
@@ -393,8 +396,9 @@ status = "ok"
 latin = "nobsi"
 text = "ᠨᠣᠪᠰᠢ"
 keys = "NobsI"
-status = "pending"
+status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
+snapshot = { CMSHR = "c7adaf7ff2d7", CMSUB = "e0694375df41", CMSUG = "49747b60129d" }
 
 [[golden]]
 latin = "aziy-a"
@@ -413,7 +417,7 @@ latin = "ebüγe"
 text = "ᠡᠪᠦᠭᠡ"
 keys = "fBkEt"
 status = "fixed"
-snapshot = { CMSHR = "40940e509134", CMSUB = "c00132096d3e", CMSUG = "b7db409e680d" }
+snapshot = { CMSHR = "40940e509134", CMSUB = "c00132096d3e", CMSUG = "30ec1f025cf4" }
 
 [[golden]]
 latin = "neres"
@@ -425,8 +429,9 @@ status = "ok"
 latin = "front"
 text = "ᠹᠷᠣᠨᠲ"
 keys = "qroeD"
-status = "pending"
+status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
+snapshot = { CMSHR = "2c73b805b8d7", CMSUB = "d025a4aea30d", CMSUG = "2dff58f9ebd9" }
 
 [[golden]]
 latin = "enērγi"
@@ -445,7 +450,7 @@ latin = "engneγe"
 text = "ᠡᠩᠨᠡᠭᠡ"
 keys = "feknekEt"
 status = "fixed"
-snapshot = { CMSHR = "e11897a59a09", CMSUB = "d18abb9f998d", CMSUG = "7dd4a8fcc40d" }
+snapshot = { CMSHR = "5da1d5918dac", CMSUB = "d18abb9f998d", CMSUG = "2d3843cc6cfc" }
 
 [[golden]]
 latin = "bučaju"
@@ -494,7 +499,8 @@ status = "ok"
 latin = "tingqim-ün"
 text = "ᠲᠢᠩᠬᠢᠮ᠎ᠦᠨ"
 keys = "Diekku^ oa"
-status = "ok"
+status = "fixed"
+snapshot = { CMSHR = "83c9de7f3411", CMSUB = "7fb1187a0c94", CMSUG = "a75a29b54a98" }
 
 [[golden]]
 latin = "qauli-ača"
@@ -512,8 +518,9 @@ status = "ok"
 latin = "jišiγsen"
 text = "ᠵᠢᠱ᠌ᠢᠭᠰᠡᠨ"
 keys = "Jiziksea"
-status = "pending"
+status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
+snapshot = { CMSHR = "c998e724eb9e", CMSUB = "b96943aad7bb", CMSUG = "4558281dafa5" }
 
 [[golden]]
 latin = "čaγdaγ-a"
@@ -615,8 +622,9 @@ status = "ok"
 latin = "üjeγdel"
 text = "ᠦᠵᠡᠭᠳᠡᠯ"
 keys = "foijekde&"
-status = "pending"
+status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
+snapshot = { CMSHR = "7a91c1a2fe6a", CMSUB = "f999fd2c1833", CMSUG = "4ef783fefc42" }
 
 [[golden]]
 latin = "orčin"
@@ -629,3 +637,11 @@ latin = "öγčü"
 text = "ᠥᠭᠴᠦ"
 keys = "foikcO"
 status = "ok"
+
+[[golden]]
+latin = "angq-a"
+text = "ᠠᠩᠬ᠎ᠠ"
+keys = "Feek(T"
+status = "fixed"
+note = "from production: the q after ng had no tail (AGH.fina was ekE)"
+snapshot = { CMSHR = "6cefc5e0a3fe", CMSUB = "965e75bb7e88", CMSUG = "6fc1f80610d9" }

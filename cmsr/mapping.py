@@ -38,6 +38,9 @@ HEADER = """\
 #         on = 2 sets the mark on the third key, tooth tip to tooth tip, in every cut
 # shift   move a key and everything after it along the stem, in font units, e.g.
 #         shift = { "2" = -200 } slides the third key back 200 to tighten a join
+# shifts  per-cut shift where a cut differs, e.g. shifts = { CMSHR = { "2" = -164 } }
+# drop    teeth cut off the front of a key where the key before already draws them, with
+#         the stem leading into them: drop = { "3" = 1 } sets the fourth key from its 2nd tooth
 # trim    "end" cuts the stem the last key runs on past its body, "start" the stem the first
 #         key leads in with, "both" both: in-word keys carry stubs of nirugu that the start
 #         or end of a word (or of a suffix after its gap) should not have
@@ -56,6 +59,8 @@ HEADER = """\
 #                there; keys, if any, stand in until it is drawn
 #         auto   built from its parts (ligatures, pre-MVS forms, whole forms)
 #
+# before  the same, when a given piece comes right after: before = { "@arch" = "h" } types the
+#         small arch when another arch follows; drawn by hand as cmsr.<piece>.before.<piece or @group>
 # groups     named sets of pieces for "after" rules, such as the arch-shaped letters
 # pieces     single written units in a joining position: everything is built from these
 # mvs        the shape a unit takes before an MVS, where it has one of its own
@@ -149,15 +154,21 @@ class Entry:
     cuts: dict[str, str] = field(default_factory=dict)
     marks: list[Mark] = field(default_factory=list)
     after: dict[str, After] = field(default_factory=dict)
+    before: dict[str, After] = field(default_factory=dict)
     shift: dict[int, int] = field(default_factory=dict)
     trim: Trim = ""
     trims: dict[str, Trim] = field(default_factory=dict)
+    shifts: dict[str, dict[int, int]] = field(default_factory=dict)
+    drop: dict[int, int] = field(default_factory=dict)
 
     def keys_for(self, cut_id: str) -> str | None:
         return self.cuts.get(cut_id, self.keys)
 
     def trim_for(self, cut_id: str) -> Trim:
         return self.trims.get(cut_id, self.trim)
+
+    def shift_for(self, cut_id: str) -> dict[int, int]:
+        return self.shifts.get(cut_id, self.shift)
 
     def as_dict(self) -> dict:
         found: dict = {"name": self.name, "kind": self.kind, "status": self.status}
@@ -169,8 +180,14 @@ class Entry:
             found["marks"] = [mark.as_dict() for mark in self.marks]
         if self.after:
             found["after"] = {previous: rule.as_value() for previous, rule in self.after.items()}
+        if self.before:
+            found["before"] = {following: rule.as_value() for following, rule in self.before.items()}
         if self.shift:
             found["shift"] = {str(index): units for index, units in self.shift.items()}
+        if self.shifts:
+            found["shifts"] = {cut: {str(index): units for index, units in shift.items()} for cut, shift in self.shifts.items()}
+        if self.drop:
+            found["drop"] = {str(index): teeth for index, teeth in self.drop.items()}
         if self.trim:
             found["trim"] = self.trim
         if self.trims:
@@ -212,23 +229,30 @@ class Mapping:
                         cuts=dict(fields.get("cuts", {})),
                         marks=[Mark.from_dict(mark) for mark in fields.get("marks", [])],
                         after={previous: After.from_value(value) for previous, value in fields.get("after", {}).items()},
+                        before={following: After.from_value(value) for following, value in fields.get("before", {}).items()},
                         shift={int(index): int(units) for index, units in fields.get("shift", {}).items()},
                         trim=fields.get("trim", ""),
                         trims=dict(fields.get("trims", {})),
+                        shifts={
+                            cut: {int(index): int(units) for index, units in shift.items()}
+                            for cut, shift in fields.get("shifts", {}).items()
+                        },
+                        drop={int(index): int(teeth) for index, teeth in fields.get("drop", {}).items()},
                     )
         return cls(entries, path, groups)
 
-    def rules(self, entry: Entry) -> dict[str, After]:
-        """The entry's "after" rules by single piece: groups expanded, named pieces winning."""
+    def rules(self, entry: Entry, side: str = "after") -> dict[str, After]:
+        """The entry's "after" (or "before") rules by single piece: groups expanded, named pieces winning."""
 
+        table = entry.after if side == "after" else entry.before
         found: dict[str, After] = {}
-        for previous, rule in entry.after.items():
-            if previous.startswith("@"):
-                for member in self.groups.get(previous[1:], []):
+        for other, rule in table.items():
+            if other.startswith("@"):
+                for member in self.groups.get(other[1:], []):
                     found.setdefault(member, rule)
-        for previous, rule in entry.after.items():
-            if not previous.startswith("@"):
-                found[previous] = rule
+        for other, rule in table.items():
+            if not other.startswith("@"):
+                found[other] = rule
         return found
 
     def get(self, name: str) -> Entry:
@@ -287,8 +311,15 @@ class Mapping:
                         found.append(f"{entry.name}: unknown trim {rule.trim!r} after {previous}")
                     if bad := sorted({mark.key for mark in rule.marks if mark.key not in keyed}):
                         found.append(f"{entry.name}: {cut_id} has no glyph on mark key {''.join(bad)!r} (after {previous})")
-                if bad := [index for index in entry.shift if not 0 < index < len(keys)]:
+                for following, rule in entry.before.items():
+                    if following.startswith("@") and following[1:] not in self.groups:
+                        found.append(f"{entry.name}: rule before {following!r}, which is not a group")
+                    if bad := sorted({key for key in rule.keys if key not in keyed}):
+                        found.append(f"{entry.name}: {cut_id} has no glyph on {''.join(bad)!r} (before {following})")
+                if bad := [index for index in entry.shift_for(cut_id) if not 0 < index < len(keys)]:
                     found.append(f"{entry.name}: {cut_id} shift for key {bad}, but the keys are {keys!r}")
+                if bad := [index for index in entry.drop if not 0 < index < len(keys)]:
+                    found.append(f"{entry.name}: {cut_id} drop for key {bad}, but the keys are {keys!r}")
                 for mark in entry.marks:
                     if mark.key not in keyed:
                         found.append(f"{entry.name}: {cut_id} has no glyph on mark key {mark.key!r}")
@@ -352,6 +383,10 @@ def _inline(entry: Entry) -> str:
     if entry.shift:
         shifts = ", ".join(f'"{index}" = {units}' for index, units in sorted(entry.shift.items()))
         fields.append(f"shift = {{ {shifts} }}")
+    if entry.drop:
+        fields.append(f"drop = {_shift(entry.drop)}")
+    if entry.shifts:
+        fields.append("shifts = { " + ", ".join(f"{cut} = {_shift(shift)}" for cut, shift in sorted(entry.shifts.items())) + " }")
     if entry.trim:
         fields.append(f"trim = {_string(entry.trim)}")
     if entry.trims:
@@ -360,6 +395,9 @@ def _inline(entry: Entry) -> str:
     if entry.after:
         rules = ", ".join(f"{_string(previous)} = {_after(rule)}" for previous, rule in entry.after.items())
         fields.append(f"after = {{ {rules} }}")
+    if entry.before:
+        rules = ", ".join(f"{_string(following)} = {_after(rule)}" for following, rule in entry.before.items())
+        fields.append(f"before = {{ {rules} }}")
     fields.append(f"status = {_string(entry.status)}")
     if entry.note:
         fields.append(f"note = {_string(entry.note)}")

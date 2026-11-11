@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="cms.w.@arch-k" format="2">
+  <advance width="612"/>
+  <outline>
+    <contour>
+      <point x="-311" y="352" type="qcurve"/>
+      <point x="-340" y="333"/>
+      <point x="-385" y="312" type="qcurve"/>
+      <point x="-424" y="319"/>
+      <point x="-463" y="405" type="qcurve" smooth="yes"/>
+      <point x="-482" y="451"/>
+      <point x="-500" y="497" type="qcurve"/>
+      <point x="-583" y="497" type="line"/>
+      <point x="-583" y="648" type="line"/>
+      <point x="-500" y="648"/>
+      <point x="-500" y="648" type="qcurve"/>
+      <point x="-502" y="789"/>
+      <point x="-409" y="886" type="qcurve"/>
+      <point x="-336" y="938"/>
+      <point x="-253" y="938" type="qcurve" smooth="yes"/>
+      <point x="-201" y="938"/>
+      <point x="-126" y="916" type="qcurve"/>
+      <point x="41" y="814"/>
+      <point x="82" y="495" type="qcurve"/>
+      <point x="45" y="499" type="line"/>
+      <point x="-6" y="624"/>
+      <point x="-96" y="707" type="qcurve" smooth="yes"/>
+      <point x="-161" y="768"/>
+      <point x="-229" y="768" type="qcurve" smooth="yes"/>
+      <point x="-340" y="768"/>
+      <point x="-382" y="643" type="qcurve"/>
+      <point x="-272" y="618"/>
+      <point x="-182" y="570"/>
+      <point x="-160" y="524" type="qcurve"/>
+      <point x="-158" y="514"/>
+      <point x="-158" y="504" type="qcurve" smooth="yes"/>
+      <point x="-158" y="473"/>
+      <point x="-187" y="436" type="qcurve"/>
+      <point x="-239" y="502"/>
+      <point x="-309" y="502" type="qcurve" smooth="yes"/>
+      <point x="-332" y="502"/>
+      <point x="-355" y="495" type="qcurve"/>
+      <point x="-358" y="486"/>
+      <point x="-358" y="476" type="qcurve" smooth="yes"/>
+      <point x="-358" y="443"/>
+      <point x="-332" y="393" type="qcurve" smooth="yes"/>
+      <point x="-311" y="352"/>
+    </contour>
+  </outline>
+</glyph>

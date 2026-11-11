@@ -46,5 +46,29 @@
       <string>bu</string>
       <string>glyphs.bu</string>
     </array>
+    <array>
+      <string>auto-trim</string>
+      <string>glyphs.auto-trim</string>
+    </array>
+    <array>
+      <string>arch-after</string>
+      <string>glyphs.arch-after</string>
+    </array>
+    <array>
+      <string>small-arch-before</string>
+      <string>glyphs.small-arch-before</string>
+    </array>
+    <array>
+      <string>w-old</string>
+      <string>glyphs.w-old</string>
+    </array>
+    <array>
+      <string>arch-before</string>
+      <string>glyphs.arch-before</string>
+    </array>
+    <array>
+      <string>old-medial</string>
+      <string>glyphs.old-medial</string>
+    </array>
   </array>
 </plist>

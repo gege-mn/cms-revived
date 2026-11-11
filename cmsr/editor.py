@@ -23,7 +23,7 @@ from mongfontbuilder import data, splitWrittens
 from ufoLib2 import Font
 
 from . import config, goldens
-from .build import _stem, build
+from .build import _stem, build, composed_preview
 from .check import run
 from .legacy import LegacyFont
 from .mapping import After, Entry, Mapping, Mark
@@ -185,7 +185,30 @@ def _mapping_state(mapping: Mapping) -> dict:
         "entries": {entry.name: entry.as_dict() for entry in mapping.all()},
         "groups": mapping.groups,
         "problems": mapping.problems(),
+        "composed": _composed(mapping),
     }
+
+
+def _composed(mapping: Mapping) -> dict:
+    """The build's own outline of each entry whose keys a browser cannot lay out: dropped
+    teeth, or a key moved back and clipped under the one before. `spec` is what it was
+    composed from, so the editor can tell when an unsaved edit has made it stale."""
+
+    found: dict = {}
+    for cut_id in config.CUTS:
+        for entry in mapping.all():
+            keys = entry.keys_for(cut_id)
+            shift = entry.shift_for(cut_id)
+            if not keys or not (entry.drop or any(units < 0 for index, units in shift.items() if index > 0)):
+                continue
+            trim = entry.trim_for(cut_id)
+            try:
+                ufo, name = composed_preview(cut_id, keys, entry.marks, shift, trim, entry.drop)
+            except (KeyError, ValueError):
+                continue
+            spec = {"keys": keys, "shift": {str(i): u for i, u in shift.items()}, "drop": {str(i): t for i, t in entry.drop.items()}, "trim": trim}
+            found.setdefault(cut_id, {})[entry.name] = {"advance": ufo[name].width, "spec": spec, **_outline(ufo, name)}
+    return found
 
 
 def _build(cut_id: str) -> dict:
@@ -308,6 +331,16 @@ class Handler(SimpleHTTPRequestHandler):
                             shift={int(index): int(units) for index, units in body.get("shift", {}).items() if int(units)},
                             trim=body.get("trim") or "",
                             trims={cut: trim for cut, trim in body.get("trims", {}).items() if trim},
+                            shifts={
+                                cut: {int(index): int(units) for index, units in shift.items() if int(units)}
+                                for cut, shift in body.get("shifts", {}).items()
+                            },
+                            drop={int(index): int(teeth) for index, teeth in body.get("drop", {}).items() if int(teeth)},
+                            before={
+                                following: rule
+                                for following, value in body.get("before", {}).items()
+                                if following and (rule := After.from_value(value)).keys
+                            },
                         )
                     )
                     mapping.save()

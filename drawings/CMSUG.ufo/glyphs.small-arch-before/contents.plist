@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>cmsr.B.medi.after.@arch-g</key>
+    <string>cmsr.B_.medi.after.@arch-g.glif</string>
+    <key>cmsr.B.medi.before.@arch</key>
+    <string>cmsr.B_.medi.before.@arch.glif</string>
+    <key>cmsr.F.medi.before.@arch</key>
+    <string>cmsr.F_.medi.before.@arch.glif</string>
+    <key>cmsr.G.medi.after.@arch-g</key>
+    <string>cmsr.G_.medi.after.@arch-g.glif</string>
+    <key>cmsr.K.medi.before.@arch</key>
+    <string>cmsr.K_.medi.before.@arch.glif</string>
+    <key>cmsr.P.medi.before.@arch</key>
+    <string>cmsr.P_.medi.before.@arch.glif</string>
+  </dict>
+</plist>

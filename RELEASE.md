@@ -27,7 +27,21 @@ Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.m
 ## After a release
 
 - [ ] Draw the left-out letters. A freehand birga was tried and rejected; it needs a better source.
+- [ ] Smooth Urga's arch + ē join (`cms.w.@arch-*` in `drawings/CMSUG.ufo`): accepted for 1.0 as it is,
+      the owner finds it "slapped on" and may retry another day (2026-11-11).
 - [ ] Remake the arch + ē family (`BW`, `PW`, `FW`, `KW`, `GW`, `GxW`, initial and medial) in every
       cut. The current drawings are stand-ins: dEgi's b and w overlapped, the others carrying bē's
       tail on their own arch. Huree's gē and hē need their own shape for its smaller arch;
       k2ē waits for k2. The `w` and `bu` layers in `drawings/<cut>.ufo` are references for it.
+- [ ] Smooth the arch + r joins (`cmsr.R.medi.after.@arch-*`) in every cut. The owner's drawings
+      fix the extra spine; the curves could be smoother, which needs a type designer's hand.
+      Most readers won't notice (2026-11-11).
+
+## Ideas
+
+- [ ] A legacy-keyed companion, "CMs Ulaanbaatar Revived" (no Gege prefix, no Unicode): dEgi's
+      ASCII keys in the cmap as in 1998, his glyphs with the rework's fixes, and contextual
+      substitutions that turn the key sequences CMs typed into the fixed joins (`ek(` → the
+      custom angq-a glyph, an arch key + `d` → the drawn d). Old documents typed the CMs way
+      would render fixed. The goldens' typed keys become its test: each must shape like the
+      Unicode build. Raised 2026-11-11; not started.

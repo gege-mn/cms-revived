@@ -106,7 +106,7 @@ def check(golden: Golden, font_path: Path, legacy: LegacyFont) -> Result:
             as_typed += [(leaf, x + dx, y) for leaf, dx, _ in _legacy_leaves(legacy, stand_ins[name])]
         else:
             produced += _typed(name, keys_by_glyph)
-            as_typed.append((name, x, y))
+            as_typed.append((name.partition(".@")[0], x, y))
     signature = _signature(built, font_path)
     if golden.status == "fixed":
         return Result(produced, signature == golden.snapshot.get(legacy.cut.id), signature)
@@ -132,16 +132,33 @@ def _stand_ins(cut_id: str, *revisions: int) -> dict[str, str]:
     if not path.exists():
         return {}
     mapping = Mapping.load()
+    drawings = Font.open(path)
     found = {}
-    for name in Font.open(path).keys():
+    for name in drawings.keys():
         if name.startswith("_") and name[1:] in mapping.entries and (keys := mapping.get(name[1:]).keys_for(cut_id)):
             found[name] = keys
+    # A join rule drawn by hand stands in for the rule's keys the same way.
+    from . import neighbours
+    from .build import _rule_drawing
+
+    for (piece, previous), rule in neighbours.rules(mapping).items():
+        if rule.keys and _rule_drawing(drawings, mapping, piece, previous) is not None:
+            found[neighbours.rule_glyph(piece, previous)] = rule.keys
+    from .build import _before_drawing
+
+    for (piece, following), rule in neighbours.before_rules(mapping).items():
+        if rule.keys and _before_drawing(drawings, mapping, piece, following) is not None:
+            found[neighbours.before_rule_glyph(piece, following)] = rule.keys
     return found
 
 
 def _typed(name: str, keys_by_glyph: dict[str, str]) -> str:
     if name in keys_by_glyph:
         return keys_by_glyph[name]
+    # A key redrawn for one arch family (E.@arch-g) still reads as the key typed.
+    variant_of, variant, _ = name.partition(".@")
+    if variant and variant_of in keys_by_glyph:
+        return keys_by_glyph[variant_of]
     base, trimmed, sides = name.partition(".trim")
     if trimmed and base in keys_by_glyph:
         return TRIMMED * (sides in ("_start", "_both")) + keys_by_glyph[base] + TRIMMED * (sides in ("", "_both"))
@@ -172,10 +189,11 @@ def _signature(leaves: list[tuple[str, float, float]], path: Path) -> str:
 
     def mark(name: str) -> str:
         # A hand drawing can be redrawn under the same name; dEgi's outlines never change.
-        if not name.startswith(("cmsr.", "_")):
+        # A key redrawn for one arch family (E.@arch-g) is a hand drawing too.
+        if not name.startswith(("cmsr.", "_")) and ".@" not in name:
             return name
         recording = RecordingPen()
-        glyph_set[name].draw(recording)
+        glyph_set[name if name.startswith(("cmsr.", "_")) else f"cms.{name}"].draw(recording)
         return f"{name}#{hashlib.sha1(repr(recording.value).encode()).hexdigest()[:8]}"
 
     x0 = leaves[0][1]

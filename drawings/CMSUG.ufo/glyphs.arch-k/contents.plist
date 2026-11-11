@@ -2,7 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>cms.E</key>
+    <string>cms.E_.glif</string>
+    <key>cms.E.@arch-k</key>
+    <string>cms.E_.@arch-k.glif</string>
+    <key>cms.w.@arch-k</key>
+    <string>cms.w.@arch-k.glif</string>
+    <key>cmsr.D.medi.after.@arch</key>
+    <string>cmsr.D_.medi.after.@arch.glif</string>
+    <key>cmsr.D.medi.after.@arch-k</key>
+    <string>cmsr.D_.medi.after.@arch-k.glif</string>
     <key>cmsr.L.medi.after.@arch</key>
     <string>cmsr.L_.medi.after.@arch.glif</string>
+    <key>cmsr.R.medi.after.@arch-k</key>
+    <string>cmsr.R_.medi.after.@arch-k.glif</string>
+    <key>cmsr.S.medi.after.@arch-k</key>
+    <string>cmsr.S_.medi.after.@arch-k.glif</string>
   </dict>
 </plist>
