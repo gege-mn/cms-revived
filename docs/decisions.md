@@ -57,6 +57,35 @@ changes them. Dates are when each was decided.
   `@arch-bpf` (b, p, f), `@arch-k` (k). It need not be seamless: the arch's closing slope
   and the long strokes (shilbe, medial d) differ optically, and other fonts leave that join
   as it is.
+- The same per-family drawings carry arch + r and arch + s (2026-11-11). Huree's g after b/p/f
+  and after g, and its b after g, are drawn by the owner too.
+- **The first of two arches is small** (2026-11-11). When an arch is followed by another
+  arch, every arch but the last takes its small form: g uses dEgi's `h` (the g inside ng
+  too), b/p/f/k their own drawings (`cmsr.<piece>.before.@arch`). Huree's arches are all
+  small already. Arch + arch spacing is measured as ink start + dEgi's reach (the distance
+  from his key's ink to the next letter). b, p and f drawn by eye share one advance.
+- **Suffix initials have no leading nirugu after the gap** (2026-11-11), in Ulaanbaatar and
+  Urga: -i (`I.isol`), -iyan/-iyar (`I.init`), -yin/-yi (`u1836.I.init`), -du/-dür
+  (`D.init`), -u/-ün. Huree is left as dEgi drew it (owner's call). Final hö/hü drop the
+  trailing nirugu (`GO.fina`).
+- **Arch + ē** (2026-11-11): mid-word, Ulaanbaatar and Huree keep the Alpha 5 glyphs (the
+  owner's preference); Urga uses the owner's w per arch family (`cms.w.@arch-*`; p and f
+  are b's moved down by how much later their stems end). Word-final ē after an arch is the
+  mid-word glyph split in two, overlapping 12 units: the arch half
+  (`cmsr.<arch>.before.W.fina`) and the ē half with dEgi's short tail `A`
+  (`cmsr.W.fina.after.<arch>`).
+- **No gaps between letters** (2026-11-11). Huree's medial b/p/f and their ē glyphs lead in
+  with the owner's nirugu from `_G.medi`; Huree's looped t sits 8 closer. Checked by a
+  scan of the corpora for neighbours whose ink does not touch.
+- **wa after an arch takes ē's shape** (2026-11-11): CMs typed wa and ē with the same `w`, so
+  wa after b/p/f/g/k uses the halves of the arch + ē glyph (`cmsr.<arch>.before.W.medi`,
+  `cmsr.W.medi.after.<arch>`). Word-initial wa and ē keep their own shapes. A p after wa or
+  pē sits where CMs typed it (`pwp`), dEgi's stem filling up to it.
+- **Final t ends with dEgi's mini tail `A`** (2026-11-11), as final ē does. Huree's looped
+  t (medial and final) leads in with a nirugu cut from dEgi's stem key, up to where the loop
+  starts.
+- Never run a stem under an arch, even to close a gap: tried for Urga's ng + p/f and
+  rejected; the owner drew those joins instead.
 - Before regenerating anything the owner edited by hand, back it up and say which edits
   would be replaced. (Urga's pē and fē were once overwritten this way and had to be
   restored.)

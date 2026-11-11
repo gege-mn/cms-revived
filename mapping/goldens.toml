@@ -156,7 +156,8 @@ snapshot = { CMSHR = "ab477b2986bf", CMSUB = "be1050969f67", CMSUG = "23c262d897
 latin = "intēr"
 text = "ᠢᠨᠲ᠋ᠧᠷ"
 keys = "fieDw*"
-status = "ok"
+status = "fixed"
+snapshot = { CMSHR = "9e9841c6fe07", CMSUB = "4a6200ce2040", CMSUG = "934e22922801" }
 
 [[golden]]
 latin = "paisa"
@@ -232,7 +233,7 @@ latin = "hēbēi"
 text = "ᠾᠧᠪᠧᠢ"
 keys = "f~wbwI"
 status = "fixed"
-snapshot = { CMSHR = "0543cc8e70c8", CMSUB = "2327382401ba", CMSUG = "ee85c3e490bf" }
+snapshot = { CMSHR = "c28f789a3901", CMSUB = "d57afff7c8c7", CMSUG = "75e042b3dec9" }
 
 [[golden]]
 latin = "bülqüm"
@@ -372,7 +373,8 @@ status = "ok"
 latin = "mētr"
 text = "ᠮᠧᠲᠷ"
 keys = "MwD*"
-status = "ok"
+status = "fixed"
+snapshot = { CMSHR = "918db7ee8b74", CMSUB = "ad7ba23e1afe", CMSUG = "cff0614892c9" }
 
 [[golden]]
 latin = "sonin"
@@ -398,7 +400,7 @@ text = "ᠨᠣᠪᠰᠢ"
 keys = "NobsI"
 status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
-snapshot = { CMSHR = "c7adaf7ff2d7", CMSUB = "e0694375df41", CMSUG = "49747b60129d" }
+snapshot = { CMSHR = "7cbab3f16621", CMSUB = "e0694375df41", CMSUG = "49747b60129d" }
 
 [[golden]]
 latin = "aziy-a"
@@ -428,10 +430,10 @@ status = "ok"
 [[golden]]
 latin = "front"
 text = "ᠹᠷᠣᠨᠲ"
-keys = "qroeD"
+keys = "qroeDA"
 status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
-snapshot = { CMSHR = "2c73b805b8d7", CMSUB = "d025a4aea30d", CMSUG = "2dff58f9ebd9" }
+snapshot = { CMSHR = "9e6ecfcc121a", CMSUB = "9b5ab5a8ef80", CMSUG = "24625593b3d3" }
 
 [[golden]]
 latin = "enērγi"
@@ -443,7 +445,8 @@ status = "ok"
 latin = "sistēm"
 text = "ᠰᠢᠰᠲᠧᠮ"
 keys = "SisDw^"
-status = "ok"
+status = "fixed"
+snapshot = { CMSHR = "4f5c73a1f594", CMSUB = "7bb8f84e1098", CMSUG = "e58e6a937c05" }
 
 [[golden]]
 latin = "engneγe"
@@ -462,8 +465,9 @@ status = "ok"
 latin = "pwptid"
 text = "ᠫᠸᠫᠲ᠋ᠢᠳ᠋"
 keys = "pwpDidA"
-status = "pending"
+status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
+snapshot = { CMSHR = "99603b214657", CMSUB = "4c1e817f81de", CMSUG = "e172a0dd629b" }
 
 [[golden]]
 latin = "liyouhē"
@@ -493,7 +497,8 @@ status = "ok"
 latin = "witamin"
 text = "ᠸᠢᠲ᠋ᠠᠮᠢᠨ"
 keys = "WiDemia"
-status = "ok"
+status = "fixed"
+snapshot = { CMSHR = "9a69f2f6c9b4", CMSUB = "11602c63ebde", CMSUG = "09f919452387" }
 
 [[golden]]
 latin = "tingqim-ün"
@@ -645,3 +650,11 @@ keys = "Feek(T"
 status = "fixed"
 note = "from production: the q after ng had no tail (AGH.fina was ekE)"
 snapshot = { CMSHR = "6cefc5e0a3fe", CMSUB = "965e75bb7e88", CMSUG = "6fc1f80610d9" }
+
+[[golden]]
+latin = "argentin"
+text = "ᠠᠷᠭᠧᠨ᠋ᠲ᠋ᠢᠨ"
+keys = "ferkwnDia"
+status = "fixed"
+note = "added at the owner's request (2026-11-11): Huree's looped t now leads in with a nirugu; keys proposed from the build, to confirm"
+snapshot = { CMSHR = "c0a357934be7", CMSUB = "907dfb0a2c2f", CMSUG = "fd9d5878dd7a" }

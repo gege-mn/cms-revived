@@ -52,8 +52,38 @@
     <string>cmsr.G_.medi.after.@arch-g.glif</string>
     <key>cmsr.G.medi.before.@arch</key>
     <string>cmsr.G_.medi.before.@arch.glif</string>
+    <key>cmsr.G.medi.before.F.medi</key>
+    <string>cmsr.G_.medi.before.F_.medi.glif</string>
+    <key>cmsr.G.medi.before.P.medi</key>
+    <string>cmsr.G_.medi.before.P_.medi.glif</string>
     <key>cmsr.K.medi.before.@arch</key>
     <string>cmsr.K_.medi.before.@arch.glif</string>
+    <key>cmsr.P.medi.after.BW.init</key>
+    <string>cmsr.P_.medi.after.B_W_.init.glif</string>
+    <key>cmsr.P.medi.after.BW.medi</key>
+    <string>cmsr.P_.medi.after.B_W_.medi.glif</string>
+    <key>cmsr.P.medi.after.FW.init</key>
+    <string>cmsr.P_.medi.after.F_W_.init.glif</string>
+    <key>cmsr.P.medi.after.FW.medi</key>
+    <string>cmsr.P_.medi.after.F_W_.medi.glif</string>
+    <key>cmsr.P.medi.after.GW.init</key>
+    <string>cmsr.P_.medi.after.G_W_.init.glif</string>
+    <key>cmsr.P.medi.after.GW.medi</key>
+    <string>cmsr.P_.medi.after.G_W_.medi.glif</string>
+    <key>cmsr.P.medi.after.GxW.init</key>
+    <string>cmsr.P_.medi.after.G_xW_.init.glif</string>
+    <key>cmsr.P.medi.after.GxW.medi</key>
+    <string>cmsr.P_.medi.after.G_xW_.medi.glif</string>
+    <key>cmsr.P.medi.after.KW.init</key>
+    <string>cmsr.P_.medi.after.K_W_.init.glif</string>
+    <key>cmsr.P.medi.after.KW.medi</key>
+    <string>cmsr.P_.medi.after.K_W_.medi.glif</string>
+    <key>cmsr.P.medi.after.PW.init</key>
+    <string>cmsr.P_.medi.after.P_W_.init.glif</string>
+    <key>cmsr.P.medi.after.PW.medi</key>
+    <string>cmsr.P_.medi.after.P_W_.medi.glif</string>
+    <key>cmsr.P.medi.after.W.medi</key>
+    <string>cmsr.P_.medi.after.W_.medi.glif</string>
     <key>cmsr.P.medi.before.@arch</key>
     <string>cmsr.P_.medi.before.@arch.glif</string>
     <key>cmsr.R.medi.after.@arch-bpf</key>
@@ -82,5 +112,29 @@
     <string>cmsr.W_.fina.after.P_.init.glif</string>
     <key>cmsr.W.fina.after.P.medi</key>
     <string>cmsr.W_.fina.after.P_.medi.glif</string>
+    <key>cmsr.W.medi.after.B.init</key>
+    <string>cmsr.W_.medi.after.B_.init.glif</string>
+    <key>cmsr.W.medi.after.B.medi</key>
+    <string>cmsr.W_.medi.after.B_.medi.glif</string>
+    <key>cmsr.W.medi.after.F.init</key>
+    <string>cmsr.W_.medi.after.F_.init.glif</string>
+    <key>cmsr.W.medi.after.F.medi</key>
+    <string>cmsr.W_.medi.after.F_.medi.glif</string>
+    <key>cmsr.W.medi.after.G.init</key>
+    <string>cmsr.W_.medi.after.G_.init.glif</string>
+    <key>cmsr.W.medi.after.G.medi</key>
+    <string>cmsr.W_.medi.after.G_.medi.glif</string>
+    <key>cmsr.W.medi.after.Gx.init</key>
+    <string>cmsr.W_.medi.after.G_x.init.glif</string>
+    <key>cmsr.W.medi.after.Gx.medi</key>
+    <string>cmsr.W_.medi.after.G_x.medi.glif</string>
+    <key>cmsr.W.medi.after.K.init</key>
+    <string>cmsr.W_.medi.after.K_.init.glif</string>
+    <key>cmsr.W.medi.after.K.medi</key>
+    <string>cmsr.W_.medi.after.K_.medi.glif</string>
+    <key>cmsr.W.medi.after.P.init</key>
+    <string>cmsr.W_.medi.after.P_.init.glif</string>
+    <key>cmsr.W.medi.after.P.medi</key>
+    <string>cmsr.W_.medi.after.P_.medi.glif</string>
   </dict>
 </plist>

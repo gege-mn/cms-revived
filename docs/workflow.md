@@ -13,6 +13,10 @@
 
 `uv run cmsr editor --open` serves http://localhost:8787 (`--port` to change it).
 
+Restart it after any change to `cmsr/` (the mapping model, the build): a server started on
+older code writes the mapping back without what it does not know. On 2026-11-11 a save
+from a stale server dropped every `before` rule.
+
 - `/`: every piece, its keys per cut, live shaping. Edits are written back to
   `mapping/pieces.toml`; it rewrites the file and keeps only its own header comment.
 - `/goldens`: words and the CMs keys that typed them. Confirm when the build draws the

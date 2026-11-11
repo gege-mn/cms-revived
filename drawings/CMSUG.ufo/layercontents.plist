@@ -62,5 +62,9 @@
       <string>w-old</string>
       <string>glyphs.w-old</string>
     </array>
+    <array>
+      <string>next-letter</string>
+      <string>glyphs.next-letter</string>
+    </array>
   </array>
 </plist>

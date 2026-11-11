@@ -19,8 +19,8 @@ waits for:
 
 Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.md) collected.
 
-- [ ] Fix the five known-failure goldens (see [docs/state.md](docs/state.md)): nobsi and front
-      need the owner's rule glyphs (`cmsr.S.medi.after.@arch`, `cmsr.R.medi.after.@arch`).
+- [x] The five known-failure goldens: nobsi, front, jišiγsen and üjeγdel settled; pwptid waits
+      for the owner on /goldens.
 - [ ] A licence for the tooling code (`cmsr/`, `editor/`), or a decision to leave it unlicensed.
 - [ ] A home for the news corpora, so the goldens tools work on another machine.
 
@@ -29,10 +29,11 @@ Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.m
 - [ ] Draw the left-out letters. A freehand birga was tried and rejected; it needs a better source.
 - [ ] Smooth Urga's arch + ē join (`cms.w.@arch-*` in `drawings/CMSUG.ufo`): accepted for 1.0 as it is,
       the owner finds it "slapped on" and may retry another day (2026-11-11).
-- [ ] Remake the arch + ē family (`BW`, `PW`, `FW`, `KW`, `GW`, `GxW`, initial and medial) in every
-      cut. The current drawings are stand-ins: dEgi's b and w overlapped, the others carrying bē's
-      tail on their own arch. Huree's gē and hē need their own shape for its smaller arch;
-      k2ē waits for k2. The `w` and `bu` layers in `drawings/<cut>.ufo` are references for it.
+- [ ] Ulaanbaatar's mid-word pē, fē, gē and kē are still the Alpha 5 stand-ins (bē's tail on each
+      arch); the owner prefers them for now. Huree's were rebuilt from the owner's halves; Urga's
+      come from the owner's w. k2ē waits for k2.
+- [ ] Huree p + t and ng + t, Urga pē + p: small gaps left (see docs/feedback.md).
+- [ ] angg-a like angq-a: needs `drop` on rules.
 - [ ] Smooth the arch + r joins (`cmsr.R.medi.after.@arch-*`) in every cut. The owner's drawings
       fix the extra spine; the curves could be smoother, which needs a type designer's hand.
       Most readers won't notice (2026-11-11).

@@ -378,8 +378,10 @@ def _compose_keys(
             glyph.components.append(Component(clipped, Transform(dx=x)))
             x += legacy.advance(name)
             continue
-        glyph.components.append(Component(variant(keys, index, name) if variant else legacy_glyph_name(name), Transform(dx=x)))
-        x += legacy.advance(name)
+        chosen = variant(keys, index, name) if variant else legacy_glyph_name(name)
+        glyph.components.append(Component(chosen, Transform(dx=x)))
+        # A redrawn key keeps the advance it was drawn with (Urga's w for an arch family).
+        x += ufo[chosen].width if chosen != legacy_glyph_name(name) else legacy.advance(name)
     for mark in marks:
         base = _mark_glyph(ufo, legacy, mark)
         dx = mark.dx
