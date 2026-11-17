@@ -57,6 +57,11 @@ dl_legacy_desc = "CMs Revived opens old CMs files as they were. Type on dEgi's k
 dl_legacy_note = "For new text, use the Unicode fonts: text typed the old way still can't be searched."
 dl_zip = "Download all (ZIP)"
 dl_install = "To install, open a font file and choose Install."
+web_title = "On a website"
+web_desc = "Add this line to your page&#39;s <code>&lt;head&gt;</code>, then use a font by its name. Any website can use it."
+web_copy = "Copy"
+web_copied = "Copied"
+og_image_alt = "The words mongγol bičig set vertically in the three cuts of Gege CMs Revived"
 
 faith_title = "Looking for dEgi"
 faith_p1 = "dEgi drew this typeface. We have tried to reach him for his permission and have not yet succeeded."

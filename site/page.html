@@ -8,12 +8,17 @@
 <link rel="canonical" href="{{canonical}}">
 {{alternates}}
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Gege CMs Revived">
 <meta property="og:title" content="{{title}}">
 <meta property="og:description" content="{{description}}">
 <meta property="og:url" content="{{canonical}}">
 <meta property="og:image" content="{{site}}/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{og_image_alt}}">
+<meta property="bg:title" content="{{bg_title}}">
+<meta property="bg:description" content="{{bg_description}}">
+<meta property="bg:image" content="{{site}}/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -195,6 +200,14 @@ textarea.pad {
 .files a:hover span:first-child { color: var(--cobalt); text-decoration: underline; }
 .install { color: var(--grey); font-size: 15px; margin-top: 40px; }
 @media (max-width: 900px) { .packs { grid-template-columns: minmax(0, 1fr); } }
+.web { margin-top: 72px; padding-top: 40px; border-top: 1.5px solid var(--black); }
+.web h3 { font-size: 28px; letter-spacing: -.02em; }
+.web > p { margin: 10px 0 24px; max-width: 34em; }
+.snippet { display: flex; align-items: stretch; margin-top: 12px; background: var(--key); border: 1px solid var(--key-edge); border-radius: 12px; overflow: hidden; }
+.snippet pre { flex: 1; min-width: 0; margin: 0; padding: 16px 18px; overflow-x: auto; font: 400 15px/1.5 ui-monospace, "SF Mono", Menlo, monospace; }
+.copy { flex: none; border: 0; border-left: 1px solid var(--key-edge); background: var(--white); color: var(--cobalt); font: 500 15px var(--sans); padding: 0 20px; cursor: pointer; }
+.copy:hover { background: var(--cobalt); color: var(--white); }
+.copy:focus-visible { outline: 3px solid var(--cobalt); outline-offset: -3px; }
 
 /* good faith */
 .faith { background: var(--cobalt); color: var(--white); }
@@ -316,6 +329,12 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 6px 28px; }
       </div>
     </div>
     <p class="install">{{dl_install}}</p>
+    <div class="web">
+      <h3>{{web_title}}</h3>
+      <p>{{web_desc}}</p>
+      <div class="snippet"><pre><code>{{web_link}}</code></pre><button type="button" class="copy" data-done="{{web_copied}}">{{web_copy}}</button></div>
+      <div class="snippet"><pre><code>{{web_family}}</code></pre><button type="button" class="copy" data-done="{{web_copied}}">{{web_copy}}</button></div>
+    </div>
   </div>
 </section>
 
@@ -427,6 +446,14 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 6px 28px; }
     }
   })();
 })();
+document.querySelectorAll(".copy").forEach((b) => {
+  const label = b.textContent;
+  b.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(b.previousElementSibling.textContent); } catch { return; }
+    b.textContent = b.dataset.done;
+    setTimeout(() => { b.textContent = label; }, 1600);
+  });
+});
 </script>
 </body>
 </html>

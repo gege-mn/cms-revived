@@ -62,6 +62,31 @@ def specimen() -> tuple[str, str, str]:
     return title, first, lines[3].split("\u1803")[0] + "\u1803"
 
 
+def ranges(codepoints: set[int]) -> str:
+    spans: list[list[int]] = []
+    for c in sorted(codepoints):
+        if spans and c == spans[-1][1] + 1:
+            spans[-1][1] = c
+        else:
+            spans.append([c, c])
+    return ", ".join(f"U+{a:X}" if a == b else f"U+{a:X}-{b:X}" for a, b in spans)
+
+
+def web_css(fonts: list[tuple[str, str, Path]]) -> str:
+    """The stylesheet other sites link: one face per cut, served from /fonts/ by version."""
+    faces = [
+        f'@font-face {{\n  font-family: "{family}";\n  font-style: normal;\n  font-weight: 400;\n  font-display: swap;\n'
+        f'  src: url("{SITE}/fonts/{name}") format("woff2"), url("{SITE}/fonts/{Path(name).stem}.ttf") format("truetype");\n'
+        # The fonts' own characters only, so Latin and Cyrillic in a mixed run come from the next font.
+        f"  unicode-range: {ranges(set(TTFont(ttf).getBestCmap()))};\n}}"
+        for family, name, ttf in fonts
+    ]
+    return (
+        f"/* Gege CMs Revived {RELEASE}: dEgi's 1998 CMs fonts, Unicode rework by L'Atelier Gege.\n"
+        f"   Free of charge for personal use. Not to be sold. {SITE} */\n" + "\n".join(faces) + "\n"
+    )
+
+
 def woff2(src: Path, dst: Path) -> None:
     font = TTFont(src)
     font.flavor = "woff2"
@@ -146,6 +171,11 @@ def page(lang: str, copy: dict, all_copy: dict[str, dict], gold: dict[str, dict]
     t["site"] = SITE
     t["canonical"] = SITE + copy["path"]
     t["contact"] = CONTACT
+    bg_title, bg_description = (HERE / "bg.txt").read_text().splitlines()[:2]
+    t["bg_title"] = html.escape(bg_title)
+    t["bg_description"] = html.escape(bg_description)
+    t["web_link"] = html.escape(f'<link rel="stylesheet" href="{SITE}/css/cms-revived.css">')
+    t["web_family"] = html.escape(f'font-family: "{next(iter(CUTS.values())).family}", "Noto Sans Mongolian", sans-serif;')
     t["alternates"] = "\n".join(
         f'<link rel="alternate" hreflang="{c["lang"]}" href="{SITE}{c["path"]}">' for c in all_copy.values()
     ) + f'\n<link rel="alternate" hreflang="x-default" href="{SITE}/">'
@@ -232,6 +262,7 @@ def main() -> None:
     for cut, f in zip(CUTS.values(), main_fonts):
         name = f"{cut.postscript_name}-{RELEASE}.woff2"
         woff2(f, OUT / "fonts" / name)
+        shutil.copy2(f, OUT / "fonts" / f"{Path(name).stem}.ttf")
         faces.append((cut.family, name))
         woff2_main.append(name)
     for cut in CUTS.values():
@@ -242,6 +273,10 @@ def main() -> None:
     shutil.copy2(NOTO / "noto-sans-mongolian.woff2", OUT / "fonts" / noto)
     shutil.copy2(NOTO / "OFL.txt", OUT / "fonts" / "noto-sans-mongolian-OFL.txt")
     faces.append(("Noto Sans Mongolian", noto))
+    (OUT / "css").mkdir(exist_ok=True)
+    (OUT / "css" / "cms-revived.css").write_text(
+        web_css([(cut.family, name, f) for cut, name, f in zip(CUTS.values(), woff2_main, main_fonts)])
+    )
 
     files = {
         "faces": faces,
@@ -313,6 +348,8 @@ def main() -> None:
     (OUT / "_headers").write_text(
         "/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n  Access-Control-Allow-Origin: *\n"
         "/download/*\n  Cache-Control: public, max-age=3600\n"
+        # Not immutable: the address stays the same from release to release, the fonts it names do not.
+        "/css/*\n  Cache-Control: public, max-age=3600\n  Access-Control-Allow-Origin: *\n"
     )
     print(f"wrote {OUT.relative_to(ROOT)}/")
 

@@ -57,6 +57,11 @@ dl_legacy_desc = "CMs Revived ouvre les anciens fichiers CMs tels quels. On tape
 dl_legacy_note = "Pour un nouveau texte, préférez les polices Unicode : un texte tapé à l'ancienne reste introuvable."
 dl_zip = "Tout télécharger (ZIP)"
 dl_install = "Pour installer, ouvrez le fichier de police et choisissez « Installer »."
+web_title = "Sur un site web"
+web_desc = "Ajoutez cette ligne dans le <code>&lt;head&gt;</code> de votre page, puis utilisez une police par son nom. Tout site peut l’utiliser."
+web_copy = "Copier"
+web_copied = "Copié"
+og_image_alt = "Les mots mongγol bičig en écriture verticale, dans les trois styles de Gege CMs Revived"
 
 faith_title = "À la recherche de dEgi"
 faith_p1 = "dEgi a dessiné ce caractère. Nous avons cherché à le joindre pour lui demander son autorisation, sans succès pour l'instant."
