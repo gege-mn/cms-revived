@@ -23,21 +23,23 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
 from cmsr.companion import typed_keys  # noqa: E402
-from cmsr.config import CONTACT, CUTS  # noqa: E402
+from cmsr.config import CONTACT, COPYRIGHT, CUTS, LICENSE, VERSION  # noqa: E402
 from joins import Join  # noqa: E402
 
 SITE = "https://cms-revived.gege.mn"
 OUT = HERE / "public"
-RELEASE = "1.0.1"
+RELEASE = f"{VERSION[0]}.{VERSION[1] // 100}.{VERSION[1] % 100}"
 MAIN_DIR = ROOT / "releases" / RELEASE
 LEGACY_DIR = ROOT / "releases" / f"legacy-{RELEASE}"
 NOTO = Path.home() / "Projects/gege.mn/static/fonts"
 NOTO_VERSION = "3.103"
 LANGS = ("mn", "en", "fr")
 
-# From releases/1.0.1/NOTES.md and docs/state.md.
-CASES = (3548, 3553)
-GOLDENS = 103
+# Every cut passes the same shaping cases; the release notes record them.
+CASES = tuple(
+    int(n) for n in re.search(r"shaping: (\d+)/(\d+)", (MAIN_DIR / "NOTES.md").read_text()).groups()
+)
+GOLDENS = len(tomllib.loads((ROOT / "mapping/goldens.toml").read_text())["golden"])
 
 HERO_WORDS = ("mongγol", "bičig")
 # Joins CMs drew differently, each as typed in 1998 and as the rework draws it. `at` places the
@@ -77,13 +79,13 @@ def web_css(fonts: list[tuple[str, str, Path]]) -> str:
     faces = [
         f'@font-face {{\n  font-family: "{family}";\n  font-style: normal;\n  font-weight: 400;\n  font-display: swap;\n'
         f'  src: url("{SITE}/fonts/{name}") format("woff2"), url("{SITE}/fonts/{Path(name).stem}.ttf") format("truetype");\n'
-        # The fonts' own characters only, so Latin and Cyrillic in a mixed run come from the next font.
+        # The fonts' own characters: Latin letters and Cyrillic come from the next font, while
+        # space and the few punctuation marks CMs draws (! ( ) ? and the angle brackets) come from CMs.
         f"  unicode-range: {ranges(set(TTFont(ttf).getBestCmap()))};\n}}"
         for family, name, ttf in fonts
     ]
     return (
-        f"/* Gege CMs Revived {RELEASE}: dEgi's 1998 CMs fonts, Unicode rework by L'Atelier Gege.\n"
-        f"   Free of charge for personal use. Not to be sold. {SITE} */\n" + "\n".join(faces) + "\n"
+        f"/* Gege CMs Revived {RELEASE}. {COPYRIGHT}\n   {LICENSE}\n   {SITE} */\n" + "\n".join(faces) + "\n"
     )
 
 

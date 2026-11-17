@@ -308,6 +308,10 @@ class Handler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self) -> None:
+        # Any page open in the browser can POST here; only the editor's own pages may write.
+        origin = self.headers.get("Origin")
+        if origin is not None and urlparse(origin).netloc != self.headers.get("Host"):
+            return self.send_error(403)
         path = urlparse(self.path).path
         length = int(self.headers.get("Content-Length", 0))
         body = json.loads(self.rfile.read(length) or b"{}")

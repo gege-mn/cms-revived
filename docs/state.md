@@ -3,6 +3,8 @@
 As of **1.0.1** (2026-11-17): tag `v1.0.1`, files also in `releases/1.0.1/`. 1.0.0
 (2026-11-11) was the first public release. What changed in each is in
 [CHANGELOG.md](../CHANGELOG.md); note anything seen in use in [feedback.md](feedback.md).
+The homepage, https://cms-revived.gege.mn (`site/`), offers the downloads and the web fonts
+other sites link (`/css/cms-revived.css`).
 
 ## The fonts
 

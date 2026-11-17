@@ -303,13 +303,16 @@
       state.data = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then((response) => response.json());
     }
 
+    let sending = false;
     async function verdict(kind) {
+      if (sending) return;
+      sending = true;
       const index = one.at;
       const body = { index, keys: $("#one-keys").value, verdict: kind };
       if (kind === "wrong") body.flag = $("#flag-text").value;
       setFlagging(false);
       $("#one-keys").blur();
-      await post("/api/golden", body);
+      try { await post("/api/golden", body); } finally { sending = false; }
       const next = nextUnreviewed(index);
       if (next < 0) one.done = true; else one.at = next;
       renderOne();

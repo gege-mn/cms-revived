@@ -88,6 +88,10 @@ ligatures off they still draw exactly like dEgi's 1998 files.
   - The three cuts set vertically.
   - A typing pad that types in every cut at once, with the Standard keyboard by default.
   - A before-and-after of the joins against dEgi's 1998 fonts.
+  - Web fonts any site can link: `https://cms-revived.gege.mn/css/cms-revived.css` loads the
+    three cuts (woff2, with TTF for older browsers) from `/fonts/`, by version.
+  - `bg:title`, `bg:description` and `bg:image` tags, so devter (gege-pub) shows the page's card in
+    bichig. The bichig is in `site/bg.txt`.
 
 ## legacy 1.0.0 (2026-11-12)
 

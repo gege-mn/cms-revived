@@ -78,6 +78,9 @@ The homepage, https://cms-revived.gege.mn, is built from the released fonts in `
 the copy in `site/copy/{mn,en,fr}.toml`, then deployed as static assets to Cloudflare. Its type
 tester types through [typepad](https://github.com/gege-mn/typepad), bundled from `site/typer.js`;
 the before/after joins are drawn from the companion with its features off and on (`site/joins.py`). The hero's words are set in `site/hero.toml`.
+It also serves the web fonts other sites link, `/css/cms-revived.css` (woff2 and TTF under
+`/fonts/`, open to any origin), and says its card in bichig for devter through `bg:` tags whose
+text is `site/bg.txt`.
 
 ```sh
 cd site
