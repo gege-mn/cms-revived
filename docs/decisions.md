@@ -52,7 +52,7 @@ changes them. Dates are when each was decided.
   (`Rh.*`), `Zr.init`, final s with FVS1 (`Sz.fina`) and the birga (U+1800). The build cuts
   them, and everything drawn from them, out of the compiled font. Text with them falls back
   to the plain form (s + FVS1 shows the plain final s) or to another font (k2, zhi, birga
-  are not in the cmap).
+  are not in the cmap, and neither is zra: `Zr.init` was its only Hudum form).
 
 ## Glyph shapes
 
