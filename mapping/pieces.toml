@@ -338,4 +338,4 @@ arch-f = ["F.init", "F.medi"]
 [forms]
 "u1835.I.init" = { keys = "J", status = "ok", note = "j only: J, the consonant's own stroke; the shared I.init is i" }
 "u1836.I.init" = { keys = "i", trims = { CMSUB = "start" }, status = "ok", note = "y only, the suffix -yi after its gap (yoso-yi = YosO iI): i uncut, keeping its leading nirugu; I.init cuts it in Ulaanbaatar for word-initial i | Urga: the owner's _I.init copied as _u1836.I.init, so -yin and -yi start at the tooth like -iyan (owner asked, 2026-11-11) | Ulaanbaatar: cut at the start like I.init, so -yin and -yi lose the leading nirugu as -iyar does (owner asked, 2026-11-11)" }
-"II.medi" = { keys = "ii", status = "ok", note = "two i keys, not U: the user chose ii (Huree draws U differently)" }
+"II.medi" = { keys = "ii", status = "ok", note = "two i keys, not U: ii chosen (Huree draws U differently)" }

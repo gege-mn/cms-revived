@@ -82,8 +82,7 @@ changes them. Dates are when each was decided.
   Urga: -i (`I.isol`), -iyan/-iyar (`I.init`), -yin/-yi (`u1836.I.init`), -du/-dür
   (`D.init`), -u/-ün. Huree is left as dEgi drew it (owner's call). Final hö/hü drop the
   trailing nirugu (`GO.fina`).
-- **Arch + ē** (2026-11-11): mid-word, Ulaanbaatar and Huree keep the Alpha 5 glyphs (the
-  owner's preference); Urga uses the owner's w per arch family (`cms.w.@arch-*`; p and f
+- **Arch + ē** (2026-11-11): mid-word, Ulaanbaatar and Huree keep the Alpha 5 glyphs; Urga uses the owner's w per arch family (`cms.w.@arch-*`; p and f
   are b's moved down by how much later their stems end). Word-final ē after an arch is the
   mid-word glyph split in two, overlapping 12 units: the arch half
   (`cmsr.<arch>.before.W.fina`) and the ē half with dEgi's short tail `A`

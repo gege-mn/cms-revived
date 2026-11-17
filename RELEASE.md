@@ -30,10 +30,10 @@ Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.m
 ## After a release
 
 - [ ] Draw the left-out letters. A freehand birga was tried and rejected; it needs a better source.
-- [ ] Smooth Urga's arch + ē join (`cms.w.@arch-*` in `drawings/CMSUG.ufo`): accepted for 1.0 as it is,
-      the owner finds it "slapped on" and may retry another day (2026-11-11).
+- [ ] Smooth Urga's arch + ē join (`cms.w.@arch-*` in `drawings/CMSUG.ufo`): accepted for 1.0 as it is;
+      it could sit more naturally (2026-11-11).
 - [ ] Ulaanbaatar's mid-word pē, fē, gē and kē are still the Alpha 5 stand-ins (bē's tail on each
-      arch); the owner prefers them for now. Huree's were rebuilt from the owner's halves; Urga's
+      arch), kept for now. Huree's were rebuilt from the owner's halves; Urga's
       come from the owner's w. k2ē waits for k2.
 - [ ] Huree p + t and ng + t: small gaps left (see docs/feedback.md).
 - [ ] angg-a like angq-a: needs `drop` on rules.

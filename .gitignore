@@ -20,3 +20,6 @@ site/public/
 site/node_modules/
 site/bun.lock
 site/__pycache__/
+
+# personal working notes for Claude
+CLAUDE.local.md
