@@ -1,0 +1,16 @@
+# The words the hero types: key by key in dEgi's 1998 font (the companion with its joins off),
+# then as the rework draws them. The 1998 keys are worked out from the word, the way CMs typists
+# typed it (cmsr.companion.typed_keys); give `keys` to set them by hand. Cuts: CMSUB
+# (Ulaanbaatar), CMSUG (Urga), CMSHR (Huree). The hero plays them in this order, round and round.
+
+[[word]]
+text = "ᠮᠣᠩᠭᠣᠯ"
+cut = "CMSUG"
+
+[[word]]
+text = "ᠠᠪᠳᠠᠷ\u180Eᠠ"
+cut = "CMSHR"
+
+[[word]]
+text = "ᠲᠩᠷᠢ"
+cut = "CMSUB"

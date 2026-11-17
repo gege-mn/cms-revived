@@ -57,16 +57,84 @@
     @media (max-width: 900px) {
       .golden { grid-template-columns: 1fr; }
     }
+    header .mode, header .restart { padding: 4px 12px; border: 1px solid var(--accent); border-radius: 6px; background: none; color: var(--accent); cursor: pointer; font-size: 13px; }
+    header .restart { border-color: var(--line); color: var(--muted); }
+    header .progress { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
+    header .progress b { color: var(--ink); }
+    body.one header .hint, body.one header .toggle, body:not(.one) header .restart, body:not(.one) header .progress { display: none; }
+    body.one { height: 100svh; overflow: hidden; display: flex; flex-direction: column; }
+    body.one main#goldens, body:not(.one) #one { display: none; }
+    #meter { height: 3px; background: var(--line); }
+    #meter span { display: block; height: 100%; background: var(--ok); transition: width .2s; }
+    #one { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    #one .bar { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; padding: 10px 20px; background: var(--panel); border-bottom: 1px solid var(--line); }
+    #one .bar .pos { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 13px; }
+    #one .bar .latin { font-size: 22px; font-weight: 650; }
+    #one .bar .said { font-size: 15px; }
+    #one .bar .said.same { color: var(--ok); }
+    #one .bar .said.differs { color: var(--accent); }
+    #one .bar .said code { font-size: 15px; }
+    #one .bar .seen { font-size: 12px; color: var(--muted); }
+    #one .bar .flagged { font-size: 13px; color: var(--bad); font-weight: 600; }
+    /* White and black whatever the theme: hairline gaps show best at full contrast. */
+    #stage { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #fff; color: #000; }
+    #stage .col { min-width: 0; display: flex; flex-direction: column; align-items: center; padding: 12px 8px 8px; border-left: 1px solid #e3e0d9; overflow: visible; }
+    #stage .col:first-child { border-left: 0; }
+    #stage .col .label { font-size: 13px; font-weight: 600; color: #4a4741; margin-bottom: 2px; }
+    #stage .col .sub { font-size: 12px; margin-bottom: 8px; color: #3f8f4f; }
+    #stage .col.differs .sub { color: #b4441c; }
+    #stage .col .sub code { font-size: 13px; }
+    #stage.old { background: #fff8e6; }
+    #stage .done { grid-column: 1 / -1; align-self: center; justify-self: center; text-align: center; display: flex; flex-direction: column; gap: 14px; align-items: center; font-size: 16px; color: #1d1c1a; }
+    #stage .done button { padding: 6px 14px; border: 1px solid #e3e0d9; border-radius: 6px; background: #fff; cursor: pointer; font-size: 14px; }
+    /* CMs ink fills about a third of the em across the stem: a tight line box lets the height,
+       not empty line space, set the size. */
+    #stage .word { writing-mode: vertical-lr; white-space: pre; line-height: 0.6; }
+    #one .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 20px; background: var(--panel); border-top: 1px solid var(--line); }
+    #one .actions button { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line); background: none; color: inherit; cursor: pointer; font-size: 15px; }
+    #one .actions button kbd { font: 12px ui-monospace, monospace; opacity: .7; margin-left: 6px; }
+    #one .actions #right { background: var(--ok); border-color: var(--ok); color: #fff; font-weight: 600; }
+    #one .actions #wrong { border-color: var(--bad); color: var(--bad); }
+    #one .actions .keys { display: flex; align-items: center; gap: 6px; margin-left: auto; font-size: 12px; color: var(--muted); }
+    #one .actions .keys input { width: 12em; font: 16px ui-monospace, monospace; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: inherit; }
+    #one .actions .help { flex-basis: 100%; font-size: 12px; color: var(--muted); }
+    #one .actions .flag { display: none; flex: 1 1 360px; gap: 8px; }
+    #one .actions.flagging .flag { display: flex; }
+    #one .actions.flagging > .act { display: none; }
+    #one .actions .flag input { flex: 1; font: 15px system-ui; padding: 6px 10px; border: 1px solid var(--bad); border-radius: 6px; background: var(--bg); color: inherit; }
   </style>
 </head>
 <body>
   <header>
     <strong>Goldens</strong>
-    <span class="hint">Every cut is shown: Confirm and Differs on purpose accept all three at once. Type the keys you would use in CMs and press ↵ to confirm. Confirmed goldens that match in every cut are hidden.</span>
-    <label class="toggle"><input id="show-done" type="checkbox"> show <span id="done-count">0</span> confirmed</label>
+    <span class="progress" id="progress"></span>
+    <span class="hint">Type the keys you would use in CMs; Looks right accepts the word in all three cuts. Accepted goldens that still draw the same are hidden.</span>
+    <label class="toggle"><input id="show-done" type="checkbox"> show <span id="done-count">0</span> accepted</label>
+    <span style="flex:1"></span>
+    <button class="restart" id="restart" type="button">Start a new pass</button>
+    <button class="mode" id="mode" type="button">List</button>
     <a href="/">editor</a> <a href="/specimen">specimen</a>
   </header>
   <main id="goldens"></main>
+  <section id="one">
+    <div id="meter"><span></span></div>
+    <div class="bar">
+      <span class="pos" id="one-pos"></span>
+      <span class="latin" id="one-latin"></span>
+      <span class="said" id="one-said"></span>
+      <span class="flagged" id="one-flag"></span>
+      <span class="seen" id="one-seen"></span>
+    </div>
+    <div id="stage"></div>
+    <div class="actions" id="actions">
+      <button class="act" id="right" type="button">Looks right<kbd>↵</kbd></button>
+      <button class="act" id="wrong" type="button">Something's wrong<kbd>W</kbd></button>
+      <button class="act" id="skip" type="button">Skip<kbd>→</kbd></button>
+      <div class="flag"><input id="flag-text" placeholder="What's wrong? (optional) ↵ to save, Esc to cancel" autocomplete="off"><button id="flag-save" type="button">Flag it</button></div>
+      <label class="keys act">CMs keys <input id="one-keys" spellcheck="false" autocomplete="off"></label>
+      <span class="help">Hold <b>Space</b> to see what CMs drew in 1998 with these keys, in the same place. <b>←</b> goes back. ✎ marks pieces drawn by hand.</span>
+    </div>
+  </section>
   <script>
     "use strict";
     const $ = (selector) => document.querySelector(selector);
@@ -98,18 +166,175 @@
     }
 
     const allPassed = (golden) => Object.values(golden.results).every((result) => result.passed);
+    const goldens = () => state.data.goldens;
+
+    // Review: every golden in file order, one at a time. A verdict stamps it reviewed and moves to
+    // the next one not yet reviewed in this pass.
+    const one = { on: true, at: 0, old: false, done: false };
+
+    const nextUnreviewed = (from) => {
+      const list = goldens();
+      for (let step = 1; step <= list.length; step++) {
+        const index = (from + step) % list.length;
+        if (!list[index].reviewed) return index;
+      }
+      return -1;
+    };
+
+    function progress() {
+      const list = goldens();
+      const reviewed = list.filter((golden) => golden.reviewed).length;
+      const flagged = list.filter((golden) => golden.flag).length;
+      $("#progress").innerHTML = `<b>${reviewed}</b> of ${list.length} reviewed${flagged ? ` · <span style="color:var(--bad)">${flagged} flagged</span>` : ""}`;
+      $("#meter span").style.width = `${(100 * reviewed) / list.length}%`;
+    }
+
+    // What the cuts draw against what the keys typed, said once when every cut agrees.
+    function differences(golden) {
+      const byKeys = {};
+      for (const cut of state.data.cuts) {
+        const result = golden.results[cut.cut];
+        if (!result.matches) (byKeys[result.produced] ||= []).push(cut.name);
+      }
+      return Object.entries(byKeys);
+    }
+
+    function renderOne() {
+      progress();
+      const list = goldens();
+      if (one.done) return renderDone();
+      one.at = Math.max(0, Math.min(one.at, list.length - 1));
+      const golden = list[one.at];
+      $("#one-pos").textContent = `${one.at + 1} / ${list.length}`;
+      $("#one-latin").textContent = golden.latin;
+      const diffs = differences(golden);
+      const said = $("#one-said");
+      if (!diffs.length) {
+        said.className = "said same";
+        said.textContent = "Draws exactly what these keys drew in CMs.";
+      } else {
+        const where = diffs.length === 1 && diffs[0][1].length === state.data.cuts.length ? "" : ` (${diffs.map(([, names]) => names.join(", ")).join("; ")})`;
+        said.className = "said differs";
+        said.innerHTML = `Differs from CMs${escape(where)}. Looks right keeps the difference on purpose.`;
+      }
+      $("#one-flag").textContent = golden.flag ? `Flagged: ${golden.flag}` : "";
+      $("#one-seen").textContent = golden.reviewed ? `reviewed ${golden.reviewed} · ${golden.status === "fixed" ? "differs on purpose" : golden.status === "ok" ? "matches CMs" : "pending"}` : "not reviewed in this pass";
+      if (document.activeElement !== $("#one-keys")) $("#one-keys").value = golden.keys;
+      $("#stage").innerHTML = state.data.cuts.map((cut) => {
+        const result = golden.results[cut.cut];
+        const sub = result.matches ? "same as CMs" : `draws <code>${escape(result.produced)}</code>`;
+        return `<div class="col ${result.matches ? "" : "differs"}" data-cut="${cut.cut}"><span class="label">${escape(cut.name)}</span><span class="sub">${sub}</span><span class="word"></span></div>`;
+      }).join("");
+      paintOne();
+      fitOne();
+    }
+
+    function renderDone() {
+      $("#one-pos").textContent = "";
+      $("#one-latin").textContent = "Pass complete";
+      $("#one-said").className = "said same";
+      $("#one-said").textContent = "Every golden has been reviewed.";
+      $("#one-flag").textContent = "";
+      $("#one-seen").textContent = "";
+      const flagged = goldens().map((golden, index) => ({ golden, index })).filter(({ golden }) => golden.flag);
+      $("#stage").innerHTML = `<div class="done">${flagged.length
+        ? `<div>Flagged:</div>${flagged.map(({ golden, index }) => `<button data-go="${index}">${escape(golden.latin)}: ${escape(golden.flag)}</button>`).join("")}`
+        : "<div>Nothing flagged.</div>"}<button data-go="0">Look through again from the first</button></div>`;
+    }
+
+    // Holding Space swaps every column to dEgi's 1998 drawing at the same size and place, so
+    // blinking between the two shows what moved.
+    function paintOne() {
+      if (one.done) return;
+      const golden = goldens()[one.at];
+      const keys = $("#one-keys").value;
+      $("#stage").classList.toggle("old", one.old);
+      document.querySelectorAll("#stage .col").forEach((column) => {
+        const word = column.querySelector(".word");
+        word.style.fontFamily = one.old ? `'legacy-${column.dataset.cut}'` : `'${state.fonts[column.dataset.cut]}'`;
+        word.textContent = one.old ? keys : golden.text;
+        column.querySelector(".label").textContent = `${state.data.cuts.find((cut) => cut.cut === column.dataset.cut).name}${one.old ? ", CMs 1998" : ""}`;
+      });
+    }
+
+    // One size for all three cuts, the largest at which the longest drawing (Revived or 1998)
+    // still fits the screen's height and each word its column.
+    function fitOne() {
+      const columns = [...document.querySelectorAll("#stage .col")];
+      if (!columns.length) return;
+      const golden = goldens()[one.at];
+      const keys = $("#one-keys").value;
+      const probe = document.createElement("span");
+      probe.className = "word";
+      probe.style.cssText = "position:absolute;visibility:hidden;font-size:100px";
+      $("#stage").append(probe);
+      let size = Infinity;
+      for (const column of columns) {
+        const used = column.querySelector(".label").offsetHeight + column.querySelector(".sub").offsetHeight;
+        const height = column.clientHeight - used - 36;
+        const width = column.clientWidth - 24;
+        for (const [family, text] of [[state.fonts[column.dataset.cut], golden.text], [`legacy-${column.dataset.cut}`, keys]]) {
+          probe.style.fontFamily = `'${family}'`;
+          probe.textContent = text;
+          const box = probe.getBoundingClientRect();
+          if (box.height) size = Math.min(size, (100 * height) / box.height);
+        }
+        // The line box is tighter than the ink: final tails and dots reach about 1.4 em across.
+        size = Math.min(size, width / 1.4);
+      }
+      probe.remove();
+      if (Number.isFinite(size)) columns.forEach((column) => { column.querySelector(".word").style.fontSize = `${Math.floor(size)}px`; });
+    }
+
+    function go(index) {
+      one.done = false;
+      one.at = (index + goldens().length) % goldens().length;
+      setFlagging(false);
+      $("#one-keys").blur();
+      renderOne();
+    }
+
+    function setFlagging(on) {
+      $("#actions").classList.toggle("flagging", on);
+      if (on) { $("#flag-text").value = goldens()[one.at].flag === "flagged" ? "" : goldens()[one.at].flag; $("#flag-text").focus(); }
+    }
+
+    async function post(path, body) {
+      state.data = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then((response) => response.json());
+    }
+
+    async function verdict(kind) {
+      const index = one.at;
+      const body = { index, keys: $("#one-keys").value, verdict: kind };
+      if (kind === "wrong") body.flag = $("#flag-text").value;
+      setFlagging(false);
+      $("#one-keys").blur();
+      await post("/api/golden", body);
+      const next = nextUnreviewed(index);
+      if (next < 0) one.done = true; else one.at = next;
+      renderOne();
+    }
+
+    function setMode(on) {
+      one.on = on;
+      document.body.classList.toggle("one", on);
+      $("#mode").textContent = on ? "List" : "Review one at a time";
+      try { localStorage.setItem("goldens-list", on ? "" : "1"); } catch {}
+      on ? renderOne() : render();
+    }
 
     function render() {
+      if (one.on) return renderOne();
       const done = (golden) => golden.status !== "pending" && allPassed(golden);
       const showDone = $("#show-done").checked;
-      $("#done-count").textContent = state.data.goldens.filter(done).length;
-      // Broken confirmed goldens first: they are regressions. Then the ones waiting for an answer.
-      const order = state.data.goldens
+      $("#done-count").textContent = goldens().filter(done).length;
+      // Broken accepted goldens first: they are regressions. Then the ones waiting for an answer.
+      const order = goldens()
         .map((golden, index) => ({ golden, index }))
         .filter(({ golden }) => showDone || !done(golden))
         .sort((a, b) => rank(a.golden) - rank(b.golden) || a.index - b.index);
       if (!order.length) {
-        $("#goldens").innerHTML = `<div class="empty">Every golden is confirmed and matching in every cut. ✓</div>`;
+        $("#goldens").innerHTML = `<div class="empty">Every golden is accepted and still draws the same in every cut. ✓</div>`;
         return;
       }
       $("#goldens").innerHTML = order.map(({ golden, index }) => row(golden, index)).join("");
@@ -118,7 +343,7 @@
     function row(golden, index) {
       const fixed = golden.status === "fixed";
       const failing = state.data.cuts.filter((cut) => !golden.results[cut.cut].passed);
-      const verdict = !failing.length
+      const verdictText = !failing.length
         ? `<span class="verdict pass">✓ ${fixed ? "as accepted" : "matches CMs"}, all cuts</span>`
         : `<span class="verdict fail">✗ ${fixed ? "changed since accepted" : "differs from CMs"}: ${failing.map((cut) => escape(cut.name)).join(", ")}</span>`;
       const border = golden.status === "pending" ? "" : failing.length ? "fail" : "ok";
@@ -132,24 +357,19 @@
           </div>
         </div>`;
       }).join("");
-      // Cuts usually draw the same keys; name the cuts only when they differ.
-      const produced = {};
-      for (const cut of state.data.cuts) {
-        const keys = golden.results[cut.cut].produced;
-        if (keys !== golden.keys) (produced[keys] ||= []).push(cut.name);
-      }
-      const variants = Object.entries(produced);
-      const draws = variants.length
-        ? `<div class="draws">the font draws ${variants.map(([keys, names]) =>
-            `<code>${escape(keys)}</code>${variants.length > 1 || names.length < state.data.cuts.length ? ` (${names.map(escape).join(", ")})` : ""}`).join("; ")}</div>`
+      const diffs = differences(golden);
+      const draws = diffs.length
+        ? `<div class="draws">the font draws ${diffs.map(([keys, names]) =>
+            `<code>${escape(keys)}</code>${diffs.length > 1 || names.length < state.data.cuts.length ? ` (${names.map(escape).join(", ")})` : ""}`).join("; ")}</div>`
         : "";
       const suggestion = state.data.cuts.map((cut) => golden.results[cut.cut].suggestion).find(Boolean);
       const [piece, keys] = Object.entries(suggestion || {})[0] || [];
       const map = piece && golden.status === "ok"
         ? `<button class="map" data-piece="${escape(piece)}" data-keys="${escape(keys)}">Map <b>${escape(piece)}</b> = <code>${escape(keys)}</code></button>`
         : "";
+      const flag = golden.flag ? `<span class="verdict fail">flagged: ${escape(golden.flag)}</span>` : "";
       return `<section class="golden ${border}" data-index="${index}">
-        <div class="name"><b>${escape(golden.latin)}</b><span class="chip ${golden.status}">${golden.status}</span>${verdict}</div>
+        <div class="name"><b>${escape(golden.latin)}</b><span class="chip ${golden.status}">${golden.status}</span>${verdictText}${flag}</div>
         <div class="renders">
           <figure><span class="v ref">${escape(golden.text)}</span><figcaption>Unicode</figcaption></figure>
           ${cuts}
@@ -157,8 +377,8 @@
         <div class="controls">
           <div class="row">
             <input value="${escape(golden.keys)}" spellcheck="false" autocomplete="off" aria-label="CMs keys for ${escape(golden.latin)}">
-            <button data-status="ok">Confirm ↵</button>
-            <button data-status="fixed" class="secondary" title="Our font differs from CMs here on purpose: pin what every cut draws now">Differs on purpose</button>
+            <button data-verdict="right">Looks right ↵</button>
+            <button data-review class="secondary">Review large</button>
           </div>
           ${draws}${map}
         </div>
@@ -171,15 +391,56 @@
       return 2;
     }
 
-    async function confirm(index, keys, status = "ok") {
-      state.data = await fetch("/api/golden", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ index, keys, status }),
-      }).then((response) => response.json());
-      render();
-      document.querySelector(".golden input")?.focus();
-    }
+    $("#mode").addEventListener("click", () => setMode(!one.on));
+    $("#restart").addEventListener("click", async () => {
+      if (!window.confirm("Start a new pass? Every golden goes back to not reviewed; statuses stay as they are.")) return;
+      await post("/api/goldens/restart", {});
+      go(0);
+    });
+    $("#right").addEventListener("click", () => verdict("right"));
+    $("#wrong").addEventListener("click", () => setFlagging(true));
+    $("#skip").addEventListener("click", () => go(one.at + 1));
+    $("#flag-save").addEventListener("click", () => verdict("wrong"));
+    $("#stage").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-go]");
+      if (button) go(Number(button.dataset.go));
+    });
+    $("#one-keys").addEventListener("input", () => { paintOne(); fitOne(); });
+
+    // Confirming moves on to the next word, so a held or repeated Enter would accept that one
+    // too: one press, one word.
+    let enterArmed = true;
+    document.addEventListener("keydown", (event) => {
+      if (!one.on || event.isComposing) return;
+      const inFlag = event.target === $("#flag-text");
+      const typing = inFlag || event.target === $("#one-keys");
+      if (inFlag) {
+        if (event.key === "Escape") { setFlagging(false); return; }
+        if (event.key === "Enter" && !event.repeat) { event.preventDefault(); verdict("wrong"); }
+        return;
+      }
+      if (event.key === "Escape" && typing) { event.target.blur(); return; }
+      if (one.done) return;
+      if (event.key === " " && !typing) {
+        event.preventDefault();
+        if (!one.old) { one.old = true; paintOne(); }
+      } else if ((event.key === "ArrowRight" || event.key === "ArrowDown") && !typing) {
+        event.preventDefault(); go(one.at + 1);
+      } else if ((event.key === "ArrowLeft" || event.key === "ArrowUp") && !typing) {
+        event.preventDefault(); go(one.at - 1);
+      } else if ((event.key === "w" || event.key === "W") && !typing && !event.metaKey && !event.ctrlKey) {
+        event.preventDefault(); setFlagging(true);
+      } else if (event.key === "Enter" && !event.repeat && enterArmed && event.target.tagName !== "BUTTON") {
+        event.preventDefault();
+        enterArmed = false;
+        verdict("right");
+      }
+    });
+    document.addEventListener("keyup", (event) => {
+      if (event.key === " " && one.old) { one.old = false; paintOne(); }
+      if (event.key === "Enter") enterArmed = true;
+    });
+    window.addEventListener("resize", () => { if (one.on && !one.done) fitOne(); });
 
     $("#show-done").addEventListener("change", render);
     $("#goldens").addEventListener("input", (event) => {
@@ -191,17 +452,13 @@
       document.querySelectorAll(".golden.focus").forEach((element) => element.classList.remove("focus"));
       event.target.closest(".golden")?.classList.add("focus");
     });
-    // Confirming moves the cursor into the next word, so a held or repeated Enter would confirm
-    // that one too: one press confirms one word.
-    let enterArmed = true;
-    $("#goldens").addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" || event.target.tagName !== "INPUT") return;
+    $("#goldens").addEventListener("keydown", async (event) => {
+      if (one.on || event.key !== "Enter" || event.target.tagName !== "INPUT") return;
       if (event.repeat || event.isComposing || !enterArmed) return;
       enterArmed = false;
-      confirm(Number(event.target.closest(".golden").dataset.index), event.target.value);
-    });
-    document.addEventListener("keyup", (event) => {
-      if (event.key === "Enter") enterArmed = true;
+      await post("/api/golden", { index: Number(event.target.closest(".golden").dataset.index), keys: event.target.value, verdict: "right" });
+      render();
+      document.querySelector(".golden input")?.focus();
     });
     $("#goldens").addEventListener("click", async (event) => {
       const map = event.target.closest(".map");
@@ -218,11 +475,19 @@
         await load();
         return;
       }
-      if (event.target.tagName !== "BUTTON") return;
       const section = event.target.closest(".golden");
-      confirm(Number(section.dataset.index), section.querySelector("input").value, event.target.dataset.status);
+      if (!section || event.target.tagName !== "BUTTON") return;
+      const index = Number(section.dataset.index);
+      if (event.target.hasAttribute("data-review")) { setMode(true); return go(index); }
+      await post("/api/golden", { index, keys: section.querySelector("input").value, verdict: "right" });
+      render();
     });
-    loadFonts().then(load);
+    try { one.on = localStorage.getItem("goldens-list") !== "1"; } catch {}
+    loadFonts().then(load).then(() => {
+      const first = nextUnreviewed(-1);
+      if (first < 0) one.done = true; else one.at = first;
+      setMode(one.on);
+    });
   </script>
 </body>
 </html>

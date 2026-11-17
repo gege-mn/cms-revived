@@ -112,7 +112,7 @@ arch-f = ["F.init", "F.medi"]
 "Dd.fina" = { keys = "oa", status = "ok", note = "from editor: d · final" }
 "D.fina" = { keys = "dA", status = "ok" }
 "Ch.init" = { keys = "C", status = "ok", note = "from editor: ch · isolated, ch · initial | set to C from the cinu-a example (CinOT); was 'c'" }
-"Ch.medi" = { keys = "c", status = "ok", note = "from editor: ch · medial" }
+"Ch.medi" = { keys = "c", after = { "B.medi" = "c" }, status = "ok", note = "from editor: ch · medial | after b (2026-11-17): Huree draws the owner's č with the stem moved in to meet b (drawing cmsr.Ch.medi.after.B.medi); everywhere else dEgi's c, since the moved stem stepped in after every other letter" }
 "Ch.fina" = { keys = "cA", status = "ok", note = "from editor: ch · final" }
 "J.medi" = { keys = "j", status = "ok" }
 "J.fina" = { keys = "jA", status = "ok" }
@@ -306,7 +306,7 @@ arch-f = ["F.init", "F.medi"]
 "LL.medi" = { keys = "lX", status = "ok" }
 "ML.medi" = { keys = "'", status = "ok", note = "' is dEgi's m + l ligature" }
 "MM.medi" = { status = "auto" }
-"AGH.fina" = { keys = "ekE(", shift = { "3" = -331 }, drop = { "3" = 1 }, shifts = { CMSHR = { "3" = -266 }, CMSUG = { "3" = -284 } }, status = "ok", note = "custom glyph, differs from CMs on purpose: CMs typed this ek(, whose nirugu pokes into the arch. Here ekE( as one q: E is the tooth on the arch, and ( drops its own first tooth and the nirugu leading into it, set so that tooth would sit on E's, tip to tip per cut (UB -156, Urga -127 from Urga's g-family E, Huree -166 from E's tip). The old @arch rule EkEa was never built and drew a's tail; dropped." }
+"AGH.fina" = { keys = "ekE(", shift = { "3" = -331 }, drop = { "3" = 1 }, shifts = { CMSHR = { "3" = -266 }, CMSUG = { "3" = -284 } }, status = "ok", note = "custom glyph, differs from CMs on purpose: CMs typed this ek(, whose nirugu pokes into the arch. Here ekE( as one q: E is the tooth on the arch, and ( drops its own first tooth and the nirugu leading into it, set so that tooth would sit on E's, tip to tip per cut (UB -156, Urga -127 from Urga's g-family E, Huree -166 from E's tip). The old @arch rule EkEa was never built and drew a's tail; dropped. | Huree, owner (2026-11-17): the join after k+E looked wrong; drawing _AGH.fina reseeded from the 1.0.0 glyph for the owner to edit by hand" }
 
 [chars]
 "U+1800" = { status = "new" }

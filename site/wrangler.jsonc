@@ -1,0 +1,10 @@
+{
+	"$schema": "https://unpkg.com/wrangler@4.149.0/config-schema.json",
+	"name": "cms-revived-site",
+	"account_id": "7ef545d0a94a91766e13b6c9303e97a8",
+	"compatibility_date": "2026-11-01",
+	"assets": { "directory": "public", "html_handling": "auto-trailing-slash", "not_found_handling": "none" },
+	"workers_dev": false,
+	"preview_urls": false,
+	"routes": [{ "pattern": "cms-revived.gege.mn", "custom_domain": true }]
+}

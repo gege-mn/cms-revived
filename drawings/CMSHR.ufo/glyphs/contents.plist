@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>_AGH.fina</key>
+    <string>_A_G_H_.fina.glif</string>
+    <key>_AGH.medi</key>
+    <string>_A_G_H_.medi.glif</string>
+    <key>_AGHx.medi</key>
+    <string>_A_G_H_x.medi.glif</string>
     <key>_B.medi</key>
     <string>_B_.medi.glif</string>
     <key>_BW.init</key>
@@ -44,6 +50,14 @@
     <string>_T_.medi.glif</string>
     <key>_U.isol</key>
     <string>_U_.isol.glif</string>
+    <key>cms.braceleft</key>
+    <string>cms.braceleft.glif</string>
+    <key>cms.braceright</key>
+    <string>cms.braceright.glif</string>
+    <key>cms.bracketleft</key>
+    <string>cms.bracketleft.glif</string>
+    <key>cms.bracketright</key>
+    <string>cms.bracketright.glif</string>
     <key>cmsr.B.init.before.W.fina</key>
     <string>cmsr.B_.init.before.W_.fina.glif</string>
     <key>cmsr.B.init.before.W.medi</key>
@@ -56,6 +70,8 @@
     <string>cmsr.B_.medi.before.W_.fina.glif</string>
     <key>cmsr.B.medi.before.W.medi</key>
     <string>cmsr.B_.medi.before.W_.medi.glif</string>
+    <key>cmsr.Ch.medi.after.B.medi</key>
+    <string>cmsr.C_h.medi.after.B_.medi.glif</string>
     <key>cmsr.D.medi.after.@arch</key>
     <string>cmsr.D_.medi.after.@arch.glif</string>
     <key>cmsr.D.medi.after.@arch-bpf</key>
@@ -84,6 +100,8 @@
     <string>cmsr.G_.medi.after.@arch-g.glif</string>
     <key>cmsr.G.medi.after.@arch-k</key>
     <string>cmsr.G_.medi.after.@arch-k.glif</string>
+    <key>cmsr.G.medi.after.BO.medi</key>
+    <string>cmsr.G_.medi.after.B_O_.medi.glif</string>
     <key>cmsr.G.medi.after.P.medi</key>
     <string>cmsr.G_.medi.after.P_.medi.glif</string>
     <key>cmsr.G.medi.before.@arch</key>
@@ -112,6 +130,8 @@
     <string>cmsr.P_.init.before.W_.fina.glif</string>
     <key>cmsr.P.init.before.W.medi</key>
     <string>cmsr.P_.init.before.W_.medi.glif</string>
+    <key>cmsr.P.medi.after.W.medi</key>
+    <string>cmsr.P_.medi.after.W_.medi.glif</string>
     <key>cmsr.P.medi.before.@arch</key>
     <string>cmsr.P_.medi.before.@arch.glif</string>
     <key>cmsr.P.medi.before.W.fina</key>

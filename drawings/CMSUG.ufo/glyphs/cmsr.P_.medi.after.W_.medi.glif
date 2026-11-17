@@ -76,13 +76,13 @@
       <point x="111.0" y="608.0"/>
       <point x="101.0" y="500.0" type="curve"/>
       <point x="103.0" y="404.6666564941406"/>
-      <point x="104.33333587646484" y="356.0"/>
-      <point x="105.0" y="354.0" type="curve"/>
+      <point x="104" y="357"/>
+      <point x="105" y="355" type="curve"/>
     </contour>
     <contour>
       <point x="0.0" y="500.0" type="line"/>
       <point x="0.0" y="355.0" type="line"/>
-      <point x="100.0" y="355.0" type="line"/>
+      <point x="120" y="355" type="line"/>
       <point x="100.0" y="500.0" type="line"/>
     </contour>
   </outline>

@@ -15,7 +15,7 @@ LOCALE = "MNG"
 FAMILY_PREFIX = "Gege"
 FAMILY_SUFFIX = "Revived"
 
-VERSION = (1, 0)  # major, minor as the font's three-digit minor: 1.000
+VERSION = (1, 1)  # major, minor as the font's three-digit minor: 1.001 is 1.0.1
 VERSION_LABEL: str | None = None  # e.g. "Alpha 5", for a snapshot that keeps the family name
 
 # dEgi is named first everywhere; where a field holds one value, the rework comes second.

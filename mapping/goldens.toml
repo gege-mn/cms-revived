@@ -3,6 +3,8 @@
 # status  pending  keys proposed, waiting for a human eye
 #         ok       confirmed: the build must draw the word exactly as these keys did
 #         fixed    differs from CMs on purpose: the build must keep drawing the snapshot
+# reviewed  the date the owner last looked at it on the goldens page
+# flag      what the owner said is wrong with it (status goes back to pending)
 #
 # The goldens page (/goldens in the editor) rewrites this file.
 
@@ -11,6 +13,7 @@ latin = "ene"
 text = "ᠡᠨᠡ"
 keys = "fna"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "mongγol"
@@ -18,43 +21,50 @@ text = "ᠮᠣᠩᠭᠣᠯ"
 keys = "Moekgo&"
 status = "fixed"
 note = "differs on purpose: CMs had no proper ng + masculine g join"
-snapshot = { CMSHR = "2bee7980440b", CMSUB = "5c40ae92119a", CMSUG = "c252f2da39aa" }
+reviewed = "2026-11-17"
+snapshot = { CMSHR = "d1dff4243415", CMSUB = "5c40ae92119a", CMSUG = "6a6162e58e51" }
 
 [[golden]]
 latin = "altan"
 text = "ᠠᠯᠲᠠᠨ"
 keys = "feldea"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "edür"
 text = "ᠡᠳᠦᠷ"
 keys = "fdo*"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ger"
 text = "ᠭᠡᠷ"
 keys = "kE*"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "usu"
 text = "ᠤᠰᠤ"
 keys = "fosO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "sar-a"
 text = "ᠰᠠᠷ᠎ᠠ"
 keys = "Se*T"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "bičig"
 text = "ᠪᠢᠴᠢᠭ"
 keys = "buciit"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "temege"
@@ -62,6 +72,7 @@ text = "ᠲᠡᠮᠡᠭᠡ"
 keys = "DemekEt"
 status = "ok"
 note = "given by hand: k is toothless, so final ge is kEt"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "kümün"
@@ -69,6 +80,7 @@ text = "ᠬᠦᠮᠦᠨ"
 keys = "Kimoa"
 status = "ok"
 note = "given by hand: hü is K + i"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "čino-a"
@@ -76,24 +88,28 @@ text = "ᠴᠢᠨᠤ᠎ᠠ"
 keys = "CinOT"
 status = "ok"
 note = "given by hand: T carries the chachlag gap"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "bayar"
 text = "ᠪᠠᠶᠠᠷ"
 keys = "bEye*"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "γajar"
 text = "ᠭᠠᠵᠠᠷ"
 keys = "Geje*"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ulus"
 text = "ᠤᠯᠤᠰ"
 keys = "folo_"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "bol"
@@ -101,24 +117,28 @@ text = "ᠪᠣᠯ"
 keys = "B&"
 status = "ok"
 note = "given by hand: B is bo/bu"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "yeke"
 text = "ᠶᠡᠬᠡ"
 keys = "YekEt"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "nige"
 text = "ᠨᠢᠭᠡ"
 keys = "NikEt"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "čaγ"
 text = "ᠴᠠᠭ"
 keys = "Ce("
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "baγsi"
@@ -126,30 +146,35 @@ text = "ᠪᠠᠭᠰᠢ"
 keys = "bEeesI"
 status = "ok"
 note = "given by hand: E only right after an arch"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "sin-e"
 text = "ᠰᠢᠨ᠎ᠡ"
 keys = "Si%T"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "qar-a"
 text = "ᠬᠠᠷ᠎ᠠ"
 keys = "He*T"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "dürim-i"
 text = "ᠳᠦᠷᠢᠮ᠎ᠢ"
 keys = "Doiri^ I"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "jöblel"
 text = "ᠵᠥᠪᠯᠡᠯ"
 keys = "Joib;e&"
 status = "ok"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "ab477b2986bf", CMSUB = "be1050969f67", CMSUG = "23c262d89727" }
 
 [[golden]]
@@ -157,6 +182,7 @@ latin = "intēr"
 text = "ᠢᠨᠲ᠋ᠧᠷ"
 keys = "fieDw*"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "9e9841c6fe07", CMSUB = "4a6200ce2040", CMSUG = "934e22922801" }
 
 [[golden]]
@@ -164,24 +190,28 @@ latin = "paisa"
 text = "ᠫᠠᠢᠰᠠ"
 keys = "pEiisa"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "eγüdqü"
 text = "ᠡᠭᠦᠳᠬᠦ"
 keys = "fKoeK"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "abuγad"
 text = "ᠠᠪᠤᠭᠠᠳ"
 keys = "feBgeoa"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "rediu"
 text = "ᠷᠡᠳᠢᠤ᠋"
 keys = "Redio"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "b5d272da20d2", CMSUB = "9ed76182d87c", CMSUG = "d2c55983332d" }
 
 [[golden]]
@@ -189,24 +219,28 @@ latin = "üy-e-dü"
 text = "ᠦᠶ᠎ᠡ᠎ᠳᠦ"
 keys = "foiIT dO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "oroqu"
 text = "ᠣᠷᠣᠬᠤ"
 keys = "foroeeO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "γuwang"
 text = "ᠭᠤᠸᠠᠩ"
 keys = "Goweeit"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "kino"
 text = "ᠻᠢᠨᠣ᠋"
 keys = "\\uno"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "2d1241771ffd", CMSUB = "d077ed24de73", CMSUG = "82365f0df678" }
 
 [[golden]]
@@ -214,12 +248,14 @@ latin = "bü"
 text = "ᠪᠦ"
 keys = "BA"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "öb-un"
 text = "ᠥᠪ᠎ᠤᠨ"
 keys = "foi$ oa"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "16da1cca8738", CMSUB = "5afa8751255a", CMSUG = "546a746853ab" }
 
 [[golden]]
@@ -227,67 +263,78 @@ latin = "šasin"
 text = "ᠱᠠᠰᠢᠨ"
 keys = "Zesia"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "hēbēi"
 text = "ᠾᠧᠪᠧᠢ"
 keys = "f~wbwI"
 status = "fixed"
-snapshot = { CMSHR = "c28f789a3901", CMSUB = "d57afff7c8c7", CMSUG = "75e042b3dec9" }
+reviewed = "2026-11-17"
+snapshot = { CMSHR = "57f59e153e2b", CMSUB = "d57afff7c8c7", CMSUG = "75e042b3dec9" }
 
 [[golden]]
 latin = "bülqüm"
 text = "ᠪᠦᠯᠬᠦᠮ"
 keys = "BilK^"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "adquju"
 text = "ᠠᠳᠬᠤᠵᠤ"
 keys = "feoeeeojO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "tēlwis"
 text = "ᠲᠧᠯᠸᠢᠰ"
 keys = "Dwlwi_"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "oomēn-u"
 text = "ᠣᠣᠮᠧᠨ᠎ᠤ"
 keys = "foomwa O"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "qoyitu"
 text = "ᠬᠣᠶ᠋ᠢᠲᠤ᠌"
 keys = "HoiidO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "luγ-a"
 text = "ᠯᠤᠭ᠎ᠠ"
 keys = "Lo)T"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "γüwē"
 text = "ᠭᠦᠸᠧ"
 keys = "KiwwA"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "qiba"
 text = "ᠬᠢᠪᠠ"
 keys = "kubEt"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "jangγi"
 text = "ᠵᠠᠩᠭᠢ"
 keys = "JeekkuA"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "2bc3239e57e7", CMSUB = "7fb3398add5f", CMSUG = "a1e29b94fcbb" }
 
 [[golden]]
@@ -295,36 +342,42 @@ latin = "elbeγ"
 text = "ᠡᠯᠪᠡᠭ"
 keys = "flbEit"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "böqöde"
 text = "ᠪᠥᠬᠥᠳᠡ"
 keys = "BiKda"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "oyunči"
 text = "ᠣᠶᠤᠨᠴᠢ"
 keys = "foyoecI"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "erdeni"
 text = "ᠡᠷᠳᠡᠨᠢ"
 keys = "frdenI"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "jil-eče"
 text = "ᠵᠢᠯ᠎ᠡᠴᠡ"
 keys = "Ji& fca"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "yoso-yi"
 text = "ᠶᠣᠰᠣ᠌᠎ᠶᠢ"
 keys = "YosO iI"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "2cd452eec26c", CMSUB = "480b84ea6861", CMSUG = "c469c7bc5ccc" }
 
 [[golden]]
@@ -332,48 +385,56 @@ latin = "fü"
 text = "ᠹᠦ"
 keys = "QA"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "cai"
 text = "ᠼᠠᠢ"
 keys = "}eI"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "šüji"
 text = "ᠱᠦᠵᠢ"
 keys = "ZoijI"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "miq-a"
 text = "ᠮᠢᠬ᠎ᠠ"
 keys = "Mi(T"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ösöγ"
 text = "ᠥᠰᠥᠭ"
 keys = "foisoit"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "abčö"
 text = "ᠠᠪᠴᠥ"
 keys = "febcO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "maγu"
 text = "ᠮᠠᠭᠤ"
 keys = "MegO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "mētr"
 text = "ᠮᠧᠲᠷ"
 keys = "MwD*"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "918db7ee8b74", CMSUB = "ad7ba23e1afe", CMSUG = "cff0614892c9" }
 
 [[golden]]
@@ -381,18 +442,21 @@ latin = "sonin"
 text = "ᠰᠣᠨᠢᠨ"
 keys = "Sonia"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "alaša"
 text = "ᠠᠯᠠᠱᠠ"
 keys = "feleza"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "siqam"
 text = "ᠰᠢᠬᠠᠮ"
 keys = "Sieee^"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "nobsi"
@@ -400,32 +464,37 @@ text = "ᠨᠣᠪᠰᠢ"
 keys = "NobsI"
 status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
-snapshot = { CMSHR = "7cbab3f16621", CMSUB = "e0694375df41", CMSUG = "49747b60129d" }
+reviewed = "2026-11-17"
+snapshot = { CMSHR = "87d648ff31b3", CMSUB = "e0694375df41", CMSUG = "49747b60129d" }
 
 [[golden]]
 latin = "aziy-a"
 text = "ᠠᠽᠢᠶ᠎ᠠ"
 keys = "fe[iIT"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "šiγud"
 text = "ᠱᠢᠭᠤᠳ"
 keys = "Sigooa"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ebüγe"
 text = "ᠡᠪᠦᠭᠡ"
 keys = "fBkEt"
 status = "fixed"
-snapshot = { CMSHR = "40940e509134", CMSUB = "c00132096d3e", CMSUG = "30ec1f025cf4" }
+reviewed = "2026-11-17"
+snapshot = { CMSHR = "6c545bdad94a", CMSUB = "c00132096d3e", CMSUG = "6d60f11aa381" }
 
 [[golden]]
 latin = "neres"
 text = "ᠨᠡᠷᠡᠰ"
 keys = "Nere_"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "front"
@@ -433,6 +502,7 @@ text = "ᠹᠷᠣᠨᠲ"
 keys = "qroeDA"
 status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "9e6ecfcc121a", CMSUB = "9b5ab5a8ef80", CMSUG = "24625593b3d3" }
 
 [[golden]]
@@ -440,12 +510,14 @@ latin = "enērγi"
 text = "ᠡᠨᠧᠷᠭᠢ"
 keys = "fnwrkuA"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "sistēm"
 text = "ᠰᠢᠰᠲᠧᠮ"
 keys = "SisDw^"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "4f5c73a1f594", CMSUB = "7bb8f84e1098", CMSUG = "e58e6a937c05" }
 
 [[golden]]
@@ -453,6 +525,7 @@ latin = "engneγe"
 text = "ᠡᠩᠨᠡᠭᠡ"
 keys = "feknekEt"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "5da1d5918dac", CMSUB = "d18abb9f998d", CMSUG = "2d3843cc6cfc" }
 
 [[golden]]
@@ -460,6 +533,7 @@ latin = "bučaju"
 text = "ᠪᠤᠴᠠᠵᠤ"
 keys = "BcejO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "pwptid"
@@ -467,37 +541,43 @@ text = "ᠫᠸᠫᠲ᠋ᠢᠳ᠋"
 keys = "pwpDidA"
 status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
-snapshot = { CMSHR = "99603b214657", CMSUB = "4c1e817f81de", CMSUG = "e172a0dd629b" }
+reviewed = "2026-11-17"
+snapshot = { CMSHR = "4f535e8aa770", CMSUB = "4c1e817f81de", CMSUG = "e23d9d84c8cb" }
 
 [[golden]]
 latin = "liyouhē"
 text = "ᠯᠢᠶᠣᠤᠾᠧ"
 keys = "Liyoo~wA"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ewürüpe"
 text = "ᠡᠸᠦ᠋ᠷᠦᠫᠡ"
 keys = "fwoiropEt"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "šiidbüri"
 text = "ᠱᠢᠢᠳᠪᠦᠷᠢ"
 keys = "SiioeBrI"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "qöγjiγen"
 text = "ᠬᠥᠭᠵᠢᠭᠡᠨ"
 keys = "KikjikEa"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "witamin"
 text = "ᠸᠢᠲ᠋ᠠᠮᠢᠨ"
 keys = "WiDemia"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "9a69f2f6c9b4", CMSUB = "11602c63ebde", CMSUG = "09f919452387" }
 
 [[golden]]
@@ -505,6 +585,7 @@ latin = "tingqim-ün"
 text = "ᠲᠢᠩᠬᠢᠮ᠎ᠦᠨ"
 keys = "Diekku^ oa"
 status = "fixed"
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "83c9de7f3411", CMSUB = "7fb1187a0c94", CMSUG = "a75a29b54a98" }
 
 [[golden]]
@@ -512,12 +593,14 @@ latin = "qauli-ača"
 text = "ᠬᠠᠤᠯᠢ᠎ᠠᠴᠠ"
 keys = "HeolI fca"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "tüngliyoo"
 text = "ᠲᠦᠩᠯᠢᠶᠣᠣ"
 keys = "Doiek;iyoO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "jišiγsen"
@@ -525,6 +608,7 @@ text = "ᠵᠢᠱ᠌ᠢᠭᠰᠡᠨ"
 keys = "Jiziksea"
 status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "c998e724eb9e", CMSUB = "b96943aad7bb", CMSUG = "4558281dafa5" }
 
 [[golden]]
@@ -532,96 +616,112 @@ latin = "čaγdaγ-a"
 text = "ᠴᠠᠭᠳᠠᠭ᠎ᠠ"
 keys = "Ceeede)T"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "sudulju"
 text = "ᠰᠤᠳᠤᠯᠵᠤ"
 keys = "SodoljO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ulγun-a"
 text = "ᠤᠯᠭᠤᠨ᠎ᠠ"
 keys = "folgo%T"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ejemden"
 text = "ᠡᠵᠡᠮᠳᠡᠨ"
 keys = "fjemdea"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ajilčid"
 text = "ᠠᠵᠢᠯᠴᠢᠳ"
 keys = "fejilcioa"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "amjilta"
 text = "ᠠᠮᠵᠢᠯᠲᠠ"
 keys = "femjilda"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "möčir-ni"
 text = "ᠮᠥᠴᠢᠷ᠎ᠨᠢ"
 keys = "Moici* NI"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "sorγoγ"
 text = "ᠰᠣᠷᠭᠣᠭ"
 keys = "Sorgo("
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "alqum"
 text = "ᠠᠯᠬᠤᠮ"
 keys = "feleeo^"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "iüi"
 text = "ᠢᠦᠢ"
 keys = "fioI"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "budulγ-a"
 text = "ᠪᠤᠳᠤᠯᠭ᠎ᠠ"
 keys = "Bdol)T"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "arbilan"
 text = "ᠠᠷᠪᠢᠯᠠᠨ"
 keys = "ferbulea"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "čola"
 text = "ᠴᠣᠯᠠ"
 keys = "Cola"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "ba"
 text = "ᠪᠠ"
 keys = "bEt"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "sunusqu"
 text = "ᠰᠤᠨᠤᠰᠬᠤ"
 keys = "SonoseeO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "qüčülen"
 text = "ᠬᠦᠴᠦᠯᠡᠨ"
 keys = "Kicolea"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "üjeγdel"
@@ -629,6 +729,7 @@ text = "ᠦᠵᠡᠭᠳᠡᠯ"
 keys = "foijekde&"
 status = "fixed"
 note = "Known failure, accepted for Alpha 5 (2026-11-03): the build does not draw it right yet."
+reviewed = "2026-11-17"
 snapshot = { CMSHR = "7a91c1a2fe6a", CMSUB = "f999fd2c1833", CMSUG = "4ef783fefc42" }
 
 [[golden]]
@@ -636,12 +737,14 @@ latin = "orčin"
 text = "ᠣᠷᠴᠢᠨ"
 keys = "forcia"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "öγčü"
 text = "ᠥᠭᠴᠦ"
 keys = "foikcO"
 status = "ok"
+reviewed = "2026-11-17"
 
 [[golden]]
 latin = "angq-a"
@@ -649,7 +752,8 @@ text = "ᠠᠩᠬ᠎ᠠ"
 keys = "Feek(T"
 status = "fixed"
 note = "from production: the q after ng had no tail (AGH.fina was ekE)"
-snapshot = { CMSHR = "6cefc5e0a3fe", CMSUB = "965e75bb7e88", CMSUG = "6fc1f80610d9" }
+reviewed = "2026-11-17"
+snapshot = { CMSHR = "365649b09e82", CMSUB = "965e75bb7e88", CMSUG = "6fc1f80610d9" }
 
 [[golden]]
 latin = "argentin"
@@ -657,4 +761,5 @@ text = "ᠠᠷᠭᠧᠨ᠋ᠲ᠋ᠢᠨ"
 keys = "ferkwnDia"
 status = "fixed"
 note = "added at the owner's request (2026-11-11): Huree's looped t now leads in with a nirugu; keys proposed from the build, to confirm"
-snapshot = { CMSHR = "c0a357934be7", CMSUB = "907dfb0a2c2f", CMSUG = "fd9d5878dd7a" }
+reviewed = "2026-11-17"
+snapshot = { CMSHR = "d32c71669fc9", CMSUB = "907dfb0a2c2f", CMSUG = "fd9d5878dd7a" }

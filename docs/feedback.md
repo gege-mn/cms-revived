@@ -30,3 +30,23 @@ it was seen. Add `goldens` candidates here too; they go into `mapping/goldens.to
   8 after n). Huree's t now sits 8 closer.
 - Left open, rare: Huree p + t (8 words, 16 units) and ng + t (6 words, 4 units); Urga pē + p
   (pēptid, the pending pwptid golden).
+
+## After 1.0.0 (2026-11-17)
+
+- mongγol (ᠮᠣᠩᠭᠣᠯ), Urga: the ng + g join has an extra stretch of nirugu (seen on the homepage).
+  The owner redraws it as `_AGHx.medi` in `drawings/CMSUG.ufo`, seeded with the 1.0.0 outline
+  (keys `ekEe` with n's dot on each tooth).
+- abdar-a (ᠠᠪᠳᠠᠷ᠎ᠠ), Huree: a nick where the tooth before b meets it, also in dEgi's `eb`. The
+  b key's edge climbs from (12, 497) to (12, 536) before its curve, and the owner's lead-in
+  nirugu keeps it. The same step is in 16 Huree drawings with b, f and g (`_B.medi`, `_F.medi`,
+  `_BW.medi`, `_FW.medi`, `_GW.medi`, `_GxW.medi`, and their `before` rules); p has none. The
+  owner fixes them in Fontra.
+- angq-a (ᠠᠩᠬ᠎ᠠ), Huree: the q's tail after ng sat 61 units into E's slant and left a step. The
+  owner redrew `_AGH.fina` from the 1.0.0 outline.
+- Goldens pass (all 103 looked at large, one at a time), Huree unless named, owner's fixes in
+  Fontra: cai, the ts loop was a separate contour in dEgi's `}` (`cms.braceright`); aziy-a, the
+  same for z's `[` (`cms.bracketleft`), with `{` and `]` reshaped to match; abčö, b + č gap
+  (`cmsr.Ch.medi.after.B.medi`: drawn into every č first, it stepped the stem in after every other
+  letter, so it is a rule after b only); ebüγe, g after bü (`cmsr.G.medi.after.BO.medi`); pwptid, w + p seams in Huree and
+  Urga (`cmsr.P.medi.after.W.medi`, plus trims to the p and w before it in Huree); ebüγe in
+  Urga too, where g's arch stood apart from the stem (Urga's `cmsr.G.medi.after.BO.medi`).

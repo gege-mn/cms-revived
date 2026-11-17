@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>_AGHx.medi</key>
+    <string>_A_G_H_x.medi.glif</string>
     <key>_D.init</key>
     <string>_D_.init.glif</string>
     <key>_GO.fina</key>
@@ -50,6 +52,8 @@
     <string>cmsr.F_.medi.before.@arch.glif</string>
     <key>cmsr.G.medi.after.@arch-g</key>
     <string>cmsr.G_.medi.after.@arch-g.glif</string>
+    <key>cmsr.G.medi.after.BO.medi</key>
+    <string>cmsr.G_.medi.after.B_O_.medi.glif</string>
     <key>cmsr.G.medi.before.@arch</key>
     <string>cmsr.G_.medi.before.@arch.glif</string>
     <key>cmsr.G.medi.before.F.medi</key>

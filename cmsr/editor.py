@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import threading
 import webbrowser
+from datetime import date
 from functools import cache
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -245,7 +246,7 @@ def _goldens() -> dict:
         results = {}
         for cut, legacy in cuts:
             result = goldens.check(golden, cut.output_path, legacy)
-            results[cut.id] = {"produced": result.produced, "passed": result.passed, "suggestion": result.suggestion}
+            results[cut.id] = {"produced": result.produced, "passed": result.passed, "matches": result.matches, "suggestion": result.suggestion}
         rows.append({**golden.__dict__, "results": results})
     return {
         "cuts": [{"cut": cut.id, "name": cut.name, "legacyFont": f"/cms/{cut.legacy_path.name}"} for cut, _ in cuts],
@@ -360,10 +361,29 @@ class Handler(SimpleHTTPRequestHandler):
                     items = goldens.load()
                     golden = items[int(body["index"])]
                     golden.keys = body.get("keys", golden.keys)
-                    golden.status = body.get("status", golden.status)
+                    verdict = body.get("verdict")
+                    if verdict == "right":
+                        # Looks right: matching CMs in every cut is ok, anything else differs on purpose.
+                        golden.status = "ok" if all(
+                            goldens.check(golden, cut.output_path, LegacyFont.open(cut.id)).matches for cut in config.CUTS.values()
+                        ) else "fixed"
+                        golden.flag = ""
+                    elif verdict == "wrong":
+                        golden.status = "pending"
+                        golden.flag = body.get("flag", "").strip() or "flagged"
+                    else:
+                        golden.status = body.get("status", golden.status)
                     golden.note = body.get("note", golden.note)
+                    if verdict:
+                        golden.reviewed = date.today().isoformat()
                     if golden.status == "fixed":
                         goldens.pin(golden)
+                    goldens.save(items)
+                    return self._json(_goldens())
+                if path == "/api/goldens/restart":
+                    items = goldens.load()
+                    for golden in items:
+                        golden.reviewed = ""
                     goldens.save(items)
                     return self._json(_goldens())
                 if path == "/api/build":

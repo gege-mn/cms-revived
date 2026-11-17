@@ -19,8 +19,8 @@ waits for:
 
 Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.md) collected.
 
-- [x] The five known-failure goldens: nobsi, front, jišiγsen and üjeγdel settled; pwptid waits
-      for the owner on /goldens.
+- [x] The five known-failure goldens: nobsi, front, jišiγsen, üjeγdel and pwptid all settled
+      (pwptid's w + p seam fixed in 1.0.1).
 - [ ] A licence for the tooling code (`cmsr/`, `editor/`), or a decision to leave it unlicensed.
 - [ ] A home for the news corpora, so the goldens tools work on another machine.
 
@@ -32,7 +32,7 @@ Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.m
 - [ ] Ulaanbaatar's mid-word pē, fē, gē and kē are still the Alpha 5 stand-ins (bē's tail on each
       arch); the owner prefers them for now. Huree's were rebuilt from the owner's halves; Urga's
       come from the owner's w. k2ē waits for k2.
-- [ ] Huree p + t and ng + t, Urga pē + p: small gaps left (see docs/feedback.md).
+- [ ] Huree p + t and ng + t: small gaps left (see docs/feedback.md).
 - [ ] angg-a like angq-a: needs `drop` on rules.
 - [ ] Smooth the arch + r joins (`cmsr.R.medi.after.@arch-*`) in every cut. The owner's drawings
       fix the extra spine; the curves could be smoother, which needs a type designer's hand.
@@ -43,3 +43,5 @@ Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.m
 - [x] A legacy-keyed companion, "CMs Ulaanbaatar Revived" (no Gege prefix, no Unicode): built
       by `cmsr build` into `dist/CMs<Cut>Revived-Regular.ttf` (2026-11-12), see docs/decisions.md.
 - [x] Released the companion as `legacy-v1.0.0` (2026-11-12), files in `releases/legacy-1.0.0/`.
+- [x] 1.0.1 and legacy 1.0.1 (2026-11-17): every golden reviewed at full size, Huree's and Urga's
+      joins fixed; see [CHANGELOG.md](CHANGELOG.md).

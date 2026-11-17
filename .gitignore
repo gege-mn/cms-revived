@@ -14,3 +14,9 @@ __pycache__/
 
 # fetched test corpora (large; see README)
 reference/corpora/
+
+# the homepage build: site/build.py rewrites it
+site/public/
+site/node_modules/
+site/bun.lock
+site/__pycache__/

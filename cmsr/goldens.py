@@ -36,6 +36,8 @@ HEADER = """\
 # status  pending  keys proposed, waiting for a human eye
 #         ok       confirmed: the build must draw the word exactly as these keys did
 #         fixed    differs from CMs on purpose: the build must keep drawing the snapshot
+# reviewed  the date the owner last looked at it on the goldens page
+# flag      what the owner said is wrong with it (status goes back to pending)
 #
 # The goldens page (/goldens in the editor) rewrites this file.
 """
@@ -50,6 +52,8 @@ class Golden:
     keys: str = ""
     status: Status = "pending"
     note: str = ""
+    reviewed: str = ""
+    flag: str = ""
     snapshot: dict[str, str] = field(default_factory=dict)  # per cut: each draws its own outlines
 
 
@@ -58,6 +62,7 @@ class Result:
     produced: str
     passed: bool
     signature: str
+    matches: bool = False  # draws exactly what the keys typed in CMs, whatever the status
     suggestion: dict[str, str] | None = None  # {piece: keys} that would explain the typed keys
 
 
@@ -81,6 +86,10 @@ def save(goldens: list[Golden], path: Path = GOLDENS_FILE) -> None:
         lines += [f"keys = {string(golden.keys)}", f"status = {string(golden.status)}"]
         if golden.note:
             lines.append(f"note = {string(golden.note)}")
+        if golden.reviewed:
+            lines.append(f"reviewed = {string(golden.reviewed)}")
+        if golden.flag:
+            lines.append(f"flag = {string(golden.flag)}")
         if golden.snapshot:
             pins = ", ".join(f"{cut} = {string(value)}" for cut, value in sorted(golden.snapshot.items()))
             lines.append(f"snapshot = {{ {pins} }}")
@@ -108,10 +117,10 @@ def check(golden: Golden, font_path: Path, legacy: LegacyFont) -> Result:
             produced += _typed(name, keys_by_glyph)
             as_typed.append((name.partition(".@")[0], x, y))
     signature = _signature(built, font_path)
+    matches = _same(as_typed, _legacy_leaves(legacy, golden.keys))
     if golden.status == "fixed":
-        return Result(produced, signature == golden.snapshot.get(legacy.cut.id), signature)
-    passed = _same(as_typed, _legacy_leaves(legacy, golden.keys))
-    return Result(produced, passed, signature, None if passed else _suggest(built, produced, golden.keys))
+        return Result(produced, signature == golden.snapshot.get(legacy.cut.id), signature, matches)
+    return Result(produced, matches, signature, matches, None if matches else _suggest(built, produced, golden.keys))
 
 
 def _revisions(cut_id: str) -> tuple[int, int]:

@@ -1,8 +1,9 @@
 # Gege CMs Revived
 
 **Gege CMs Ulaanbaatar Revived**, **Gege CMs Urga Revived** and **Gege CMs Huree Revived**.
-Latest: [Alpha 5](https://github.com/gege-mn/cms-revived/releases/tag/alpha-5). Where it
-stands: [docs/state.md](docs/state.md).
+Latest: [1.0.1](https://github.com/gege-mn/cms-revived/releases/tag/v1.0.1), at
+https://cms-revived.gege.mn. What changed: [CHANGELOG.md](CHANGELOG.md). Where it stands:
+[docs/state.md](docs/state.md).
 
 dEgi's 1998 CMs fonts (Urga, Ulaanbaatar, Huree) rebuilt as Unicode Mongolian
 fonts, from his own outlines. See [NOTICE.md](NOTICE.md) for authorship and the
@@ -73,6 +74,17 @@ uv run cmsr goldens --add 10  # next goldens: common words with joins no golden 
 uv run cmsr release "Alpha 6" --final-name  # snapshot into releases/ (docs/workflow.md)
 ```
 
+The homepage, https://cms-revived.gege.mn, is built from the released fonts in `releases/` and
+the copy in `site/copy/{mn,en,fr}.toml`, then deployed as static assets to Cloudflare. Its type
+tester types through [typepad](https://github.com/gege-mn/typepad), bundled from `site/typer.js`;
+the before/after joins are drawn from the companion with its features off and on (`site/joins.py`). The hero's words are set in `site/hero.toml`.
+
+```sh
+cd site
+bun run page      # writes site/public/ (installs and bundles typepad too)
+bun run deploy
+```
+
 ## Layout
 
 | Path | What |
@@ -86,6 +98,7 @@ uv run cmsr release "Alpha 6" --final-name  # snapshot into releases/ (docs/work
 | `reference/` | Noto Sans Mongolian, for comparison only |
 | `reference/corpora/` | news text for the goldens tools, not in git (see Corpora) |
 | `releases/` | labelled snapshots, one folder each, with NOTES.md |
+| `site/` | the homepage: page template, copy per language, build script, Cloudflare config |
 | `docs/` | [state](docs/state.md), [decisions](docs/decisions.md), [workflow](docs/workflow.md), [feedback](docs/feedback.md) |
 
 ## What counts as done

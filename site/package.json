@@ -1,0 +1,19 @@
+{
+	"name": "cms-revived-site",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@10.18.0",
+	"scripts": {
+		"page": "cd .. && uv run --with brotli python site/build.py",
+		"bundle": "esbuild typer.js --bundle --format=esm --minify --target=es2022 --outfile=public/typer.js",
+		"deploy": "wrangler deploy",
+		"lock": "bunx pnpm@10.18.0 install --lockfile-only"
+	},
+	"dependencies": {
+		"@gege-mn/typepad": "0.3.7"
+	},
+	"devDependencies": {
+		"esbuild": "^0.28.2",
+		"wrangler": "4.149.0"
+	}
+}
