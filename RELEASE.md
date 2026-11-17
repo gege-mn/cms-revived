@@ -23,6 +23,9 @@ Alpha 5 is in production use. Start from what [docs/feedback.md](docs/feedback.m
       (pwptid's w + p seam fixed in 1.0.1).
 - [ ] A licence for the tooling code (`cmsr/`, `editor/`), or a decision to leave it unlicensed.
 - [ ] A home for the news corpora, so the goldens tools work on another machine.
+- [ ] Centre each cut's em box on its spine in the release itself (from the nirugu, as devter's
+      font tool did until 2026-11-17; Huree's line is 173 units off, Urga's 28, Ulaanbaatar's 7).
+      devter and titem now take the hosted files as they are (gege-pub D148).
 
 ## After a release
 

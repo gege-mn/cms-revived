@@ -14,6 +14,7 @@ then docs/state.md (where it stands), docs/decisions.md (settled calls) and RELE
 - Don't draw or "derive" new letter shapes; compose only from dEgi's keys and contours. Join spacing is measured from his teeth per cut, never eyeballed; keep rules narrow (docs/decisions.md).
 - Before regenerating anything the user edited by hand in `drawings/`, back it up and say which edits would go.
 - dEgi's permission is not a release gate; NOTICE.md's good-faith terms cover releases.
+- After a new release is live on cms-revived.gege.mn: titem.gege.mn follows by itself (it links `/css/cms-revived.css` and the unversioned `/download/` TTFs). devter.gege.mn (`gege-pub`) does not: bump `CMS_RELEASE` in `packages/assets/src/fonts/index.ts`, run `node scripts/fonts-css.ts` in `apps/site`, then test and deploy from tb1 (gege-pub's `packages/assets/fonts/README.md`, "A new release").
 
 ## Working with the user
 
